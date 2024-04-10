@@ -9,10 +9,12 @@ export const metadata: Metadata = {
     default: "evanschoffstall.me",
     template: "%s | evanschoffstall.me",
   },
-  description: "Co-founder of librerss.com and founder of planetfall.io",
+  description:
+    "Founder and lead developer of librerss.com, specializing in web, software, and cloud development",
   openGraph: {
     title: "evanschoffstall.me",
-    description: "Co-founder of librerss.com and founder of planetfall.io",
+    description:
+      "Founder and lead developer of librerss.com, specializing in web, software, and cloud development",
     url: "https://evanschoffstall.me",
     siteName: "evanschoffstall.me",
     images: [
