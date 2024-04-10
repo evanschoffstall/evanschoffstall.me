@@ -1,3 +1,7 @@
+## Forked from
+
+[chronark/chronark.com](https://github.com/chronark/chronark.com)
+
 <div align="center">
     <a href="https://evanschoffstall.me"><h1 align="center">evanschoffstall.me</h1></a>
 
@@ -26,7 +30,3 @@ pnpm dev
 ## Cloning / Forking
 
 Please remove all of my personal information (projects, images, etc.) before deploying your own version of this site.
-
-## Originally cloned from
-
-[chronark/chronark.com](https://github.com/chronark/chronark.com)
