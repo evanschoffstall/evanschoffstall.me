@@ -43,7 +43,7 @@ export default function Home() {
           >
             librerss.com
           </Link>{" "}
-          to solve API authentication and authorization for developers.
+          to revive an extant tradition of free cloud rss access.
         </h2>
       </div>
     </div>
