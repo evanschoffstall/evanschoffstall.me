@@ -38,10 +38,10 @@ export default function Home() {
           I'm building{" "}
           <Link
             target="_blank"
-            href="https://unkey.dev"
+            href="https://librerss.com"
             className="underline duration-500 hover:text-zinc-300"
           >
-            unkey.dev
+            librerss.com
           </Link>{" "}
           to solve API authentication and authorization for developers.
         </h2>
