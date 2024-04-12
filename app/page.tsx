@@ -1,3 +1,4 @@
+import { ParallaxProvider, Parallax } from 'react-scroll-parallax';
 import Link from "next/link";
 import React from "react";
 import Particles from "./components/particles";
