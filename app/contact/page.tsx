@@ -1,5 +1,5 @@
 "use client";
-import { Github, Mail, Twitter } from "lucide-react";
+import { Github, Mail, Twitter, Linkedin } from "lucide-react";
 import Link from "next/link";
 import { Navigation } from "../components/nav";
 import { Card } from "../components/card";
@@ -22,6 +22,12 @@ const socials = [
     href: "https://github.com/evanschoffstall",
     label: "Github",
     handle: "evanschoffstall",
+  },
+  {
+    icon: <Linkedin size={20} />,
+    href: "https://www.linkedin.com/in/evan-schoffstall-2a9531163/",
+    label: "Linkedin",
+    handle: "Evan Schoffstall",
   },
 ];
 
