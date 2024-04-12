@@ -5,12 +5,12 @@ import { Navigation } from "../components/nav";
 import { Card } from "../components/card";
 
 const socials = [
-  // {
-  //    icon: <Twitter size={20} />,
-  //    href: "https://twitter.com/evnschoffstall",
-  //    label: "Twitter",
-  //    handle: "@evnschoffstall",
-  //  },
+  {
+    icon: <Twitter size={20} />,
+    href: "https//:twitter.com/evnschoffstall",
+    label: "Twitter",
+    handle: "@evnschoffstall",
+  },
   {
     icon: <Mail size={20} />,
     href: "mailto:dev@evanschoffstall.me",
