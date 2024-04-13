@@ -1,6 +1,5 @@
 'use client';
 
-import { ParallaxProvider, Parallax } from 'react-scroll-parallax';
 import Link from "next/link";
 import React, { useEffect, useRef } from "react";
 import Particles from "./components/particles";
@@ -20,7 +19,6 @@ export default function Home() {
   }, []);
 
   return (
-    <ParallaxProvider>
       <div className="relative w-screen h-screen overflow-hidden bg-gradient-to-tl from-black via-zinc-600/20 to-black">
         <div className="absolute inset-0 overflow-auto">
           <Particles
@@ -88,6 +86,5 @@ export default function Home() {
           </div>
         </div>
       </div>
-    </ParallaxProvider>
   );
 }
