@@ -7,18 +7,27 @@ import { Article } from "./article";
 import { Redis } from "@upstash/redis";
 import { Eye } from "lucide-react";
 
-const redis = Redis.fromEnv();
+let redis: any;
+const redisUrl = process.env.UPSTASH_REDIS_REST_URL;
+
+if (!redisUrl) {
+  console.warn('Warning: UPSTASH_REDIS_REST_URL is not defined. Redis will not be used.');
+} else {
+  redis = Redis.fromEnv();
+}
 
 export const revalidate = 60;
 export default async function ProjectsPage() {
-  const views = (
-    await redis.mget<number[]>(
-      ...allProjects.map((p) => ["pageviews", "projects", p.slug].join(":"))
-    )
-  ).reduce((acc, v, i) => {
-    acc[allProjects[i].slug] = v ?? 0;
-    return acc;
-  }, {} as Record<string, number>);
+  const mgetResult = await redis?.mget(
+    ...allProjects.map((p) => ["pageviews", "projects", p.slug].join(":"))
+  );
+
+  const views = mgetResult
+    ? mgetResult.reduce((acc, v, i) => {
+      acc[allProjects[i].slug] = Number(v) ?? 0;
+      return acc;
+    }, {} as Record<string, number>)
+    : {};
 
   const featured = allProjects.find((project) => project.slug === "librerss")!;
   //const top2 = allProjects.find((project) => project.slug === "planetfall")!;
