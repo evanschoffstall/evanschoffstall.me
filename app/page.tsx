@@ -65,10 +65,10 @@ export default function Home() {
           className="bio opacity-0 ease-in-out md:mt-10"
           style={{ transition: 'transform 1800ms ease-in-out, opacity 1800ms ease-in-out', transitionDelay: '1800ms' }}>
           <div className="flex flex-col md:flex-row items-center justify-center h-full">
-            <span className="relative z-10 max-w-[200px] flex items-center justify-center md:ml-20 md:mr-5">
+            <span className="relative z-10 max-w-[200px] flex items-center justify-center md:ml-20 md:mr-5 2xl:ml-96">
               <img src="/pfp.png" alt="Profile" />
             </span>
-            <div className="duration-1000 text-xs sm:text-sm md:text-base mt-10 md:mt-0 px-20 md:px-0 flex items-center justify-center md:mr-20">
+            <div className="duration-1000 text-xs sm:text-sm md:text-base mt-10 md:mt-0 px-20 md:px-0 flex items-center justify-center md:mr-20 2xl:mr-96">
               <div className="md:text-left text-center">
                 <div>
                   <h2 className="text-zinc-300">
