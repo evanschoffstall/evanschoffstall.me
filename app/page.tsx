@@ -22,11 +22,11 @@ export default function Home() {
   return (
     <ParallaxProvider>
       <div className="relative w-screen h-screen overflow-hidden bg-gradient-to-tl from-black via-zinc-600/20 to-black">
-        <Particles
-          className="absolute inset-0 -z-10 animate-fade-in"
-          quantity={100}
-        />
         <div className="absolute inset-0 overflow-auto">
+          <Particles
+            className="absolute inset-0 -z-10 animate-fade-in"
+            quantity={200}
+          />
           <div className="flex flex-col items-center justify-center min-h-screen">
             <nav className="my-16 animate-fade-in">
               <ul className="flex items-center justify-center gap-4">
