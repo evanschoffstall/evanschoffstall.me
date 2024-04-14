@@ -25,17 +25,16 @@ export default function Home() {
   }, []);
 
   return (
-    <SmoothScrollContainer>
-      <div
-        className="flex flex-col items-center sm:justify-start pt-4 relative w-screen min-h-screen bg-gradient-to-tl from-black via-zinc-600/20 to-black lg:flex lg:items-center lg:justify-center"
-      >
-        <Particles className="absolute inset-0 -z-10 animate-fade-in" quantity={200} />
-        <Navigation />
-        <Title />
-        <Tagline />
-        <Bio bioRef={bioRef} />
-      </div>
-    </SmoothScrollContainer>
+    // <SmoothScrollContainer>
+    <div
+      className="flex flex-col items-center sm:justify-start pt-4 relative w-screen min-h-screen bg-gradient-to-tl from-black via-zinc-600/20 to-black lg:flex lg:items-center lg:justify-center">
+      <Particles className="absolute inset-0 -z-10 animate-fade-in" quantity={200} />
+      <Navigation />
+      <Title />
+      <Tagline />
+      <Bio bioRef={bioRef} />
+    </div>
+    //</SmoothScrollContainer>
   );
 }
 
@@ -76,8 +75,7 @@ function Tagline() {
         <Link
           target="_blank"
           href="https://librerss.com"
-          className="underline duration-500 hover:text-zinc-500"
-        >
+          className="underline duration-500 hover:text-zinc-500"  >
           librerss.com
         </Link>{" "}
         to revive an extant tradition of free cloud rss access.
