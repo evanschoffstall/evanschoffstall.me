@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Particles from "./components/particles";
+import SmoothScrollContainer from "./scroll";
 
 const navigation = [
   { name: "Projects", href: "/projects" },
@@ -15,20 +16,25 @@ export default function Home() {
   useEffect(() => {
     if (bioRef.current) {
       console.log("Applying class changes to bioRef");
-      bioRef.current.classList.remove('opacity-0', '-translate-y-1/2');
+      setTimeout(() => {
+        if (bioRef.current) {
+          bioRef.current.classList.remove('opacity-0', '-translate-y-1/2');
+        }
+      }, 100); // Adjust delay as needed
     }
   }, []);
-
   return (
-    <div
-      className="flex flex-col items-center justify-start pt-4 min-h-screen relative w-screen min-h-screen bg-gradient-to-tl from-black via-zinc-600/20 to-black"
-    >
-      <Particles className="absolute inset-0 -z-10 animate-fade-in" quantity={200} />
-      <Navigation />
-      <Title />
-      <Tagline />
-      <Bio bioRef={bioRef} />
-    </div>
+    <SmoothScrollContainer>
+      <div
+        className="flex flex-col items-center justify-start pt-4 min-h-screen relative w-screen min-h-screen bg-gradient-to-tl from-black via-zinc-600/20 to-black"
+      >
+        <Particles className="absolute inset-0 -z-10 animate-fade-in" quantity={200} />
+        <Navigation />
+        <Title />
+        <Tagline />
+        <Bio bioRef={bioRef} />
+      </div>
+    </SmoothScrollContainer>
   );
 }
 
@@ -84,7 +90,7 @@ function Bio({ bioRef }: { bioRef: React.RefObject<HTMLDivElement> }) {
     <div
       ref={bioRef}
       className="bio opacity-0 ease-in-out md:mt-10"
-      style={{ transition: 'transform 1800ms ease-in-out, opacity 1800ms ease-in-out', transitionDelay: '1800ms' }}>
+      style={{ transition: 'transform 1800ms ease-in-out, opacity 1800ms ease-in-out', transitionDelay: '2500ms' }}>
       <div className="flex flex-col md:flex-row items-center justify-center h-full">
         <span className="relative z-10 max-w-[200px] flex items-center justify-center md:ml-20 md:mr-5 2xl:ml-96">
           <img src="/pfp.png" alt="Profile" />
