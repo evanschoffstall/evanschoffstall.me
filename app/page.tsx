@@ -1,6 +1,4 @@
-'use client';
-
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import Link from "next/link";
 import Particles from "./components/particles";
 import SmoothScrollContainer from "./scroll";
@@ -11,30 +9,15 @@ const navigation = [
 ];
 
 export default function Home() {
-  const bioRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (bioRef.current) {
-      console.log("Applying class changes to bioRef");
-      setTimeout(() => {
-        if (bioRef.current) {
-          bioRef.current.classList.remove('opacity-0', '-translate-y-1/2');
-        }
-      }, 100); // Adjust delay as needed
-    }
-  }, []);
-
   return (
-    // <SmoothScrollContainer>
     <div
       className="flex flex-col items-center sm:justify-start pt-4 relative w-screen min-h-screen bg-gradient-to-tl from-black via-zinc-600/20 to-black lg:flex lg:items-center lg:justify-center">
       <Particles className="absolute inset-0 -z-10 animate-fade-in" quantity={200} />
       <Navigation />
       <Title />
       <Tagline />
-      <Bio bioRef={bioRef} />
+      <Bio />
     </div>
-    //</SmoothScrollContainer>
   );
 }
 
@@ -64,7 +47,6 @@ function Title() {
 }
 
 function Tagline() {
-
   return (
     <div className="mt-5 px-20 duration-1000 text-xs sm:text-sm md:text-base mb-10 text-center animate-fade-in">
       <h2 className="text-zinc-300">
@@ -84,12 +66,10 @@ function Tagline() {
   );
 }
 
-function Bio({ bioRef }: { bioRef: React.RefObject<HTMLDivElement> }) {
+function Bio() {
   return (
     <div
-      ref={bioRef}
-      className="bio opacity-0 ease-in-out md:mt-10"
-      style={{ transition: 'transform 1800ms ease-in-out, opacity 1800ms ease-in-out', transitionDelay: '2500ms' }}>
+      className="bio animate-fade-in-up ease-in-out md:mt-10">
       <div className="flex flex-col md:flex-row items-center justify-center h-full">
         <span className="relative z-10 max-w-[200px] flex items-center justify-center md:ml-20 md:mr-5 2xl:ml-96">
           <img src="/pfp.png" alt="Profile" />
