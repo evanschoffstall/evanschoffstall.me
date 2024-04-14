@@ -26,7 +26,8 @@
     "rehype-pretty-code": "^0.10.2",
     "rehype-slug": "^6.0.0",
     "remark-gfm": "3.0.1",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@opentelemetry/api": "1.4.1",

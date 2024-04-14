@@ -3,6 +3,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Particles from "./components/particles";
+import { v4 as uuidv4 } from 'uuid';
+
 
 const navigation = [
   { name: "Projects", href: "/projects" },
@@ -61,6 +63,8 @@ function Title() {
 }
 
 function Tagline() {
+  const buildUUID = uuidv4();
+
   return (
     <div className="mt-5 px-20 duration-1000 text-xs sm:text-sm md:text-base mb-10 text-center animate-fade-in">
       <h2 className="text-zinc-300">
@@ -76,6 +80,9 @@ function Tagline() {
           librerss.com
         </Link>{" "}
         to revive an extant tradition of free cloud rss access.
+      </h2>
+      <h2 className="mt-4 text-zinc-300">
+        Build UUID: {buildUUID}
       </h2>
     </div>
   );
