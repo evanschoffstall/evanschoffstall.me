@@ -3,8 +3,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Particles from "./components/particles";
-import { v4 as uuidv4 } from 'uuid';
-
 
 const navigation = [
   { name: "Projects", href: "/projects" },
@@ -23,16 +21,13 @@ export default function Home() {
 
   return (
     <div
-      className="relative w-screen h-screen bg-gradient-to-tl from-black via-zinc-600/20 to-black"
-      style={{ overflow: 'auto', WebkitOverflowScrolling: 'auto' }}
+      className="flex flex-col items-center justify-start pt-4 min-h-screen relative w-screen h-screen bg-gradient-to-tl from-black via-zinc-600/20 to-black"
     >
       <Particles className="absolute inset-0 -z-10 animate-fade-in" quantity={200} />
-      <div className="flex flex-col items-center justify-center min-h-screen">
-        <Navigation />
-        <Title />
-        <Tagline />
-        <Bio bioRef={bioRef} />
-      </div>
+      <Navigation />
+      <Title />
+      <Tagline />
+      <Bio bioRef={bioRef} />
     </div>
   );
 }
@@ -63,7 +58,6 @@ function Title() {
 }
 
 function Tagline() {
-  const buildUUID = uuidv4();
 
   return (
     <div className="mt-5 px-20 duration-1000 text-xs sm:text-sm md:text-base mb-10 text-center animate-fade-in">
@@ -80,9 +74,6 @@ function Tagline() {
           librerss.com
         </Link>{" "}
         to revive an extant tradition of free cloud rss access.
-      </h2>
-      <h2 className="mt-4 text-zinc-300">
-        Build UUID: {buildUUID}
       </h2>
     </div>
   );
