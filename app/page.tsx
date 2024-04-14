@@ -1,7 +1,7 @@
 'use client';
 
 import Link from "next/link";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Particles from "./components/particles";
 
 const navigation = [
@@ -11,20 +11,28 @@ const navigation = [
 
 export default function Home() {
   const bioRef = useRef<HTMLDivElement>(null);
+  const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setViewportHeight(window.innerHeight);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     if (bioRef.current) {
       bioRef.current.classList.remove('opacity-0', '-translate-y-1/2');
-      setTimeout(() => {
-        window.scrollTo(0, 1);
-        window.scrollTo(0, 0);
-      }, 2000);
     }
   }, []);
 
   return (
-    <div className="relative w-screen h-screen overflow-auto bg-gradient-to-tl from-black via-zinc-600/20 to-black">
+    <div className="relative w-screen overflow-auto bg-gradient-to-tl from-black via-zinc-600/20 to-black" style={{ height: `${viewportHeight}px` }}>
       <Particles className="absolute inset-0 -z-10 animate-fade-in" quantity={200} />
       <div className="flex flex-col items-center justify-center min-h-screen">
         <nav className="my-16 animate-fade-in">
