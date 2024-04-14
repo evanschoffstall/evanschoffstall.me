@@ -20,7 +20,10 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="relative w-screen h-screen bg-gradient-to-tl from-black via-zinc-600/20 to-black">
+    <div
+      className="relative w-screen h-screen bg-gradient-to-tl from-black via-zinc-600/20 to-black"
+      style={{ overflow: 'auto', WebkitOverflowScrolling: 'touch' }}
+    >
       <Particles className="absolute inset-0 -z-10 animate-fade-in" quantity={200} />
       <div className="flex flex-col items-center justify-center min-h-screen">
         <Navigation />
