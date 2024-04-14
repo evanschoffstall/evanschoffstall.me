@@ -15,7 +15,13 @@ type Props = {
 };
 
 
-const redis = Redis.fromEnv();
+let redis: any;
+
+try {
+  redis = Redis.fromEnv();
+} catch (error) {
+  console.error('Failed to initialize Redis from environment variables', error);
+}
 
 export async function generateStaticParams(): Promise<Props["params"][]> {
   return allProjects
