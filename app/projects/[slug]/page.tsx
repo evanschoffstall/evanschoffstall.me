@@ -15,7 +15,7 @@ type Props = {
 };
 
 
-let redis: any = Redis.fromEnv();
+const redis = Redis.fromEnv();
 
 export async function generateStaticParams(): Promise<Props["params"][]> {
   return allProjects

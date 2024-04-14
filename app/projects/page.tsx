@@ -10,20 +10,18 @@ import { Redis } from "@upstash/redis";
 import { Eye } from "lucide-react";
 import SmoothScrollContainer from "../scroll";
 
-let redis: any = Redis.fromEnv();
+const redis = Redis.fromEnv();
 
 export const revalidate = 60;
 export default async function ProjectsPage() {
-  const mgetResult = await redis?.mget(
-    ...allProjects.map((p) => ["pageviews", "projects", p.slug].join(":"))
-  );
-
-  const views = mgetResult
-    ? mgetResult.reduce((acc, v, i) => {
-      acc[allProjects[i].slug] = Number(v) ?? 0;
-      return acc;
-    }, {} as Record<string, number>)
-    : {};
+  const views = (
+    await redis.mget<number[]>(
+      ...allProjects.map((p) => ["pageviews", "projects", p.slug].join(":")),
+    )
+  ).reduce((acc, v, i) => {
+    acc[allProjects[i].slug] = v ?? 0;
+    return acc;
+  }, {} as Record<string, number>);
 
   const featured = allProjects.find((project) => project.slug === "librerss")!;
   //const top2 = allProjects.find((project) => project.slug === "planetfall")!;
