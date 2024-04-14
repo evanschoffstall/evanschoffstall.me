@@ -21,7 +21,7 @@ export default function Home() {
 
   return (
     <div
-      className="flex flex-col items-center justify-start pt-4 min-h-screen relative w-screen h-screen bg-gradient-to-tl from-black via-zinc-600/20 to-black"
+      className="flex flex-col items-center justify-start pt-4 min-h-screen relative w-screen min-h-screen bg-gradient-to-tl from-black via-zinc-600/20 to-black"
     >
       <Particles className="absolute inset-0 -z-10 animate-fade-in" quantity={200} />
       <Navigation />
