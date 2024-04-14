@@ -21,19 +21,16 @@ try {
 
 export const revalidate = 60;
 export default async function ProjectsPage() {
-  if (!redis) {
-    console.warn('Redis is not initialized');
-    return {}; // return an empty object or some default value
-  }
-
-  const views = (
-    await redis.mget<number[]>(
-      ...allProjects.map((p) => ["pageviews", "projects", p.slug].join(":")),
-    )
-  ).reduce((acc, v, i) => {
-    acc[allProjects[i].slug] = v ?? 0;
-    return acc;
-  }, {} as Record<string, number>);
+  const views = redis
+    ? (
+      await redis.mget<number[]>(
+        ...allProjects.map((p) => ["pageviews", "projects", p.slug].join(":")),
+      )
+    ).reduce((acc, v, i) => {
+      acc[allProjects[i].slug] = v ?? 0;
+      return acc;
+    }, {} as Record<string, number>)
+    : 0;
 
   const featured = allProjects.find((project) => project.slug === "librerss")!;
   //const top2 = allProjects.find((project) => project.slug === "planetfall")!;
