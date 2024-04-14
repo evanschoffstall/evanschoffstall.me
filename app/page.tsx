@@ -23,10 +23,11 @@ export default function Home() {
       }, 100); // Adjust delay as needed
     }
   }, []);
+
   return (
     <SmoothScrollContainer>
       <div
-        className="flex flex-col items-center justify-start pt-4 min-h-screen relative w-screen min-h-screen bg-gradient-to-tl from-black via-zinc-600/20 to-black lg:flex lg:items-center lg:justify-center"
+        className="flex flex-col items-center sm:justify-start pt-4 relative w-screen min-h-screen bg-gradient-to-tl from-black via-zinc-600/20 to-black lg:flex lg:items-center lg:justify-center"
       >
         <Particles className="absolute inset-0 -z-10 animate-fade-in" quantity={200} />
         <Navigation />
