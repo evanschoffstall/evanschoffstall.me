@@ -15,12 +15,13 @@ type Props = {
 };
 
 
-let redis: any;
+let redis: Redis | null;
 
 try {
   redis = Redis.fromEnv();
 } catch (error) {
-  console.error('Failed to initialize Redis from environment variables', error);
+  console.warn('Failed to initialize Redis from environment variables', error);
+  redis = null;
 }
 
 export async function generateStaticParams(): Promise<Props["params"][]> {

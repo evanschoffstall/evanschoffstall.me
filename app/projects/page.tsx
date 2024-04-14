@@ -10,10 +10,22 @@ import { Redis } from "@upstash/redis";
 import { Eye } from "lucide-react";
 import SmoothScrollContainer from "../scroll";
 
-const redis = Redis.fromEnv();
+let redis: Redis | null;
+
+try {
+  redis = Redis.fromEnv();
+} catch (error) {
+  console.warn('Failed to initialize Redis from environment variables', error);
+  redis = null;
+}
 
 export const revalidate = 60;
 export default async function ProjectsPage() {
+  if (!redis) {
+    console.warn('Redis is not initialized');
+    return {}; // return an empty object or some default value
+  }
+
   const views = (
     await redis.mget<number[]>(
       ...allProjects.map((p) => ["pageviews", "projects", p.slug].join(":")),
