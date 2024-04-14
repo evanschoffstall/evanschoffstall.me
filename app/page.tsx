@@ -11,22 +11,6 @@ const navigation = [
 
 export default function Home() {
   const bioRef = useRef<HTMLDivElement>(null);
-  const [viewportHeight, setViewportHeight] = useState<number | null>(null);
-
-  // Set initial viewport height immediately if window is available
-  if (typeof window !== "undefined" && viewportHeight === null) {
-    setViewportHeight(window.innerHeight);
-  }
-
-  useEffect(() => {
-    function handleResize() {
-      console.log("Resizing to:", window.innerHeight);
-      setViewportHeight(window.innerHeight);
-    }
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   useEffect(() => {
     if (bioRef.current) {
@@ -35,8 +19,8 @@ export default function Home() {
     }
   }, []);
 
-  return viewportHeight ? (
-    <div className="relative w-screen overflow-auto bg-gradient-to-tl from-black via-zinc-600/20 to-black" style={{ height: `${viewportHeight}px` }}>
+  return (
+    <div className="relative w-screen h-screen bg-gradient-to-tl from-black via-zinc-600/20 to-black">
       <Particles className="absolute inset-0 -z-10 animate-fade-in" quantity={200} />
       <div className="flex flex-col items-center justify-center min-h-screen">
         <Navigation />
@@ -45,7 +29,7 @@ export default function Home() {
         <Bio bioRef={bioRef} />
       </div>
     </div>
-  ) : null;
+  );
 }
 
 function Navigation() {
