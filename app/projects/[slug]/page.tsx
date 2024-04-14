@@ -15,15 +15,7 @@ type Props = {
 };
 
 
-let redis: any;
-const redisUrl = process.env.UPSTASH_REDIS_REST_URL;
-
-if (!redisUrl) {
-  console.warn('Warning: UPSTASH_REDIS_REST_URL is not defined. Redis will not be used.');
-} else {
-  redis = Redis.fromEnv();
-}
-
+let redis: any = Redis.fromEnv();
 
 export async function generateStaticParams(): Promise<Props["params"][]> {
   return allProjects
