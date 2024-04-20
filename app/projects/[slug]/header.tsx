@@ -3,7 +3,6 @@
 import { ArrowLeft, Eye, Github, Twitter } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
-import SmoothScrollContainer from "app/scroll";
 
 type Props = {
   project: {

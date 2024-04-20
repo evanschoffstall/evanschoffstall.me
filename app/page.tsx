@@ -1,7 +1,6 @@
 import React from "react";
 import Link from "next/link";
 import Particles from "./components/particles";
-import SmoothScrollContainer from "./scroll";
 
 const navigation = [
   { name: "Projects", href: "/projects" },
