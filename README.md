@@ -10,7 +10,7 @@ My personal website, forked and improved from [chronark/chronark.com](https://gi
 ## Running Locally
 
 ```sh-session
-git clone https://github.com/evanschoffstall/evanschoffstall.me.git
+git clone https://github.com/evanschoffstall/evanschoffstall-portfolio.git
 cd evanschoffstall.me
 ```
 
