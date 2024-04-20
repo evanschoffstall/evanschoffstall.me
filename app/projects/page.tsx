@@ -59,7 +59,7 @@ export default async function ProjectsPage() {
         </div>
         <div className="w-full h-px bg-zinc-800" />
 
-        <div className="grid grid-cols-1 gap-8 mx-auto lg:grid-cols-2 ">
+        <div className="grid grid-cols-1 gap-8 mx-auto md:grid-cols-2 ">
           <Card>
             <Link href={`/projects/${featured.slug}`}>
               <article className="relative w-full h-full p-4 md:p-8 pb-16 md:pb-20">
