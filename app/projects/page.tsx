@@ -34,6 +34,21 @@ export default async function ProjectsPage() {
   const top3 = allProjects.find((project) => project.slug === "evanschoffstall.me")!;
   const sorted = allProjects
     .filter((p) => p.published)
+    .filter((p) => !p.contributor)
+    .filter(
+      (project) => project.slug !== featured.slug &&
+        project.slug !== top2.slug &&
+        project.slug !== top3.slug
+    )
+    .sort(
+      (a, b) =>
+        new Date(b.date ?? Number.POSITIVE_INFINITY).getTime() -
+        new Date(a.date ?? Number.POSITIVE_INFINITY).getTime()
+    );
+
+  const sortedContributions = allProjects
+    .filter((p) => p.published)
+    .filter((p) => p.contributor)
     .filter(
       (project) => project.slug !== featured.slug &&
         project.slug !== top2.slug &&
@@ -131,6 +146,47 @@ export default async function ProjectsPage() {
           </div>
           <div className="grid grid-cols-1 gap-4">
             {sorted
+              .filter((_, i) => i % 3 === 2)
+              .map((project) => (
+                <Card key={project.slug}>
+                  <Article project={project} views={views[project.slug] ?? 0} />
+                </Card>
+              ))}
+          </div>
+        </div>
+      </div>
+
+      <br></br>
+      {/* Contributions*/}
+      <div className="px-6 pt-10 mx-auto space-y-8 max-w-7xl lg:px-8 md:space-y-12 md:pt-12 lg:pt-12">
+        <div className="max-w-2xl mx-auto lg:mx-0">
+          <h2 className="text-3xl font-bold tracking-tight text-zinc-100 sm:text-3xl">
+            Contributions
+          </h2>
+        </div>
+        <div className="hidden w-full h-px md:block bg-zinc-800" />
+
+        <div className="grid grid-cols-1 gap-4 mx-auto lg:mx-0 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4">
+            {sortedContributions
+              .filter((_, i) => i % 3 === 0)
+              .map((project) => (
+                <Card key={project.slug}>
+                  <Article project={project} views={views[project.slug] ?? 0} />
+                </Card>
+              ))}
+          </div>
+          <div className="grid grid-cols-1 gap-4">
+            {sortedContributions
+              .filter((_, i) => i % 3 === 1)
+              .map((project) => (
+                <Card key={project.slug}>
+                  <Article project={project} views={views[project.slug] ?? 0} />
+                </Card>
+              ))}
+          </div>
+          <div className="grid grid-cols-1 gap-4">
+            {sortedContributions
               .filter((_, i) => i % 3 === 2)
               .map((project) => (
                 <Card key={project.slug}>
