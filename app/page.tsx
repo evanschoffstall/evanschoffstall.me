@@ -49,7 +49,7 @@ function Tagline() {
   return (
     <div className="mt-5 px-20 duration-1000 text-xs sm:text-sm md:text-base mb-10 text-center animate-fade-in">
       <h2 className="text-zinc-300">
-        Web & Software Developer with 10 Years of Expertise in Business, Service, Product: Development, Management, & Execution
+        Tech Leader with 10+ Years of Extensive, Multifaceted Experience in Business, Service, and Product Innovation, Strategic Management, and Execution
       </h2>
       <h2 className="mt-4 text-zinc-300">
         I'm building{" "}
@@ -81,7 +81,7 @@ function Bio() {
               </h2>
               <br></br>
               <h2 className="text-zinc-300">
-                <strong>With over a decade of experience spanning business development, management, and execution,</strong> I have taken leadership roles that include bringing a brewery and distillery from concept to market. This cross-industry expertise is evident in my ability to adapt and innovate, underscoring my tenure in technology and product development.
+                <strong>With over a decade of experience problem solving in changing fast-paced environments</strong> spanning business development, management, and execution, I have taken leadership roles that include bringing a brewery and distillery from concept to market. This cross-industry expertise is evident in my ability to adapt and innovate, underscoring my tenure in technology and product development.
               </h2>
               <br></br>
               <h2 className="text-zinc-300">
