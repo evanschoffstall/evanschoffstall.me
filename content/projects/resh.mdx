@@ -1,0 +1,16 @@
+---
+title: resh
+description: |
+    Secure restricted production-grade ssh-combatible shell built in rust
+date: "2024-04-30"
+published: true
+repository: evanschoffstall/resh
+---
+
+`resh` is a secure, production-grade, and SSH-compatible shell, developed in Rust, specifically designed for restricted environments. It allows fine-grained control over user commands by defining whitelists in a configuration file, ensuring only authorized commands can be executed.
+
+    Features include:
+
+    - **Configurable Command Whitelisting**: Administrators can specify allowed commands for users or globally by setting them in the resh.toml configuration file, providing a secure way to manage shell access.
+    - **Flexible Environment Customization**: resh supports alternative configuration file locations set via the RESH_CONFIG environment variable, making it adaptable for various deployment scenarios including per-user or per-key configurations.
+    - **Integration with SSH**: It seamlessly integrates with SSH, allowing it to be set as the default shell or invoked on a per-key basis, which is ideal for managing remote access securely without altering user login shells.
