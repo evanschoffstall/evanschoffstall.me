@@ -1,15 +1,16 @@
 "use client";
+import { useEffect } from 'react';
+import TagManager from 'react-gtm-module';
 
 export function Analytics() {
-	const token = process.env.NEXT_PUBLIC_BEAM_TOKEN;
-	if (!token) {
-		return null;
-	}
-	return (
-		<script
-			src="https://beamanalytics.b-cdn.net/beam.min.js"
-			data-token={token}
-			async
-		/>
-	);
+	const GTM_ID = process.env.GTM_ID;
+
+	useEffect(() => {
+		if (typeof window !== 'undefined' && GTM_ID) {
+			const TagManager = require('react-gtm-module');
+			TagManager.initialize({ gtmId: GTM_ID });
+		}
+	}, []);
+
+	return null;
 }
