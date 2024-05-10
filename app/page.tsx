@@ -49,7 +49,7 @@ function Tagline() {
   return (
     <div className="mt-5 px-20 duration-1000 text-xs sm:text-sm md:text-base mb-10 text-center animate-fade-in">
       <h2 className="text-zinc-300">
-        Tech Leader with 10+ Years of Extensive, Multifaceted Experience in Business, Service, and Product Innovation, Strategic Management, and Execution
+        15+ Year Web & Software Engineer With Enriched Experience
       </h2>
       <h2 className="mt-4 text-zinc-300">
         I'm building{" "}
@@ -77,15 +77,19 @@ function Bio() {
           <div className="md:text-left text-center">
             <div>
               <h2 className="text-zinc-300">
-                <strong>Founder & Lead Developer of Librerss,</strong> a modernized, cloud-native revival of free cloud news aggregation, with a background in both cloud and on-premises web and software development, and IT.
+                <strong>Over 15 years in web & software engineering</strong> and over a decade ground floor to executive, enriched multi-industry experience in every way.
               </h2>
               <br></br>
               <h2 className="text-zinc-300">
-                <strong>With over a decade of experience problem solving in changing fast-paced environments</strong> spanning business development, management, and execution, I have taken leadership roles that include bringing a brewery and distillery from concept to market. This cross-industry expertise is evident in my ability to adapt and innovate, underscoring my tenure in technology and product development.
+                <strong>Certified & professional technical expertise that spans a wide range of programming languages and frameworks</strong>, such as Java, Python, C# JavaScript, Bash, Powershell, and more, alongside profound knowledge in web and server-side technologies such as Node.js, Next.js, PHP, SQL, and more.
               </h2>
               <br></br>
               <h2 className="text-zinc-300">
-                <strong>Currently overseeing operations as Distillery Manager, Vineyard Manager, and Senior Operations Officer,</strong> I leverage my diverse skill set to develop, grow, and enhance business, product, and services across multiple facets of industry.
+                <strong>Founder & Lead Developer of LibreRSS</strong>, a revival of the extant tradition of free cloud news aggregation.
+              </h2>
+              <br></br>
+              <h2 className="text-zinc-300">
+                <strong>Extensive history both working with and serving</strong> others, be it users, employees, employers, clients, customers and guests alike.
               </h2>
             </div>
           </div>
