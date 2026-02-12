@@ -1,6 +1,6 @@
 import { redis } from "@/lib/redis";
 import { allProjects } from "contentlayer/generated";
-import { Eye, ArrowRight } from "lucide-react";
+import { ArrowRight, Eye } from "lucide-react";
 import Link from "next/link";
 import { Card } from "../components/card";
 import { Navigation } from "../components/nav";
@@ -61,9 +61,9 @@ export default async function ProjectsPage() {
     );
 
   return (
-    <div className="relative pb-16">
+    <div className="relative pb-16 pt-20">
       <Navigation />
-      <div className="px-6 pt-20 mx-auto space-y-8 max-w-7xl lg:px-8 md:pt-24 lg:pt-32">
+      <div className="px-6 mx-auto space-y-8 max-w-7xl lg:px-8">
         <div>
           <h2 className="text-3xl font-bold tracking-tight text-zinc-100 sm:text-4xl">
             Projects
