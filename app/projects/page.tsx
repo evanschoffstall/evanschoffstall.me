@@ -1,201 +1,46 @@
-import Link from "next/link";
-import React from "react";
+import { getProjectViews } from "@/lib/pageviews";
 import { allProjects } from "contentlayer/generated";
 import { Navigation } from "../components/nav";
-import { Card } from "../components/card";
-import { Article } from "./article";
-import { Redis } from "@upstash/redis";
-import { Eye } from "lucide-react";
-
-let redis: Redis | null;
-
-try {
-  redis = Redis.fromEnv();
-} catch (error) {
-  console.warn('Failed to initialize Redis from environment variables', error);
-  redis = null;
-}
+import { ParticlesBackground } from "../components/particles-background";
+import { groupAndSortProjects, pickFeaturedProjects } from "./project-utils";
+import { ProjectsContent } from "./projects-content";
 
 export const revalidate = 60;
 export default async function ProjectsPage() {
-  const views = redis
-    ? (
-      await redis.mget<number[]>(
-        ...allProjects.map((p) => ["pageviews", "projects", p.slug].join(":")),
-      )
-    ).reduce((acc, v, i) => {
-      acc[allProjects[i].slug] = v ?? 0;
-      return acc;
-    }, {} as Record<string, number>)
-    : 0;
+  const views = await getProjectViews(allProjects.map((p) => p.slug));
 
-  const featured = allProjects.find((project) => project.slug === "librerss")!;
-  const top2 = allProjects.find((project) => project.slug === "example-traefik-multitenant-ssl")!;
-  const top3 = allProjects.find((project) => project.slug === "evanschoffstall.me")!;
-  const sorted = allProjects
-    .filter((p) => p.published)
-    .filter((p) => !p.contributor)
-    .filter(
-      (project) => project.slug !== featured.slug &&
-        project.slug !== top2.slug &&
-        project.slug !== top3.slug
-    )
-    .sort(
-      (a, b) =>
-        new Date(b.date ?? Number.POSITIVE_INFINITY).getTime() -
-        new Date(a.date ?? Number.POSITIVE_INFINITY).getTime()
-    );
+  const { featured, top2, top3 } = pickFeaturedProjects(allProjects);
 
-  const sortedContributions = allProjects
-    .filter((p) => p.published)
-    .filter((p) => p.contributor)
-    .filter(
-      (project) => project.slug !== featured.slug &&
-        project.slug !== top2.slug &&
-        project.slug !== top3.slug
-    )
-    .sort(
-      (a, b) =>
-        new Date(b.date ?? Number.POSITIVE_INFINITY).getTime() -
-        new Date(a.date ?? Number.POSITIVE_INFINITY).getTime()
+  if (!featured || !top2 || !top3) {
+    return (
+      <div className="relative w-full min-h-screen pb-16 pt-16">
+        <ParticlesBackground quantity={200} />
+        <Navigation />
+        <div className="px-6 mx-auto max-w-7xl lg:px-8 text-center py-20">
+          <p className="text-zinc-400">Some featured projects are not available.</p>
+        </div>
+      </div>
     );
+  }
+
+  const { sorted, sortedLegacy, sortedContributions } = groupAndSortProjects(
+    allProjects,
+    [featured.slug, top2.slug, top3.slug],
+  );
 
   return (
-    <div className="relative pb-16">
+    <div className="relative w-full min-h-screen pb-16 pt-16">
+      <ParticlesBackground quantity={200} />
       <Navigation />
-      <div className="px-6 pt-20 mx-auto space-y-8 max-w-7xl lg:px-8 md:space-y-16 md:pt-24 lg:pt-32">
-        <div className=""> {/* Scrubed so md doesn't float / 'unglue' TODO: add margin to md size*/}
-          <h2 className="text-3xl font-bold tracking-tight text-zinc-100 sm:text-4xl">
-            Projects
-          </h2>
-          <p className="mt-4 text-zinc-400">
-            Some of the projects are from work and some are on my own time.
-          </p>
-        </div>
-        <div className="w-full h-px bg-zinc-800" />
-
-        <div className="grid grid-cols-1 gap-8 mx-auto md:grid-cols-2 ">
-          <Card>
-            <Link href={`/projects/${featured.slug}`}>
-              <article className="relative w-full h-full p-4 md:p-8 pb-16 md:pb-20">
-                <div className="flex items-center justify-between gap-2">
-                  <div className="text-xs text-zinc-100">
-                    {featured.date ? (
-                      <time dateTime={new Date(featured.date).toISOString()}>
-                        {Intl.DateTimeFormat(undefined, {
-                          dateStyle: "medium",
-                        }).format(new Date(featured.date))}
-                      </time>
-                    ) : (
-                      <span>SOON</span>
-                    )}
-                  </div>
-                  <span className="flex items-center gap-1 text-xs text-zinc-500">
-                    <Eye className="w-4 h-4" />{" "}
-                    {Intl.NumberFormat("en-US", { notation: "compact" }).format(
-                      views[featured.slug] ?? 0
-                    )}
-                  </span>
-                </div>
-
-                <h2
-                  id="featured-post"
-                  className="mt-4 text-3xl font-bold text-zinc-100 group-hover:text-white sm:text-4xl font-display"
-                >
-                  {featured.title}
-                </h2>
-                <p className="mt-4 leading-8 duration-150 text-zinc-400 group-hover:text-zinc-300">
-                  {featured.description}
-                </p>
-                <div className="absolute bottom-4 md:bottom-8">
-                  <p className="hidden text-zinc-200 hover:text-zinc-50 lg:block">
-                    Read more <span aria-hidden="true">&rarr;</span>
-                  </p>
-                </div>
-              </article>
-            </Link>
-          </Card>
-          <div className="flex flex-col w-full gap-8 mx-auto border-t border-gray-900/10 lg:mx-0 lg:border-t-0 ">
-            {[top2, top3].map((project) => (
-              <Card key={project.slug}>
-                <Article project={project} views={views[project.slug] ?? 0} />
-              </Card>
-            ))}
-          </div>
-        </div>
-        <div className="hidden w-full h-px md:block bg-zinc-800" />
-
-        <div className="grid grid-cols-1 gap-4 mx-auto lg:mx-0 md:grid-cols-3">
-          <div className="grid grid-cols-1 gap-4">
-            {sorted
-              .filter((_, i) => i % 3 === 0)
-              .map((project) => (
-                <Card key={project.slug}>
-                  <Article project={project} views={views[project.slug] ?? 0} />
-                </Card>
-              ))}
-          </div>
-          <div className="grid grid-cols-1 gap-4">
-            {sorted
-              .filter((_, i) => i % 3 === 1)
-              .map((project) => (
-                <Card key={project.slug}>
-                  <Article project={project} views={views[project.slug] ?? 0} />
-                </Card>
-              ))}
-          </div>
-          <div className="grid grid-cols-1 gap-4">
-            {sorted
-              .filter((_, i) => i % 3 === 2)
-              .map((project) => (
-                <Card key={project.slug}>
-                  <Article project={project} views={views[project.slug] ?? 0} />
-                </Card>
-              ))}
-          </div>
-        </div>
-      </div>
-
-      <br></br>
-      {/* Contributions*/}
-      <div className="px-6 pt-10 mx-auto space-y-8 max-w-7xl lg:px-8 md:space-y-12 md:pt-12 lg:pt-12">
-        <div className=""> {/* Scrubed so md doesn't float / 'unglue' TODO: add margin to md size*/}
-          <h2 className="text-3xl font-bold tracking-tight text-zinc-100 sm:text-3xl">
-            Contributions
-          </h2>
-        </div>
-        <div className="hidden w-full h-px md:block bg-zinc-800" />
-
-        <div className="grid grid-cols-1 gap-4 mx-auto lg:mx-0 md:grid-cols-3">
-          <div className="grid grid-cols-1 gap-4">
-            {sortedContributions
-              .filter((_, i) => i % 3 === 0)
-              .map((project) => (
-                <Card key={project.slug}>
-                  <Article project={project} views={views[project.slug] ?? 0} />
-                </Card>
-              ))}
-          </div>
-          <div className="grid grid-cols-1 gap-4">
-            {sortedContributions
-              .filter((_, i) => i % 3 === 1)
-              .map((project) => (
-                <Card key={project.slug}>
-                  <Article project={project} views={views[project.slug] ?? 0} />
-                </Card>
-              ))}
-          </div>
-          <div className="grid grid-cols-1 gap-4">
-            {sortedContributions
-              .filter((_, i) => i % 3 === 2)
-              .map((project) => (
-                <Card key={project.slug}>
-                  <Article project={project} views={views[project.slug] ?? 0} />
-                </Card>
-              ))}
-          </div>
-        </div>
-      </div>
+      <ProjectsContent
+        featured={featured}
+        top2={top2}
+        top3={top3}
+        sorted={sorted}
+        sortedContributions={sortedContributions}
+        sortedLegacy={sortedLegacy}
+        views={views}
+      />
     </div>
   );
 }

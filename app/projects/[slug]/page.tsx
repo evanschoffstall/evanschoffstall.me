@@ -1,30 +1,20 @@
-import { notFound } from "next/navigation";
-import { allProjects } from "contentlayer/generated";
 import { Mdx } from "@/app/components/mdx";
+import { getProjectView } from "@/lib/pageviews";
+import { allProjects } from "contentlayer/generated";
+import { notFound } from "next/navigation";
 import { Header } from "./header";
 import "./mdx.css";
 import { ReportView } from "./view";
-import { Redis } from "@upstash/redis";
 
 export const revalidate = 60;
 
 type Props = {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 };
 
-
-let redis: Redis | null;
-
-try {
-  redis = Redis.fromEnv();
-} catch (error) {
-  console.warn('Failed to initialize Redis from environment variables', error);
-  redis = null;
-}
-
-export async function generateStaticParams(): Promise<Props["params"][]> {
+export async function generateStaticParams(): Promise<{ slug: string }[]> {
   return allProjects
     .filter((p) => p.published)
     .map((p) => ({
@@ -33,14 +23,14 @@ export async function generateStaticParams(): Promise<Props["params"][]> {
 }
 
 export default async function PostPage({ params }: Props) {
-  const slug = params?.slug;
+  const { slug } = await params;
   const project = allProjects.find((project) => project.slug === slug);
 
   if (!project) {
     notFound();
   }
 
-  const views = (await redis?.get(["pageviews", "projects", slug].join(":"))) as number ?? 0;
+  const views = await getProjectView(slug);
 
   return (
     <div className="bg-zinc-50 min-h-screen">

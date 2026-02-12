@@ -1,9 +1,16 @@
 {
-  "typescript.tsdk": "node_modules/.pnpm/typescript@4.9.5/node_modules/typescript/lib",
+  "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "files.associations": {
     "*.embeddedhtml": "html",
     "plyconfig.json": "jsonc"
   },
-  "cSpell.words": ["contentlayer"]
+  "cSpell.words": ["contentlayer"],
+  "files.exclude": {
+    "**/*.meta": false,
+    ".contentlayer": false,
+    "bun.lock": false,
+    "next-env.d.ts": false,
+    "node_modules": false
+  }
 }

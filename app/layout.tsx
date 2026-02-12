@@ -1,8 +1,7 @@
-import "../global.css";
-import { Inter } from "@next/font/google";
-import LocalFont from "@next/font/local";
 import { Metadata } from "next";
-import { Analytics } from "./components/analytics";
+import { Inter } from "next/font/google";
+import LocalFont from "next/font/local";
+import "../global.css";
 
 export const metadata: Metadata = {
   title: {
@@ -63,15 +62,17 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={[inter.variable, calSans.variable].join(" ")}>
-      <head>
-        <Analytics />
-      </head>
       <body
-        className={`bg-black ${
-          process.env.NODE_ENV === "development" ? "debug-screens" : undefined
-        }`}
+        className={[
+          "bg-black",
+          process.env.NODE_ENV === "development" ? "debug-screens" : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
       >
-        {children}
+        <div className="fixed inset-0 bg-gradient-to-tr from-zinc-900/20 via-black to-zinc-800/20 pointer-events-none" />
+        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-zinc-800/5 via-transparent to-transparent pointer-events-none" />
+        <div className="relative">{children}</div>
       </body>
     </html>
   );

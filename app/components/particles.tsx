@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useRef, useEffect, useState } from "react";
-import { useMousePosition } from "@/util/mouse";
+import { useMousePosition } from "@/app/hooks/use-mouse-position";
+import { useEffect, useRef } from "react";
 
 interface ParticlesProps {
 	className?: string;
@@ -21,7 +21,7 @@ export default function Particles({
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const canvasContainerRef = useRef<HTMLDivElement>(null);
 	const context = useRef<CanvasRenderingContext2D | null>(null);
-	const circles = useRef<any[]>([]);
+	const circles = useRef<Circle[]>([]);
 	const mousePosition = useMousePosition();
 	const mouse = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
 	const canvasSize = useRef<{ w: number; h: number }>({ w: 0, h: 0 });
@@ -32,11 +32,17 @@ export default function Particles({
 			context.current = canvasRef.current.getContext("2d");
 		}
 		initCanvas();
-		animate();
-		window.addEventListener("resize", initCanvas);
+		let animationId = requestAnimationFrame(function animateLoop() {
+			animate();
+			animationId = requestAnimationFrame(animateLoop);
+		});
+
+		const handleResize = () => initCanvas();
+		window.addEventListener("resize", handleResize);
 
 		return () => {
-			window.removeEventListener("resize", initCanvas);
+			cancelAnimationFrame(animationId);
+			window.removeEventListener("resize", handleResize);
 		};
 	}, []);
 
@@ -89,7 +95,8 @@ export default function Particles({
 			canvasRef.current.height = canvasSize.current.h * dpr;
 			canvasRef.current.style.width = `${canvasSize.current.w}px`;
 			canvasRef.current.style.height = `${canvasSize.current.h}px`;
-			context.current.scale(dpr, dpr);
+			// Reset transform (canvas width/height resets context state, but be explicit)
+			context.current.setTransform(dpr, 0, 0, dpr, 0, 0);
 		}
 	};
 
@@ -168,7 +175,9 @@ export default function Particles({
 
 	const animate = () => {
 		clearContext();
-		circles.current.forEach((circle: Circle, i: number) => {
+		// Iterate backwards because we splice out-of-bounds particles.
+		for (let i = circles.current.length - 1; i >= 0; i--) {
+			const circle = circles.current[i];
 			// Handle the alpha value
 			const edge = [
 				circle.x + circle.translateX - circle.size, // distance from left edge
@@ -222,8 +231,7 @@ export default function Particles({
 					true,
 				);
 			}
-		});
-		window.requestAnimationFrame(animate);
+		}
 	};
 
 	return (

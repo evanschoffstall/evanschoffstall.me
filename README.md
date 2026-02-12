@@ -1,28 +1,81 @@
-<div align="center">
-    <a href="https://evanschoffstall.me"><h1 align="center">evanschoffstall.me</h1></a>
+# evanschoffstall.me
 
-My personal website, forked and improved from [chronark/chronark.com](https://github.com/chronark/chronark.com), built with [Next.js](https://nextjs.org/), [Tailwind CSS](https://tailwindcss.com/), [Upstash](https://upstash.com?ref=evanschoffstall.me), [Contentlayer](https://www.contentlayer.dev/) and deployed to [Vercel](https://vercel.com/).
+Personal portfolio website built with Next.js 16, showcasing projects and technical writing.
 
-</div>
+## ✨ Features
 
-<br/>
+- MDX-powered project content with Contentlayer
+- View tracking with Upstash Redis
+- Syntax highlighting with Shiki
+- Smooth animations with Framer Motion
+- Responsive design with Tailwind CSS
 
-## Running Locally
+## 🛠 Tech Stack
 
-```sh-session
-git clone https://github.com/evanschoffstall/evanschoffstall.me.git
-cd evanschoffstall.me
+- **Next.js 16** (App Router) + **React 19**
+- **TypeScript**
+- **Contentlayer** for MDX processing
+- **Tailwind CSS** with Typography plugin
+- **Upstash Redis** for analytics
+- **Shiki** for code syntax highlighting
+- **Framer Motion** for animations
+
+## 🚀 Getting Started
+
+```bash
+# Install dependencies
+bun install
+
+# Run development server
+bun dev
 ```
 
-> Optional: Create a `.env` file similar to [`.env.example`](https://github.com/evanschoffstall/evanschoffstall.me/blob/main/.env.example).
+Set up environment variables in `.env.local`:
 
-Then install dependencies and run the development server:
-
-```sh-session
-pnpm install
-pnpm dev
+```bash
+UPSTASH_REDIS_REST_URL=your_redis_url
+UPSTASH_REDIS_REST_TOKEN=your_redis_token
 ```
 
-## Cloning / Forking
+## 📁 Project Structure
 
-Please remove all of my personal information (projects, images, etc.) before deploying your own version of this site.
+```
+app/              # Next.js App Router
+  components/     # React components
+  projects/       # Project pages
+content/
+  projects/       # MDX project files
+lib/              # Utilities and Redis client
+app/api/          # API routes (Route Handlers)
+```
+
+## ➕ Adding Projects
+
+Create a new MDX file in `content/projects/`:
+
+```mdx
+---
+title: "Project Title"
+description: "Brief description"
+date: "2024-01-01"
+published: true
+url: "https://project-url.com"
+repository: "https://github.com/user/repo"
+---
+
+Your content here...
+```
+
+## 💻 Scripts
+
+- `bun dev` - Start development server
+- `bun build` - Build for production
+- `bun start` - Start production server
+
+## 🌐 Deployment
+
+Optimized for [Vercel](https://vercel.com). Configure environment variables and deploy.
+
+---
+
+Made with ❤️ by Evan Schoffstall
