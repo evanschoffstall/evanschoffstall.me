@@ -7,10 +7,10 @@
   },
   "cSpell.words": ["contentlayer"],
   "files.exclude": {
-    "**/*.meta": true,
-    ".contentlayer": true,
-    "bun.lock": true,
-    "next-env.d.ts": true,
-    "node_modules": true
+    "**/*.meta": false,
+    ".contentlayer": false,
+    "bun.lock": false,
+    "next-env.d.ts": false,
+    "node_modules": false
   }
 }

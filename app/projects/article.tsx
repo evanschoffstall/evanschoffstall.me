@@ -1,6 +1,6 @@
 import type { Project } from "@/.contentlayer/generated";
-import Link from "next/link";
 import { Eye } from "lucide-react";
+import Link from "next/link";
 
 type Props = {
   project: Project;
@@ -10,7 +10,7 @@ type Props = {
 export const Article: React.FC<Props> = ({ project, views }) => {
   return (
     <Link href={`/projects/${project.slug}`}>
-      <article className="p-4 md:p-8">
+      <article className="p-4 md:p-8 h-full">
         <div className="flex justify-between gap-2 items-center">
           <span className="text-xs duration-1000 text-zinc-200 group-hover:text-white group-hover:border-zinc-200 drop-shadow-orange">
             {project.date ? (
@@ -28,7 +28,7 @@ export const Article: React.FC<Props> = ({ project, views }) => {
             {Intl.NumberFormat("en-US", { notation: "compact" }).format(views)}
           </span>
         </div>
-        <h2 className="z-20 text-xl font-medium duration-1000 lg:text-2.5xl text-zinc-200 group-hover:text-white font-display">
+        <h2 className="z-20 text-xl font-medium duration-1000 lg:text-2.5xl text-zinc-200 group-hover:text-white font-display leading-tight break-words py-2">
           {project.title}
         </h2>
         <p className="z-20 mt-4 text-sm  duration-1000 text-zinc-400 group-hover:text-zinc-200">

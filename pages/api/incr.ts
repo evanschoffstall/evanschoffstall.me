@@ -1,7 +1,5 @@
-import { Redis } from "@upstash/redis";
 import { NextRequest, NextResponse } from "next/server";
-
-const redis = Redis.fromEnv();
+import { redis } from "@/lib/redis";
 export const config = {
   runtime: "edge",
 };
@@ -21,6 +19,9 @@ export default async function incr(req: NextRequest): Promise<NextResponse> {
   }
   if (!slug) {
     return new NextResponse("Slug not found", { status: 400 });
+  }
+  if (!redis) {
+    return new NextResponse(null, { status: 202 });
   }
   const ip = req.ip;
   if (ip) {
