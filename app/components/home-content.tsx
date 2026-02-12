@@ -7,6 +7,63 @@ import { useCallback, useState } from "react";
 import { Card } from "./card";
 import { HeroName } from "./hero-name";
 
+// ========================================
+// CONTENT - Edit all bio text here
+// ========================================
+
+const content = {
+  subtitle: "Technologist, Engineer, and Business Officer",
+
+  summary: "Technologist, engineer, and business officer with expertise spanning code to teams to revenue. Currently contributing to state-level public procurement systems and procurement operations. Previously facilitated compliant data science initiatives at a national utility and drove a local winery's technical operations from inception to multi-million dollar success.",
+
+  highlights: [
+    {
+      icon: <Terminal className="w-4 h-4" />,
+      title: "15+ Years",
+      description: "Ground floor to executive across government, enterprise, and startups.",
+    },
+    {
+      icon: <Code2 className="w-4 h-4" />,
+      title: "Full Stack",
+      description: "Web, cloud, and systems. TypeScript to Rust, React to Kubernetes.",
+    },
+    {
+      icon: <Users className="w-4 h-4" />,
+      title: "Builder & Leader",
+      description: "From solo projects to team operations. Technical and business ownership.",
+    },
+    {
+      icon: <Rss className="w-4 h-4" />,
+      title: "Open Source",
+      description: "LibreRSS, resh, and contributions to OpenEmu & Wineskin.",
+    },
+  ],
+
+  stack: {
+    title: "Core Stack",
+    items: [
+      {
+        label: "Primary",
+        tech: "TypeScript, Python, Rust, C# • React, Next.js, Node.js, .NET",
+      },
+      {
+        label: "Infrastructure",
+        tech: "Docker, Kubernetes • AWS, Azure • CI/CD automation",
+      },
+      {
+        label: "Data",
+        tech: "PostgreSQL, Redis • SAP ERP • Data pipelines & analytics",
+      },
+      {
+        label: "Also",
+        tech: "Java, Go, C++, Swift, PHP • MySQL, MariaDB • OpenShift, Vercel, Jenkins",
+      },
+    ],
+  },
+};
+
+// ========================================
+
 const navigation = [
   { name: "Projects", href: "/projects" }
 ];
@@ -16,29 +73,6 @@ const socials = [
   { icon: <Linkedin className="w-4 h-4" />, href: "https://www.linkedin.com/in/evan-schoffstall-2a9531163/", label: "LinkedIn" },
   { icon: <Twitter className="w-4 h-4" />, href: "https://twitter.com/evnschoffstall", label: "Twitter" },
   { icon: <Mail className="w-4 h-4" />, href: "mailto:hello@evanschoffstall.me", label: "Email" },
-];
-
-const highlights = [
-  {
-    icon: <Terminal className="w-4 h-4" />,
-    title: "15+ Years",
-    description: "Ground floor to executive across government, enterprise, and startups.",
-  },
-  {
-    icon: <Code2 className="w-4 h-4" />,
-    title: "Full Stack",
-    description: "Web, cloud, and systems. TypeScript to Rust, React to Kubernetes.",
-  },
-  {
-    icon: <Users className="w-4 h-4" />,
-    title: "Builder & Leader",
-    description: "From solo projects to team operations. Technical and business ownership.",
-  },
-  {
-    icon: <Rss className="w-4 h-4" />,
-    title: "Open Source",
-    description: "LibreRSS, resh, and contributions to OpenEmu & Wineskin.",
-  },
 ];
 
 const fadeIn = {
@@ -117,7 +151,7 @@ export function HomeContent() {
               />
               <div>
                 <h2 className="text-sm font-medium text-zinc-100">Evan Schoffstall</h2>
-                <p className="text-xs text-zinc-500 mt-0.5">Technologist, Engineer, and Business Officer</p>
+                <p className="text-xs text-zinc-500 mt-0.5">{content.subtitle}</p>
               </div>
               <div className="ml-auto hidden sm:block">
                 <Link
@@ -141,15 +175,13 @@ export function HomeContent() {
               }}
             >
               <p className="text-[13px] leading-relaxed text-zinc-400">
-                Technologist, engineer, and business officer with expertise spanning code to teams to revenue.
-                Currently contributing to state-level public procurement systems and procurement operations. Previously facilitated compliant data science
-                initiatives at a national utility and drove a local winery's technical operations from inception to multi-million dollar success.
+                {content.summary}
               </p>
             </motion.div>
 
             {/* Highlights grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-zinc-800/50">
-              {highlights.map((item, i) => (
+              {content.highlights.map((item, i) => (
                 <motion.div
                   key={item.title}
                   className={`p-5 md:p-6 ${i >= 2 ? "border-t border-zinc-800/50" : ""}`}
@@ -185,32 +217,16 @@ export function HomeContent() {
                 ease: "easeOut",
               }}
             >
-              <h3 className="text-sm font-medium text-zinc-300 mb-3">Core Stack</h3>
+              <h3 className="text-sm font-medium text-zinc-300 mb-3">{content.stack.title}</h3>
               <div className="space-y-2.5">
-                <div className="flex items-start gap-3">
-                  <span className="text-xs text-zinc-500 min-w-[80px] pt-0.5">Primary</span>
-                  <p className="text-[13px] text-zinc-400 leading-relaxed">
-                    TypeScript, Python, Rust, C# • React, Next.js, Node.js, .NET
-                  </p>
-                </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-xs text-zinc-500 min-w-[80px] pt-0.5">Infrastructure</span>
-                  <p className="text-[13px] text-zinc-400 leading-relaxed">
-                    Docker, Kubernetes • AWS, Azure • CI/CD automation
-                  </p>
-                </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-xs text-zinc-500 min-w-[80px] pt-0.5">Data</span>
-                  <p className="text-[13px] text-zinc-400 leading-relaxed">
-                    PostgreSQL, Redis • SAP ERP • Data pipelines & analytics
-                  </p>
-                </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-xs text-zinc-500 min-w-[80px] pt-0.5">Also</span>
-                  <p className="text-[13px] text-zinc-400 leading-relaxed">
-                    Java, Go, C++, Swift, PHP • MySQL, MariaDB • OpenShift, Vercel, Jenkins
-                  </p>
-                </div>
+                {content.stack.items.map((item, i) => (
+                  <div key={i} className="flex items-start gap-3">
+                    <span className="text-xs text-zinc-500 min-w-[80px] pt-0.5">{item.label}</span>
+                    <p className="text-[13px] text-zinc-400 leading-relaxed">
+                      {item.tech}
+                    </p>
+                  </div>
+                ))}
               </div>
             </motion.div>
 
