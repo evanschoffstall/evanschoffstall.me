@@ -1,9 +1,17 @@
 "use client";
 import { cn } from "@/lib/cn";
-import { useMDXComponent } from "next-contentlayer/hooks";
 import Image from "next/image";
 import Link from "next/link";
 import * as React from "react";
+import * as jsxRuntime from "react/jsx-runtime";
+
+function useMDXComponent(code: string) {
+	return React.useMemo(() => {
+		const fn = new Function("_jsx_runtime", code) as (runtime: unknown) => unknown;
+		const mod = fn(jsxRuntime) as { default?: React.ElementType } | React.ElementType;
+		return (typeof mod === "object" && mod && "default" in mod ? (mod as any).default : mod) as React.ElementType;
+	}, [code]);
+}
 
 type HeadingProps = React.HTMLAttributes<HTMLHeadingElement>;
 type ParagraphProps = React.HTMLAttributes<HTMLParagraphElement>;
