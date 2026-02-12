@@ -9,17 +9,24 @@ if (
 ) {
   try {
     redis = Redis.fromEnv();
+    if (process.env.NODE_ENV === "development") {
+      console.info("Redis initialized successfully");
+    }
   } catch (error) {
-    console.warn(
-      "Failed to initialize Redis from environment variables",
-      error,
-    );
+    if (process.env.NODE_ENV === "development") {
+      console.warn(
+        "Failed to initialize Redis from environment variables. View counts will not be tracked.",
+        error instanceof Error ? error.message : error,
+      );
+    }
     redis = null;
   }
 } else {
-  console.warn(
-    "Redis not initialized: Missing UPSTASH_REDIS_REST_URL or UPSTASH_REDIS_REST_TOKEN environment variables",
-  );
+  if (process.env.NODE_ENV === "development") {
+    console.warn(
+      "Redis not initialized: Missing UPSTASH_REDIS_REST_URL or UPSTASH_REDIS_REST_TOKEN environment variables",
+    );
+  }
 }
 
 export { redis };

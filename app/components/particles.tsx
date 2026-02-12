@@ -21,7 +21,7 @@ export default function Particles({
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const canvasContainerRef = useRef<HTMLDivElement>(null);
 	const context = useRef<CanvasRenderingContext2D | null>(null);
-	const circles = useRef<any[]>([]);
+	const circles = useRef<Circle[]>([]);
 	const mousePosition = useMousePosition();
 	const mouse = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
 	const canvasSize = useRef<{ w: number; h: number }>({ w: 0, h: 0 });
@@ -32,11 +32,17 @@ export default function Particles({
 			context.current = canvasRef.current.getContext("2d");
 		}
 		initCanvas();
-		animate();
-		window.addEventListener("resize", initCanvas);
+		let animationId = requestAnimationFrame(function animateLoop() {
+			animate();
+			animationId = requestAnimationFrame(animateLoop);
+		});
+		
+		const handleResize = () => initCanvas();
+		window.addEventListener("resize", handleResize);
 
 		return () => {
-			window.removeEventListener("resize", initCanvas);
+			cancelAnimationFrame(animationId);
+			window.removeEventListener("resize", handleResize);
 		};
 	}, []);
 
@@ -168,7 +174,7 @@ export default function Particles({
 
 	const animate = () => {
 		clearContext();
-		circles.current.forEach((circle: Circle, i: number) => {
+		circles.current.forEach((circle, i) => {
 			// Handle the alpha value
 			const edge = [
 				circle.x + circle.translateX - circle.size, // distance from left edge
@@ -223,7 +229,6 @@ export default function Particles({
 				);
 			}
 		});
-		window.requestAnimationFrame(animate);
 	};
 
 	return (

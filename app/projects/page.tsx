@@ -15,11 +15,25 @@ export default async function ProjectsPage() {
       acc[allProjects[i].slug] = v ?? 0;
       return acc;
     }, {} as Record<string, number>)
-    : 0;
+    : {} as Record<string, number>;
 
-  const featured = allProjects.find((project) => project.slug === "librerss")!;
-  const top2 = allProjects.find((project) => project.slug === "example-traefik-multitenant-ssl")!;
-  const top3 = allProjects.find((project) => project.slug === "evanschoffstall.me")!;
+  const featured = allProjects.find((project) => project.slug === "librerss" && project.published);
+  const top2 = allProjects.find((project) => project.slug === "example-traefik-multitenant-ssl" && project.published);
+  const top3 = allProjects.find((project) => project.slug === "evanschoffstall.me" && project.published);
+  
+  if (!featured || !top2 || !top3) {
+    return (
+      <div className="relative w-full min-h-screen pb-16 pt-16">
+        <div className="fixed inset-0 -z-20 bg-gradient-to-tl from-black via-zinc-600/20 to-black" />
+        <Particles className="fixed inset-0 -z-10 animate-fade-in" quantity={200} />
+        <Navigation />
+        <div className="px-6 mx-auto max-w-7xl lg:px-8 text-center py-20">
+          <p className="text-zinc-400">Some featured projects are not available.</p>
+        </div>
+      </div>
+    );
+  }
+
   const sorted = allProjects
     .filter((p) => p.published)
     .filter((p) => !p.contributor)
@@ -70,7 +84,7 @@ export default async function ProjectsPage() {
         sorted={sorted}
         sortedContributions={sortedContributions}
         sortedLegacy={sortedLegacy}
-        views={typeof views === 'number' ? {} : views}
+        views={views}
       />
     </div>
   );

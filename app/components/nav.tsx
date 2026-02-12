@@ -22,7 +22,7 @@ export const Navigation: React.FC = () => {
 			<div
 				className={`fixed inset-x-0 top-0 z-50 backdrop-blur  duration-200 border-b  ${isIntersecting
 					? "bg-zinc-900/0 border-transparent"
-					: "bg-zinc-900/500  border-zinc-800 "
+					: "bg-zinc-900/50  border-zinc-800 "
 					}`}
 			>
 				<div className="flex flex-row items-center justify-between p-4">

@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
 import { redis } from "@/lib/redis";
+import { NextRequest, NextResponse } from "next/server";
 export const config = {
   runtime: "edge",
 };
@@ -8,22 +8,26 @@ export default async function incr(req: NextRequest): Promise<NextResponse> {
   if (req.method !== "POST") {
     return new NextResponse("use POST", { status: 405 });
   }
-  if (req.headers.get("Content-Type") !== "application/json") {
+  const contentType = req.headers.get("content-type") ?? "";
+  if (!contentType.toLowerCase().startsWith("application/json")) {
     return new NextResponse("must be json", { status: 400 });
   }
 
   const body = await req.json();
-  let slug: string | undefined = undefined;
-  if ("slug" in body) {
-    slug = body.slug;
-  }
+  const slug =
+    body && typeof body === "object" && "slug" in body && typeof body.slug === "string"
+      ? body.slug.trim()
+      : "";
+
   if (!slug) {
     return new NextResponse("Slug not found", { status: 400 });
   }
   if (!redis) {
     return new NextResponse(null, { status: 202 });
   }
-  const ip = req.ip;
+
+  const forwardedFor = req.headers.get("x-forwarded-for");
+  const ip = forwardedFor?.split(",")[0]?.trim() || req.headers.get("x-real-ip") || null;
   if (ip) {
     // Hash the IP in order to not store it directly in your db.
     const buf = await crypto.subtle.digest(
@@ -43,6 +47,12 @@ export default async function incr(req: NextRequest): Promise<NextResponse> {
       return new NextResponse(null, { status: 202 });
     }
   }
-  await redis.incr(["pageviews", "projects", slug].join(":"));
-  return new NextResponse(null, { status: 202 });
+
+  try {
+    await redis.incr(["pageviews", "projects", slug].join(":"));
+    return new NextResponse(null, { status: 202 });
+  } catch (error) {
+    console.error("Failed to increment view count:", error);
+    return new NextResponse("Internal Server Error", { status: 500 });
+  }
 }

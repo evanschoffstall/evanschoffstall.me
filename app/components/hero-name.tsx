@@ -20,7 +20,7 @@ export function HeroName({ onSettled }: HeroNameProps) {
         letterSpacing: "0.02em",
         transition: {
           duration: 2.2,
-          ease: "easeOut",
+          ease: [0.16, 1, 0.3, 1] as const,
         },
       });
 

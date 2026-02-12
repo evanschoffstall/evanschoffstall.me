@@ -77,12 +77,12 @@ const socials = [
 
 const fadeIn = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.8, ease: "easeOut" } },
+  visible: { opacity: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const } },
 };
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.9, ease: "easeOut" } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] as const } },
 };
 
 export function HomeContent() {
@@ -117,6 +117,7 @@ export function HomeContent() {
                 key={s.label}
                 href={s.href}
                 target="_blank"
+                rel="noopener noreferrer"
                 aria-label={s.label}
                 className="text-zinc-600 hover:text-zinc-300 transition-colors duration-200">
                 {s.icon}
@@ -148,7 +149,7 @@ export function HomeContent() {
               transition={{
                 duration: 0.5,
                 delay: 0.5,
-                ease: "easeOut",
+                ease: [0.16, 1, 0.3, 1] as const,
               }}
             >
               <Image
@@ -180,7 +181,7 @@ export function HomeContent() {
               transition={{
                 duration: 0.5,
                 delay: 0.6,
-                ease: "easeOut",
+                ease: [0.16, 1, 0.3, 1] as const,
               }}
             >
               <p className="text-[13px] leading-relaxed text-zinc-400">
@@ -199,7 +200,7 @@ export function HomeContent() {
                   transition={{
                     duration: 0.5,
                     delay: 0.7 + i * 0.1,
-                    ease: "easeOut",
+                    ease: [0.16, 1, 0.3, 1] as const,
                   }}
                 >
                   <div className="flex items-center gap-2.5 mb-2">
@@ -223,7 +224,7 @@ export function HomeContent() {
               transition={{
                 duration: 0.5,
                 delay: 1.1,
-                ease: "easeOut",
+                ease: [0.16, 1, 0.3, 1] as const,
               }}
             >
               <h3 className="text-sm font-medium text-zinc-300 mb-3">{content.stack.title}</h3>
@@ -247,7 +248,7 @@ export function HomeContent() {
               transition={{
                 duration: 0.5,
                 delay: 1.2,
-                ease: "easeOut",
+                ease: [0.16, 1, 0.3, 1] as const,
               }}
             >
               <Link

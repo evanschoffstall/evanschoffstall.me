@@ -20,17 +20,17 @@ type Props = {
 
 const fadeIn = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.8, ease: "easeOut" } },
+  visible: { opacity: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const } },
 };
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.9, ease: "easeOut" } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] as const } },
 };
 
 const dividerSlide = {
   hidden: { scaleX: 0, opacity: 0 },
-  visible: { scaleX: 1, opacity: 1, transition: { duration: 0.8, ease: "easeOut" } },
+  visible: { scaleX: 1, opacity: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const } },
 };
 
 export function ProjectsContent({ featured, top2, top3, sorted, sortedContributions, sortedLegacy, views }: Props) {
@@ -63,7 +63,7 @@ export function ProjectsContent({ featured, top2, top3, sorted, sortedContributi
           style={{ transformOrigin: "left" }}
           initial={{ scaleX: 0, opacity: 0 }}
           animate={{ scaleX: 1, opacity: 1 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as const }}
         />
       </motion.div>
 
@@ -181,7 +181,7 @@ export function ProjectsContent({ featured, top2, top3, sorted, sortedContributi
             style={{ transformOrigin: "left" }}
             initial={{ scaleX: 0, opacity: 0 }}
             animate={{ scaleX: 1, opacity: 1 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as const }}
           />
           <motion.div
             className="space-y-2 mt-8"
@@ -221,7 +221,7 @@ export function ProjectsContent({ featured, top2, top3, sorted, sortedContributi
               style={{ transformOrigin: "left" }}
               initial={{ scaleX: 0, opacity: 0 }}
               animate={{ scaleX: 1, opacity: 1 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as const }}
             />
           </div>
           <motion.div
@@ -262,7 +262,7 @@ export function ProjectsContent({ featured, top2, top3, sorted, sortedContributi
               style={{ transformOrigin: "left" }}
               initial={{ scaleX: 0, opacity: 0 }}
               animate={{ scaleX: 1, opacity: 1 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as const }}
             />
           </div>
           <motion.div

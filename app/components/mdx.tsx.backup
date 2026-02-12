@@ -4,6 +4,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { useMDXComponent } from "next-contentlayer/hooks";
 
+interface MDXComponentProps {
+	className?: string;
+	children?: React.ReactNode;
+	[key: string]: any;
+}
+function clsx(...args: any[]) {
+	return args.filter(Boolean).join(" ");
+}
+
+const components = {
 function clsx(...args: Array<string | undefined | false | null>) {
 	return args.filter(Boolean).join(" ");
 }
@@ -24,59 +34,59 @@ type AnchorProps = React.AnchorHTMLAttributes<HTMLAnchorElement>;
 
 const components: Record<string, React.ComponentType<any>> = {
 	h1: ({ className, ...props }: HeadingProps) => (
-		<h1
-			className={clsx(
-				"mt-2 scroll-m-20 text-4xl font-bold tracking-tight",
-				className,
 			)}
 			{...props}
 		/>
 	),
-	h2: ({ className, ...props }: HeadingProps) => (
+	h2: ({ className, ...props }: MDXComponentProps) => (
 		<h2
 			className={clsx(
 				"mt-10 scroll-m-20 border-b border-b-zinc-800 pb-1 text-3xl font-semibold tracking-tight first:mt-0",
-				className,
+	h2: ({ className, ...props }: HeadingProps) => (
 			)}
 			{...props}
 		/>
 	),
-	h3: ({ className, ...props }: HeadingProps) => (
+	h3: ({ className, ...props }: MDXComponentProps) => (
 		<h3
 			className={clsx(
 				"mt-8 scroll-m-20 text-2xl font-semibold tracking-tight",
-				className,
+	h3: ({ className, ...props }: HeadingProps) => (
 			)}
 			{...props}
 		/>
 	),
-	h4: ({ className, ...props }: HeadingProps) => (
+	h4: ({ className, ...props }: MDXComponentProps) => (
 		<h4
 			className={clsx(
 				"mt-8 scroll-m-20 text-xl font-semibold tracking-tight",
-				className,
+	h4: ({ className, ...props }: HeadingProps) => (
 			)}
 			{...props}
 		/>
 	),
-	h5: ({ className, ...props }: HeadingProps) => (
+	h5: ({ className, ...props }: MDXComponentProps) => (
 		<h5
 			className={clsx(
 				"mt-8 scroll-m-20 text-lg font-semibold tracking-tight",
-				className,
+	h5: ({ className, ...props }: HeadingProps) => (
 			)}
 			{...props}
 		/>
 	),
-	h6: ({ className, ...props }: HeadingProps) => (
+	h6: ({ className, ...props }: MDXComponentProps) => (
 		<h6
 			className={clsx(
 				"mt-8 scroll-m-20 text-base font-semibold tracking-tight",
-				className,
+	h6: ({ className, ...props }: HeadingProps) => (
 			)}
 			{...props}
 		/>
 	),
+	a: ({ className, ...props }: MDXComponentProps) => (
+		<Link
+			className={clsx(
+				"font-medium text-zinc-900 underline underline-offset-4",
 	a: ({ className, href, ...props }: AnchorProps) => {
 		const classes = clsx(
 			"font-medium text-zinc-900 underline underline-offset-4",
@@ -105,25 +115,21 @@ const components: Record<string, React.ComponentType<any>> = {
 		);
 	},
 	p: ({ className, ...props }: ParagraphProps) => (
-		<p
-			className={clsx("leading-7 [&:not(:first-child)]:mt-6", className)}
-			{...props}
-		/>
 	),
-	ul: ({ className, ...props }: ListProps) => (
+	ul: ({ className, ...props }: MDXComponentProps) => (
 		<ul className={clsx("my-6 ml-6 list-disc", className)} {...props} />
 	),
+	ol: ({ className, ...props }: MDXComponentProps) => (
+	ul: ({ className, ...props }: ListProps) => (
+	),
+	li: ({ className, ...props }: MDXComponentProps) => (
 	ol: ({ className, ...props }: ListProps) => (
-		<ol className={clsx("my-6 ml-6 list-decimal", className)} {...props} />
 	),
+	blockquote: ({ className, ...props }: MDXComponentProps) => (
 	li: ({ className, ...props }: ListItemProps) => (
-		<li className={clsx("mt-2", className)} {...props} />
-	),
-	blockquote: ({ className, ...props }: BlockquoteProps) => (
-		<blockquote
 			className={clsx(
 				"mt-6 border-l-2 border-zinc-300 pl-6 italic text-zinc-800 [&>*]:text-zinc-600",
-				className,
+	blockquote: ({ className, ...props }: BlockquoteProps) => (
 			)}
 			{...props}
 		/>
@@ -140,55 +146,55 @@ const components: Record<string, React.ComponentType<any>> = {
 			{...props}
 		/>
 	),
-	hr: ({ ...props }: HrProps) => (
+	hr: ({ ...props }: MDXComponentProps) => (
 		<hr className="my-4 border-zinc-200 md:my-8" {...props} />
 	),
-	table: ({ className, ...props }: TableProps) => (
-		<div className="w-full my-6 overflow-y-auto">
+	table: ({ className, ...props }: React.HTMLAttributes<HTMLTableElement>) => (
+	hr: ({ ...props }: HrProps) => (
 			<table className={clsx("w-full", className)} {...props} />
 		</div>
-	),
-	tr: ({ className, ...props }: TrProps) => (
+	table: ({ className, ...props }: TableProps) => (
+	tr: ({ className, ...props }: React.HTMLAttributes<HTMLTableRowElement>) => (
 		<tr
 			className={clsx(
 				"m-0 border-t border-zinc-300 p-0 even:bg-zinc-100",
-				className,
+	tr: ({ className, ...props }: TrProps) => (
 			)}
 			{...props}
 		/>
 	),
-	th: ({ className, ...props }: ThProps) => (
+	th: ({ className, ...props }: MDXComponentProps) => (
 		<th
 			className={clsx(
 				"border border-zinc-200 px-4 py-2 text-left font-bold [&[align=center]]:text-center [&[align=right]]:text-right",
-				className,
+	th: ({ className, ...props }: ThProps) => (
 			)}
 			{...props}
 		/>
 	),
-	td: ({ className, ...props }: TdProps) => (
+	td: ({ className, ...props }: MDXComponentProps) => (
 		<td
 			className={clsx(
 				"border border-zinc-200 px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right",
-				className,
+	td: ({ className, ...props }: TdProps) => (
 			)}
 			{...props}
 		/>
 	),
-	pre: ({ className, ...props }: PreProps) => (
+	pre: ({ className, ...props }: MDXComponentProps) => (
 		<pre
 			className={clsx(
 				"mt-6 mb-4 overflow-x-auto rounded-lg bg-zinc-900 py-4",
-				className,
+	pre: ({ className, ...props }: PreProps) => (
 			)}
 			{...props}
 		/>
 	),
-	code: ({ className, ...props }: CodeProps) => (
+	code: ({ className, ...props }: MDXComponentProps) => (
 		<code
 			className={clsx(
 				"relative rounded border bg-zinc-300 bg-opacity-25 py-[0.2rem] px-[0.3rem] font-mono text-sm text-zinc-600",
-				className,
+	code: ({ className, ...props }: CodeProps) => (
 			)}
 			{...props}
 		/>
