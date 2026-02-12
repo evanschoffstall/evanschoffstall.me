@@ -1,22 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { Redis } from "@upstash/redis";
 import { allProjects } from "contentlayer/generated";
+import { redis } from "@/lib/redis";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  let redis: Redis | null;
-
-  try {
-    redis = Redis.fromEnv();
-  } catch (error) {
-    console.warn(
-      "Failed to initialize Redis from environment variables",
-      error
-    );
-    redis = null;
-  }
 
   const views = redis
     ? (

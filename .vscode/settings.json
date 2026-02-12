@@ -5,5 +5,12 @@
     "*.embeddedhtml": "html",
     "plyconfig.json": "jsonc"
   },
-  "cSpell.words": ["contentlayer"]
+  "cSpell.words": ["contentlayer"],
+  "files.exclude": {
+    "**/*.meta": true,
+    ".contentlayer": true,
+    "bun.lock": true,
+    "next-env.d.ts": true,
+    "node_modules": true
+  }
 }

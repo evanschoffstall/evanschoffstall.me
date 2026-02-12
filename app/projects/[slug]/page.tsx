@@ -4,7 +4,7 @@ import { Mdx } from "@/app/components/mdx";
 import { Header } from "./header";
 import "./mdx.css";
 import { ReportView } from "./view";
-import { Redis } from "@upstash/redis";
+import { redis } from "@/lib/redis";
 
 export const revalidate = 60;
 
@@ -13,16 +13,6 @@ type Props = {
     slug: string;
   };
 };
-
-
-let redis: Redis | null;
-
-try {
-  redis = Redis.fromEnv();
-} catch (error) {
-  console.warn('Failed to initialize Redis from environment variables', error);
-  redis = null;
-}
 
 export async function generateStaticParams(): Promise<Props["params"][]> {
   return allProjects

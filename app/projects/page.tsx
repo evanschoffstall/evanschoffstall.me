@@ -4,17 +4,8 @@ import { allProjects } from "contentlayer/generated";
 import { Navigation } from "../components/nav";
 import { Card } from "../components/card";
 import { Article } from "./article";
-import { Redis } from "@upstash/redis";
 import { Eye } from "lucide-react";
-
-let redis: Redis | null;
-
-try {
-  redis = Redis.fromEnv();
-} catch (error) {
-  console.warn('Failed to initialize Redis from environment variables', error);
-  redis = null;
-}
+import { redis } from "@/lib/redis";
 
 export const revalidate = 60;
 export default async function ProjectsPage() {
@@ -64,7 +55,7 @@ export default async function ProjectsPage() {
     <div className="relative pb-16">
       <Navigation />
       <div className="px-6 pt-20 mx-auto space-y-8 max-w-7xl lg:px-8 md:space-y-16 md:pt-24 lg:pt-32">
-        <div className=""> {/* Scrubed so md doesn't float / 'unglue' TODO: add margin to md size*/}
+        <div>
           <h2 className="text-3xl font-bold tracking-tight text-zinc-100 sm:text-4xl">
             Projects
           </h2>
@@ -156,10 +147,9 @@ export default async function ProjectsPage() {
         </div>
       </div>
 
-      <br></br>
       {/* Contributions*/}
       <div className="px-6 pt-10 mx-auto space-y-8 max-w-7xl lg:px-8 md:space-y-12 md:pt-12 lg:pt-12">
-        <div className=""> {/* Scrubed so md doesn't float / 'unglue' TODO: add margin to md size*/}
+        <div>
           <h2 className="text-3xl font-bold tracking-tight text-zinc-100 sm:text-3xl">
             Contributions
           </h2>
