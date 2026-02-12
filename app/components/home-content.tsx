@@ -141,7 +141,16 @@ export function HomeContent() {
           <div className="absolute inset-0 bg-gradient-to-br from-zinc-800/20 via-transparent to-zinc-700/20 rounded-lg blur-xl" />
           <Card>
             {/* Card header */}
-            <div className="flex items-center gap-5 p-5 md:p-6 border-b border-zinc-800/50">
+            <motion.div
+              className="flex items-center gap-5 p-5 md:p-6 border-b border-zinc-800/50"
+              initial={{ opacity: 0, y: 10 }}
+              animate={nameSettled ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+              transition={{
+                duration: 0.5,
+                delay: 0.5,
+                ease: "easeOut",
+              }}
+            >
               <Image
                 src="/pfp.png"
                 alt="Evan Schoffstall"
@@ -161,7 +170,7 @@ export function HomeContent() {
                   <ArrowRight className="w-3 h-3" />
                 </Link>
               </div>
-            </div>
+            </motion.div>
 
             {/* Professional Summary */}
             <motion.div
@@ -231,14 +240,23 @@ export function HomeContent() {
             </motion.div>
 
             {/* Mobile CTA */}
-            <div className="p-4 border-t border-zinc-800/50 sm:hidden">
+            <motion.div
+              className="p-4 border-t border-zinc-800/50 sm:hidden"
+              initial={{ opacity: 0, y: 10 }}
+              animate={nameSettled ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+              transition={{
+                duration: 0.5,
+                delay: 1.2,
+                ease: "easeOut",
+              }}
+            >
               <Link
                 href="/projects"
                 className="flex items-center justify-center gap-1.5 rounded-md border border-zinc-800 bg-zinc-900 px-3 py-2 text-xs font-medium text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100 transition-all duration-200 w-full">
                 View projects
                 <ArrowRight className="w-3 h-3" />
               </Link>
-            </div>
+            </motion.div>
           </Card>
         </motion.div>
       </div>
