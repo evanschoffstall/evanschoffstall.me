@@ -44,6 +44,9 @@ export const Project = defineDocumentType(() => ({
 		},
 		contributor: {
 			type: "boolean",
+		},
+		legacy: {
+			type: "boolean",
 		}
 	},
 	computedFields,
