@@ -21,23 +21,23 @@ const socials = [
 const highlights = [
   {
     icon: <Terminal className="w-4 h-4" />,
-    title: "15+ Years Engineering",
-    description: "Ground floor to executive, enriched multi-industry experience across the full stack.",
+    title: "15+ Years",
+    description: "Ground floor to executive across government, enterprise, and startups.",
   },
   {
     icon: <Code2 className="w-4 h-4" />,
-    title: "Full-Stack Expertise",
-    description: "TypeScript, Python, Java, C#, PHP, SQL, Bash, PowerShell, and modern frameworks.",
-  },
-  {
-    icon: <Rss className="w-4 h-4" />,
-    title: "Founder of LibreRSS",
-    description: "Reviving the extant tradition of free cloud news aggregation.",
+    title: "Full Stack",
+    description: "Web, cloud, and systems. TypeScript to Rust, React to Kubernetes.",
   },
   {
     icon: <Users className="w-4 h-4" />,
-    title: "Service-Oriented",
-    description: "Extensive history serving users, employees, employers, clients, and customers alike.",
+    title: "Builder & Leader",
+    description: "From solo projects to team operations. Technical and business ownership.",
+  },
+  {
+    icon: <Rss className="w-4 h-4" />,
+    title: "Open Source",
+    description: "LibreRSS, resh, and contributions to OpenEmu & Wineskin.",
   },
 ];
 
@@ -117,7 +117,7 @@ export function HomeContent() {
               />
               <div>
                 <h2 className="text-sm font-medium text-zinc-100">Evan Schoffstall</h2>
-                <p className="text-xs text-zinc-500 mt-0.5">Full-Stack Engineer & Founder</p>
+                <p className="text-xs text-zinc-500 mt-0.5">Technologist, Engineer, and Business Officer</p>
               </div>
               <div className="ml-auto hidden sm:block">
                 <Link
@@ -128,6 +128,24 @@ export function HomeContent() {
                 </Link>
               </div>
             </div>
+
+            {/* Professional Summary */}
+            <motion.div
+              className="p-5 md:p-6 border-b border-zinc-800/50"
+              initial={{ opacity: 0, y: 10 }}
+              animate={nameSettled ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+              transition={{
+                duration: 0.5,
+                delay: 0.6,
+                ease: "easeOut",
+              }}
+            >
+              <p className="text-[13px] leading-relaxed text-zinc-400">
+                Technologist, engineer, and business officer with expertise spanning code to teams to revenue.
+                Currently contributing to state-level public procurement systems and procurement operations. Previously facilitated compliant data science
+                initiatives at a national utility and drove a local winery's technical operations from inception to multi-million dollar success.
+              </p>
+            </motion.div>
 
             {/* Highlights grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-zinc-800/50">
@@ -155,6 +173,46 @@ export function HomeContent() {
                 </motion.div>
               ))}
             </div>
+
+            {/* Skills & Technologies */}
+            <motion.div
+              className="p-5 md:p-6 border-t border-zinc-800/50"
+              initial={{ opacity: 0, y: 10 }}
+              animate={nameSettled ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+              transition={{
+                duration: 0.5,
+                delay: 1.1,
+                ease: "easeOut",
+              }}
+            >
+              <h3 className="text-sm font-medium text-zinc-300 mb-3">Core Stack</h3>
+              <div className="space-y-2.5">
+                <div className="flex items-start gap-3">
+                  <span className="text-xs text-zinc-500 min-w-[80px] pt-0.5">Primary</span>
+                  <p className="text-[13px] text-zinc-400 leading-relaxed">
+                    TypeScript, Python, Rust, C# • React, Next.js, Node.js, .NET
+                  </p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-xs text-zinc-500 min-w-[80px] pt-0.5">Infrastructure</span>
+                  <p className="text-[13px] text-zinc-400 leading-relaxed">
+                    Docker, Kubernetes • AWS, Azure • CI/CD automation
+                  </p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-xs text-zinc-500 min-w-[80px] pt-0.5">Data</span>
+                  <p className="text-[13px] text-zinc-400 leading-relaxed">
+                    PostgreSQL, Redis • SAP ERP • Data pipelines & analytics
+                  </p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-xs text-zinc-500 min-w-[80px] pt-0.5">Also</span>
+                  <p className="text-[13px] text-zinc-400 leading-relaxed">
+                    Java, Go, C++, Swift, PHP • MySQL, MariaDB • OpenShift, Vercel, Jenkins
+                  </p>
+                </div>
+              </div>
+            </motion.div>
 
             {/* Mobile CTA */}
             <div className="p-4 border-t border-zinc-800/50 sm:hidden">
