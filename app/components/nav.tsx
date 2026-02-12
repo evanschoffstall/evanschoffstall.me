@@ -1,21 +1,11 @@
 "use client";
+import { useIsIntersecting } from "@/app/hooks/use-is-intersecting";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 
 export const Navigation: React.FC = () => {
-	const ref = useRef<HTMLElement>(null);
-	const [isIntersecting, setIntersecting] = useState(true);
-
-	useEffect(() => {
-		if (!ref.current) return;
-		const observer = new IntersectionObserver(([entry]) =>
-			setIntersecting(entry.isIntersecting),
-		);
-
-		observer.observe(ref.current);
-		return () => observer.disconnect();
-	}, []);
+	const { ref, isIntersecting } = useIsIntersecting<HTMLElement>();
 
 	return (
 		<header ref={ref}>

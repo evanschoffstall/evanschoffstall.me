@@ -1,12 +1,9 @@
 "use client";
+import { cn } from "@/util/cn";
 import { useMDXComponent } from "next-contentlayer/hooks";
 import Image from "next/image";
 import Link from "next/link";
 import * as React from "react";
-
-function clsx(...args: Array<string | undefined | false | null>) {
-	return args.filter(Boolean).join(" ");
-}
 
 type HeadingProps = React.HTMLAttributes<HTMLHeadingElement>;
 type ParagraphProps = React.HTMLAttributes<HTMLParagraphElement>;
@@ -25,7 +22,7 @@ type AnchorProps = React.AnchorHTMLAttributes<HTMLAnchorElement>;
 const components: Record<string, React.ComponentType<any>> = {
 	h1: ({ className, ...props }: HeadingProps) => (
 		<h1
-			className={clsx(
+			className={cn(
 				"mt-2 scroll-m-20 text-4xl font-bold tracking-tight",
 				className,
 			)}
@@ -34,7 +31,7 @@ const components: Record<string, React.ComponentType<any>> = {
 	),
 	h2: ({ className, ...props }: HeadingProps) => (
 		<h2
-			className={clsx(
+			className={cn(
 				"mt-10 scroll-m-20 border-b border-b-zinc-800 pb-1 text-3xl font-semibold tracking-tight first:mt-0",
 				className,
 			)}
@@ -43,7 +40,7 @@ const components: Record<string, React.ComponentType<any>> = {
 	),
 	h3: ({ className, ...props }: HeadingProps) => (
 		<h3
-			className={clsx(
+			className={cn(
 				"mt-8 scroll-m-20 text-2xl font-semibold tracking-tight",
 				className,
 			)}
@@ -52,7 +49,7 @@ const components: Record<string, React.ComponentType<any>> = {
 	),
 	h4: ({ className, ...props }: HeadingProps) => (
 		<h4
-			className={clsx(
+			className={cn(
 				"mt-8 scroll-m-20 text-xl font-semibold tracking-tight",
 				className,
 			)}
@@ -61,7 +58,7 @@ const components: Record<string, React.ComponentType<any>> = {
 	),
 	h5: ({ className, ...props }: HeadingProps) => (
 		<h5
-			className={clsx(
+			className={cn(
 				"mt-8 scroll-m-20 text-lg font-semibold tracking-tight",
 				className,
 			)}
@@ -70,7 +67,7 @@ const components: Record<string, React.ComponentType<any>> = {
 	),
 	h6: ({ className, ...props }: HeadingProps) => (
 		<h6
-			className={clsx(
+			className={cn(
 				"mt-8 scroll-m-20 text-base font-semibold tracking-tight",
 				className,
 			)}
@@ -78,7 +75,7 @@ const components: Record<string, React.ComponentType<any>> = {
 		/>
 	),
 	a: ({ className, href, ...props }: AnchorProps) => {
-		const classes = clsx(
+		const classes = cn(
 			"font-medium text-zinc-900 underline underline-offset-4",
 			className,
 		);
@@ -106,22 +103,22 @@ const components: Record<string, React.ComponentType<any>> = {
 	},
 	p: ({ className, ...props }: ParagraphProps) => (
 		<p
-			className={clsx("leading-7 [&:not(:first-child)]:mt-6", className)}
+			className={cn("leading-7 [&:not(:first-child)]:mt-6", className)}
 			{...props}
 		/>
 	),
 	ul: ({ className, ...props }: ListProps) => (
-		<ul className={clsx("my-6 ml-6 list-disc", className)} {...props} />
+		<ul className={cn("my-6 ml-6 list-disc", className)} {...props} />
 	),
 	ol: ({ className, ...props }: ListProps) => (
-		<ol className={clsx("my-6 ml-6 list-decimal", className)} {...props} />
+		<ol className={cn("my-6 ml-6 list-decimal", className)} {...props} />
 	),
 	li: ({ className, ...props }: ListItemProps) => (
-		<li className={clsx("mt-2", className)} {...props} />
+		<li className={cn("mt-2", className)} {...props} />
 	),
 	blockquote: ({ className, ...props }: BlockquoteProps) => (
 		<blockquote
-			className={clsx(
+			className={cn(
 				"mt-6 border-l-2 border-zinc-300 pl-6 italic text-zinc-800 [&>*]:text-zinc-600",
 				className,
 			)}
@@ -135,7 +132,7 @@ const components: Record<string, React.ComponentType<any>> = {
 	}: React.ImgHTMLAttributes<HTMLImageElement>) => (
 		// eslint-disable-next-line @next/next/no-img-element
 		<img
-			className={clsx("rounded-md border border-zinc-200", className)}
+			className={cn("rounded-md border border-zinc-200", className)}
 			alt={alt}
 			{...props}
 		/>
@@ -145,12 +142,12 @@ const components: Record<string, React.ComponentType<any>> = {
 	),
 	table: ({ className, ...props }: TableProps) => (
 		<div className="w-full my-6 overflow-y-auto">
-			<table className={clsx("w-full", className)} {...props} />
+			<table className={cn("w-full", className)} {...props} />
 		</div>
 	),
 	tr: ({ className, ...props }: TrProps) => (
 		<tr
-			className={clsx(
+			className={cn(
 				"m-0 border-t border-zinc-300 p-0 even:bg-zinc-100",
 				className,
 			)}
@@ -159,7 +156,7 @@ const components: Record<string, React.ComponentType<any>> = {
 	),
 	th: ({ className, ...props }: ThProps) => (
 		<th
-			className={clsx(
+			className={cn(
 				"border border-zinc-200 px-4 py-2 text-left font-bold [&[align=center]]:text-center [&[align=right]]:text-right",
 				className,
 			)}
@@ -168,7 +165,7 @@ const components: Record<string, React.ComponentType<any>> = {
 	),
 	td: ({ className, ...props }: TdProps) => (
 		<td
-			className={clsx(
+			className={cn(
 				"border border-zinc-200 px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right",
 				className,
 			)}
@@ -177,7 +174,7 @@ const components: Record<string, React.ComponentType<any>> = {
 	),
 	pre: ({ className, ...props }: PreProps) => (
 		<pre
-			className={clsx(
+			className={cn(
 				"mt-6 mb-4 overflow-x-auto rounded-lg bg-zinc-900 py-4",
 				className,
 			)}
@@ -186,7 +183,7 @@ const components: Record<string, React.ComponentType<any>> = {
 	),
 	code: ({ className, ...props }: CodeProps) => (
 		<code
-			className={clsx(
+			className={cn(
 				"relative rounded border bg-zinc-300 bg-opacity-25 py-[0.2rem] px-[0.3rem] font-mono text-sm text-zinc-600",
 				className,
 			)}

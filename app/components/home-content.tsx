@@ -1,4 +1,6 @@
 "use client";
+import { Glow } from "@/app/components/glow";
+import { fadeIn, fadeInUp } from "@/util/motion";
 import { motion } from "framer-motion";
 import { ArrowRight, Code2, Github, Linkedin, Mail, Rss, Terminal, Twitter, Users } from "lucide-react";
 import Image from "next/image";
@@ -75,16 +77,6 @@ const socials = [
   { icon: <Mail className="w-4 h-4" />, href: "mailto:hello@evanschoffstall.me", label: "Email" },
 ];
 
-const fadeIn = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const } },
-};
-
-const fadeInUp = {
-  hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] as const } },
-};
-
 export function HomeContent() {
   const [nameSettled, setNameSettled] = useState(false);
 
@@ -139,7 +131,7 @@ export function HomeContent() {
           variants={fadeInUp}
         >
           {/* Subtle glow effect */}
-          <div className="absolute inset-0 bg-gradient-to-br from-zinc-800/20 via-transparent to-zinc-700/20 rounded-lg blur-xl" />
+          <Glow />
           <Card>
             {/* Card header */}
             <motion.div

@@ -1,8 +1,10 @@
 'use client';
 
+import { useIsIntersecting } from "@/app/hooks/use-is-intersecting";
+import { formatCompactNumber } from "@/lib/format";
 import { ArrowLeft, Eye, Github } from "lucide-react";
 import Link from "next/link";
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 
 type Props = {
   project: {
@@ -15,8 +17,7 @@ type Props = {
   views: number;
 };
 export const Header: React.FC<Props> = ({ project, views }) => {
-  const ref = useRef<HTMLElement>(null);
-  const [isIntersecting, setIntersecting] = useState(true);
+  const { ref, isIntersecting } = useIsIntersecting<HTMLElement>();
 
   const links: { label: string; href: string }[] = [];
   if (project.repository) {
@@ -31,16 +32,6 @@ export const Header: React.FC<Props> = ({ project, views }) => {
       href: project.url,
     });
   }
-  useEffect(() => {
-    if (!ref.current) return;
-    const observer = new IntersectionObserver(([entry]) =>
-      setIntersecting(entry.isIntersecting)
-    );
-
-    observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <header
       ref={ref}
@@ -66,9 +57,7 @@ export const Header: React.FC<Props> = ({ project, views }) => {
               className="duration-200 hover:font-medium flex items-center gap-1 text-zinc-300 hover:text-zinc-100"
             >
               <Eye className="w-5 h-5" />{" "}
-              {Intl.NumberFormat("en-US", { notation: "compact" }).format(
-                views
-              )}
+              {formatCompactNumber(views)}
             </span>
             <Link target="_blank" rel="noopener noreferrer" href="https://github.com/evanschoffstall">
               <Github

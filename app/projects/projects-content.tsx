@@ -1,12 +1,13 @@
 "use client";
 
+import { EASE_IN_OUT, fadeInUp } from "@/util/motion";
 import type { Project } from "contentlayer/generated";
 import { motion } from "framer-motion";
-import { ArrowRight, Eye } from "lucide-react";
-import Link from "next/link";
 import { useEffect } from "react";
 import { Card } from "../components/card";
+import { Glow } from "../components/glow";
 import { Article } from "./article";
+import { ProjectHeroCard } from "./project-hero-card";
 
 type Props = {
   featured: Project;
@@ -16,21 +17,6 @@ type Props = {
   sortedContributions: Project[];
   sortedLegacy: Project[];
   views: Record<string, number>;
-};
-
-const fadeIn = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const } },
-};
-
-const fadeInUp = {
-  hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] as const } },
-};
-
-const dividerSlide = {
-  hidden: { scaleX: 0, opacity: 0 },
-  visible: { scaleX: 1, opacity: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const } },
 };
 
 export function ProjectsContent({ featured, top2, top3, sorted, sortedContributions, sortedLegacy, views }: Props) {
@@ -63,7 +49,7 @@ export function ProjectsContent({ featured, top2, top3, sorted, sortedContributi
           style={{ transformOrigin: "left" }}
           initial={{ scaleX: 0, opacity: 0 }}
           animate={{ scaleX: 1, opacity: 1 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as const }}
+          transition={{ duration: 0.8, ease: EASE_IN_OUT }}
         />
       </motion.div>
 
@@ -81,90 +67,18 @@ export function ProjectsContent({ featured, top2, top3, sorted, sortedContributi
         }}
       >
         <motion.div className="relative" variants={fadeInUp}>
-          <div className="absolute inset-0 bg-gradient-to-br from-zinc-800/20 via-transparent to-zinc-700/20 rounded-lg blur-xl" />
-          <Card>
-            <Link href={`/projects/${featured.slug}`}>
-              <article className="relative flex flex-col justify-between h-full p-4 md:p-6">
-                <div>
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="inline-flex items-center rounded-md bg-zinc-800/50 px-2 py-0.5 text-[11px] font-medium text-zinc-500 ring-1 ring-inset ring-zinc-700/50 group-hover:text-zinc-400 group-hover:ring-zinc-600 transition-colors duration-300">
-                      {featured.date ? (
-                        <time dateTime={new Date(featured.date).toISOString()}>
-                          {Intl.DateTimeFormat(undefined, {
-                            dateStyle: "medium",
-                          }).format(new Date(featured.date))}
-                        </time>
-                      ) : (
-                        "SOON"
-                      )}
-                    </span>
-                    <span className="flex items-center gap-1.5 text-xs text-zinc-500 tabular-nums group-hover:text-zinc-400 transition-colors duration-300">
-                      <Eye className="w-3.5 h-3.5" />{" "}
-                      {Intl.NumberFormat("en-US", { notation: "compact" }).format(
-                        views[featured.slug] ?? 0
-                      )}
-                    </span>
-                  </div>
-
-                  <h2
-                    id="featured-post"
-                    className="mt-3 text-xl font-bold tracking-tight text-zinc-100 group-hover:text-white sm:text-2xl font-display"
-                  >
-                    {featured.title}
-                  </h2>
-                  <p className="mt-2 text-sm leading-relaxed text-zinc-400 group-hover:text-zinc-300 line-clamp-3 transition-colors duration-300">
-                    {featured.description}
-                  </p>
-                </div>
-                <div className="flex items-center gap-1 mt-4 text-xs font-medium text-zinc-500 group-hover:text-zinc-300 transition-colors duration-300">
-                  <span>Read more</span>
-                  <ArrowRight className="w-3.5 h-3.5 translate-x-0 group-hover:translate-x-1 transition-transform duration-300" />
-                </div>
-              </article>
-            </Link>
-          </Card>
+          <ProjectHeroCard
+            project={featured}
+            views={views[featured.slug] ?? 0}
+            headingId="featured-post"
+          />
         </motion.div>
         {[top2, top3].map((project) => (
           <motion.div key={project.slug} className="relative" variants={fadeInUp}>
-            <div className="absolute inset-0 bg-gradient-to-br from-zinc-800/20 via-transparent to-zinc-700/20 rounded-lg blur-xl" />
-            <Card>
-              <Link href={`/projects/${project.slug}`}>
-                <article className="relative flex flex-col justify-between h-full p-4 md:p-6">
-                  <div>
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="inline-flex items-center rounded-md bg-zinc-800/50 px-2 py-0.5 text-[11px] font-medium text-zinc-500 ring-1 ring-inset ring-zinc-700/50 group-hover:text-zinc-400 group-hover:ring-zinc-600 transition-colors duration-300">
-                        {project.date ? (
-                          <time dateTime={new Date(project.date).toISOString()}>
-                            {Intl.DateTimeFormat(undefined, {
-                              dateStyle: "medium",
-                            }).format(new Date(project.date))}
-                          </time>
-                        ) : (
-                          "SOON"
-                        )}
-                      </span>
-                      <span className="flex items-center gap-1.5 text-xs text-zinc-500 tabular-nums group-hover:text-zinc-400 transition-colors duration-300">
-                        <Eye className="w-3.5 h-3.5" />{" "}
-                        {Intl.NumberFormat("en-US", { notation: "compact" }).format(
-                          views[project.slug] ?? 0
-                        )}
-                      </span>
-                    </div>
-
-                    <h2 className="mt-3 text-xl font-bold tracking-tight text-zinc-100 group-hover:text-white sm:text-2xl font-display">
-                      {project.title}
-                    </h2>
-                    <p className="mt-2 text-sm leading-relaxed text-zinc-400 group-hover:text-zinc-300 line-clamp-3 transition-colors duration-300">
-                      {project.description}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-1 mt-4 text-xs font-medium text-zinc-500 group-hover:text-zinc-300 transition-colors duration-300">
-                    <span>Read more</span>
-                    <ArrowRight className="w-3.5 h-3.5 translate-x-0 group-hover:translate-x-1 transition-transform duration-300" />
-                  </div>
-                </article>
-              </Link>
-            </Card>
+            <ProjectHeroCard
+              project={project}
+              views={views[project.slug] ?? 0}
+            />
           </motion.div>
         ))}
       </motion.div>
@@ -181,7 +95,7 @@ export function ProjectsContent({ featured, top2, top3, sorted, sortedContributi
             style={{ transformOrigin: "left" }}
             initial={{ scaleX: 0, opacity: 0 }}
             animate={{ scaleX: 1, opacity: 1 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as const }}
+            transition={{ duration: 0.8, ease: EASE_IN_OUT }}
           />
           <motion.div
             className="space-y-2 mt-8"
@@ -195,7 +109,7 @@ export function ProjectsContent({ featured, top2, top3, sorted, sortedContributi
           >
             {sorted.map((project) => (
               <motion.div key={project.slug} className="relative" variants={fadeInUp}>
-                <div className="absolute inset-0 bg-gradient-to-br from-zinc-800/20 via-transparent to-zinc-700/20 rounded-lg blur-xl" />
+                <Glow />
                 <Card>
                   <Article project={project} views={views[project.slug] ?? 0} />
                 </Card>
@@ -221,7 +135,7 @@ export function ProjectsContent({ featured, top2, top3, sorted, sortedContributi
               style={{ transformOrigin: "left" }}
               initial={{ scaleX: 0, opacity: 0 }}
               animate={{ scaleX: 1, opacity: 1 }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as const }}
+              transition={{ duration: 0.8, ease: EASE_IN_OUT }}
             />
           </div>
           <motion.div
@@ -236,7 +150,7 @@ export function ProjectsContent({ featured, top2, top3, sorted, sortedContributi
           >
             {sortedContributions.map((project) => (
               <motion.div key={project.slug} className="relative" variants={fadeInUp}>
-                <div className="absolute inset-0 bg-gradient-to-br from-zinc-800/20 via-transparent to-zinc-700/20 rounded-lg blur-xl" />
+                <Glow />
                 <Card>
                   <Article project={project} views={views[project.slug] ?? 0} />
                 </Card>
@@ -262,7 +176,7 @@ export function ProjectsContent({ featured, top2, top3, sorted, sortedContributi
               style={{ transformOrigin: "left" }}
               initial={{ scaleX: 0, opacity: 0 }}
               animate={{ scaleX: 1, opacity: 1 }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as const }}
+              transition={{ duration: 0.8, ease: EASE_IN_OUT }}
             />
           </div>
           <motion.div
@@ -277,7 +191,7 @@ export function ProjectsContent({ featured, top2, top3, sorted, sortedContributi
           >
             {sortedLegacy.map((project) => (
               <motion.div key={project.slug} className="relative" variants={fadeInUp}>
-                <div className="absolute inset-0 bg-gradient-to-br from-zinc-800/20 via-transparent to-zinc-700/20 rounded-lg blur-xl" />
+                <Glow />
                 <Card>
                   <Article project={project} views={views[project.slug] ?? 0} />
                 </Card>

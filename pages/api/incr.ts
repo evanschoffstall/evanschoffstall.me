@@ -1,3 +1,4 @@
+import { projectPageviewsKey } from "@/lib/pageviews";
 import { redis } from "@/lib/redis";
 import { NextRequest, NextResponse } from "next/server";
 export const config = {
@@ -53,7 +54,7 @@ export default async function incr(req: NextRequest): Promise<NextResponse> {
   }
 
   try {
-    await redis.incr(["pageviews", "projects", slug].join(":"));
+    await redis.incr(projectPageviewsKey(slug));
     return new NextResponse(null, { status: 202 });
   } catch (error) {
     console.error("Failed to increment view count:", error);

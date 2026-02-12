@@ -1,5 +1,6 @@
 import type { Project } from "@/.contentlayer/generated";
-import { Eye, ArrowRight } from "lucide-react";
+import { formatCompactNumber, formatMediumDate } from "@/lib/format";
+import { ArrowRight, Eye } from "lucide-react";
 import Link from "next/link";
 
 type Props = {
@@ -19,9 +20,7 @@ export const Article: React.FC<Props> = ({ project, views }) => {
             <span className="shrink-0 inline-flex items-center rounded-md bg-zinc-800/50 px-2 py-0.5 text-[11px] font-medium text-zinc-500 ring-1 ring-inset ring-zinc-700/50 group-hover:text-zinc-400 group-hover:ring-zinc-600 transition-colors duration-300">
               {project.date ? (
                 <time dateTime={new Date(project.date).toISOString()}>
-                  {Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(
-                    new Date(project.date)
-                  )}
+                  {formatMediumDate(project.date)}
                 </time>
               ) : (
                 "SOON"
@@ -36,7 +35,7 @@ export const Article: React.FC<Props> = ({ project, views }) => {
         <div className="shrink-0 flex items-center gap-4 text-zinc-500">
           <span className="hidden sm:inline-flex items-center gap-1.5 text-xs tabular-nums group-hover:text-zinc-400 transition-colors duration-300">
             <Eye className="w-3.5 h-3.5" />
-            {Intl.NumberFormat("en-US", { notation: "compact" }).format(views)}
+            {formatCompactNumber(views)}
           </span>
           <ArrowRight className="w-4 h-4 translate-x-0 group-hover:translate-x-1 group-hover:text-zinc-300 transition-all duration-300" />
         </div>
