@@ -4,6 +4,7 @@ import { ArrowRight, Eye } from "lucide-react";
 import Link from "next/link";
 import { Card } from "../components/card";
 import { Navigation } from "../components/nav";
+import Particles from "../components/particles";
 import { Article } from "./article";
 
 export const revalidate = 60;
@@ -61,7 +62,9 @@ export default async function ProjectsPage() {
     );
 
   return (
-    <div className="relative pb-16 pt-20">
+    <div className="relative w-full min-h-screen pb-16 pt-20">
+      <div className="fixed inset-0 -z-20 bg-gradient-to-tl from-black via-zinc-600/20 to-black" />
+      <Particles className="fixed inset-0 -z-10 animate-fade-in" quantity={200} />
       <Navigation />
       <div className="px-6 mx-auto space-y-8 max-w-7xl lg:px-8">
         <div>
