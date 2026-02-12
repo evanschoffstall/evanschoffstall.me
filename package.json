@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "NODE_ENV=development contentlayer build && next dev",
-    "build": "NODE_ENV=production contentlayer build && next build",
+    "dev": "node -e \"require('fs').rmSync('.next/dev/types',{recursive:true,force:true})\" && NODE_ENV=development contentlayer build && next dev",
+    "build": "node -e \"require('fs').rmSync('.next/dev/types',{recursive:true,force:true})\" && NODE_ENV=production contentlayer build && next build",
+    "typecheck": "node -e \"require('fs').rmSync('.next/dev/types',{recursive:true,force:true})\" && tsc --noEmit",
     "start": "next start"
   },
   "dependencies": {

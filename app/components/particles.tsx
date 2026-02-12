@@ -95,7 +95,8 @@ export default function Particles({
 			canvasRef.current.height = canvasSize.current.h * dpr;
 			canvasRef.current.style.width = `${canvasSize.current.w}px`;
 			canvasRef.current.style.height = `${canvasSize.current.h}px`;
-			context.current.scale(dpr, dpr);
+			// Reset transform (canvas width/height resets context state, but be explicit)
+			context.current.setTransform(dpr, 0, 0, dpr, 0, 0);
 		}
 	};
 
@@ -174,7 +175,9 @@ export default function Particles({
 
 	const animate = () => {
 		clearContext();
-		circles.current.forEach((circle, i) => {
+		// Iterate backwards because we splice out-of-bounds particles.
+		for (let i = circles.current.length - 1; i >= 0; i--) {
+			const circle = circles.current[i];
 			// Handle the alpha value
 			const edge = [
 				circle.x + circle.translateX - circle.size, // distance from left edge
@@ -228,7 +231,7 @@ export default function Particles({
 					true,
 				);
 			}
-		});
+		}
 	};
 
 	return (

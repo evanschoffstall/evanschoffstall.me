@@ -1,10 +1,9 @@
-'use client';
+"use client";
 
 import { useIsIntersecting } from "@/app/hooks/use-is-intersecting";
 import { formatCompactNumber } from "@/lib/format";
 import { ArrowLeft, Eye, Github } from "lucide-react";
 import Link from "next/link";
-import React from "react";
 
 type Props = {
   project: {
@@ -16,14 +15,24 @@ type Props = {
 
   views: number;
 };
-export const Header: React.FC<Props> = ({ project, views }) => {
+
+function normalizeRepoHref(repository: string): string {
+  const trimmed = repository.trim().replace(/\/+$/g, "");
+  if (!trimmed) return "";
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  if (/^github\.com\//i.test(trimmed)) return `https://${trimmed}`;
+  return `https://github.com/${trimmed}`;
+}
+
+export function Header({ project, views }: Props) {
   const { ref, isIntersecting } = useIsIntersecting<HTMLElement>();
 
   const links: { label: string; href: string }[] = [];
+  const repoHref = project.repository ? normalizeRepoHref(project.repository) : "";
   if (project.repository) {
     links.push({
       label: "GitHub",
-      href: `https://github.com/${project.repository}`,
+      href: repoHref,
     });
   }
   if (project.url) {
@@ -59,7 +68,12 @@ export const Header: React.FC<Props> = ({ project, views }) => {
               <Eye className="w-5 h-5" />{" "}
               {formatCompactNumber(views)}
             </span>
-            <Link target="_blank" rel="noopener noreferrer" href="https://github.com/evanschoffstall">
+            <Link
+              target="_blank"
+              rel="noopener noreferrer"
+              href={repoHref || "https://github.com/evanschoffstall"}
+              aria-label={repoHref ? "View repository on GitHub" : "View profile on GitHub"}
+            >
               <Github
                 className="w-6 h-6 duration-200 hover:font-medium text-zinc-300 hover:text-zinc-100"
               />
@@ -91,4 +105,4 @@ export const Header: React.FC<Props> = ({ project, views }) => {
       </div>
     </header>
   );
-};
+}

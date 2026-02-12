@@ -19,7 +19,7 @@ type ThProps = React.ThHTMLAttributes<HTMLTableCellElement>;
 type TdProps = React.TdHTMLAttributes<HTMLTableCellElement>;
 type AnchorProps = React.AnchorHTMLAttributes<HTMLAnchorElement>;
 
-const components: Record<string, React.ComponentType<any>> = {
+const components: Record<string, React.ElementType> = {
 	h1: ({ className, ...props }: HeadingProps) => (
 		<h1
 			className={cn(

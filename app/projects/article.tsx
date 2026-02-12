@@ -8,7 +8,10 @@ type Props = {
   views: number;
 };
 
-export const Article: React.FC<Props> = ({ project, views }) => {
+export function Article({ project, views }: Props) {
+  const dateObj = project.date ? new Date(project.date) : null;
+  const dateTime = dateObj && !Number.isNaN(dateObj.getTime()) ? dateObj.toISOString() : null;
+
   return (
     <Link href={`/projects/${project.slug}`}>
       <article className="flex items-center justify-between gap-4 p-4 md:px-6 md:py-5 h-full">
@@ -18,10 +21,8 @@ export const Article: React.FC<Props> = ({ project, views }) => {
               {project.title}
             </h2>
             <span className="shrink-0 inline-flex items-center rounded-md bg-zinc-800/50 px-2 py-0.5 text-[11px] font-medium text-zinc-500 ring-1 ring-inset ring-zinc-700/50 group-hover:text-zinc-400 group-hover:ring-zinc-600 transition-colors duration-300">
-              {project.date ? (
-                <time dateTime={new Date(project.date).toISOString()}>
-                  {formatMediumDate(project.date)}
-                </time>
+              {project.date && dateTime ? (
+                <time dateTime={dateTime}>{formatMediumDate(project.date)}</time>
               ) : (
                 "SOON"
               )}
@@ -42,4 +43,4 @@ export const Article: React.FC<Props> = ({ project, views }) => {
       </article>
     </Link>
   );
-};
+}

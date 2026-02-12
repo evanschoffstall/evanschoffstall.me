@@ -12,6 +12,9 @@ type Props = {
 };
 
 export function ProjectHeroCard({ project, views, headingId }: Props) {
+  const dateObj = project.date ? new Date(project.date) : null;
+  const dateTime = dateObj && !Number.isNaN(dateObj.getTime()) ? dateObj.toISOString() : null;
+
   return (
     <>
       <Glow />
@@ -21,10 +24,8 @@ export function ProjectHeroCard({ project, views, headingId }: Props) {
             <div>
               <div className="flex items-center justify-between gap-2">
                 <span className="inline-flex items-center rounded-md bg-zinc-800/50 px-2 py-0.5 text-[11px] font-medium text-zinc-500 ring-1 ring-inset ring-zinc-700/50 group-hover:text-zinc-400 group-hover:ring-zinc-600 transition-colors duration-300">
-                  {project.date ? (
-                    <time dateTime={new Date(project.date).toISOString()}>
-                      {formatMediumDate(project.date)}
-                    </time>
+                  {project.date && dateTime ? (
+                    <time dateTime={dateTime}>{formatMediumDate(project.date)}</time>
                   ) : (
                     "SOON"
                   )}
