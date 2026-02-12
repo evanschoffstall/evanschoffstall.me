@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useRef, useEffect, useState } from "react";
-import { useMousePosition } from "@/util/mouse";
+import { useMousePosition } from "@/app/hooks/use-mouse-position";
+import { useEffect, useRef } from "react";
 
 interface ParticlesProps {
 	className?: string;
@@ -36,7 +36,7 @@ export default function Particles({
 			animate();
 			animationId = requestAnimationFrame(animateLoop);
 		});
-		
+
 		const handleResize = () => initCanvas();
 		window.addEventListener("resize", handleResize);
 

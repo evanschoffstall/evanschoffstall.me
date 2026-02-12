@@ -2,7 +2,8 @@
 
 import { useEffect } from "react";
 
-export const ReportView: React.FC<{ slug: string }> = ({ slug }) => {
+
+export function ReportView({ slug }: { slug: string }) {
 	useEffect(() => {
 		void fetch("/api/incr", {
 			method: "POST",
@@ -14,4 +15,4 @@ export const ReportView: React.FC<{ slug: string }> = ({ slug }) => {
 	}, [slug]);
 
 	return null;
-};
+}

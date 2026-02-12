@@ -1,6 +1,6 @@
 "use client";
 
-import { EASE_IN_OUT, fadeInUp } from "@/util/motion";
+import { EASE_IN_OUT, fadeInUp } from "@/lib/motion";
 import type { Project } from "contentlayer/generated";
 import { motion } from "framer-motion";
 import { useEffect } from "react";

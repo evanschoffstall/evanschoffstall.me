@@ -1,5 +1,5 @@
 "use client";
-import { cn } from "@/util/cn";
+import { cn } from "@/lib/cn";
 import { useMDXComponent } from "next-contentlayer/hooks";
 import Image from "next/image";
 import Link from "next/link";

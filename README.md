@@ -46,7 +46,7 @@ app/              # Next.js App Router
 content/
   projects/       # MDX project files
 lib/              # Utilities and Redis client
-pages/api/        # API routes
+app/api/          # API routes (Route Handlers)
 ```
 
 ## ➕ Adding Projects

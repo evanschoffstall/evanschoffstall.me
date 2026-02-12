@@ -1,6 +1,6 @@
 "use client";
 import { Glow } from "@/app/components/glow";
-import { fadeIn, fadeInUp } from "@/util/motion";
+import { fadeIn, fadeInUp } from "@/lib/motion";
 import { motion } from "framer-motion";
 import { ArrowRight, Code2, Github, Linkedin, Mail, Rss, Terminal, Twitter, Users } from "lucide-react";
 import Image from "next/image";

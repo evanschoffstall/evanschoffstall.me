@@ -2,9 +2,9 @@
 import { useIsIntersecting } from "@/app/hooks/use-is-intersecting";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import React from "react";
 
-export const Navigation: React.FC = () => {
+
+export function Navigation() {
 	const { ref, isIntersecting } = useIsIntersecting<HTMLElement>();
 
 	return (
@@ -26,4 +26,4 @@ export const Navigation: React.FC = () => {
 			</div>
 		</header>
 	);
-};
+}
