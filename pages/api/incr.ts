@@ -15,7 +15,10 @@ export default async function incr(req: NextRequest): Promise<NextResponse> {
 
   const body = await req.json();
   const slug =
-    body && typeof body === "object" && "slug" in body && typeof body.slug === "string"
+    body &&
+    typeof body === "object" &&
+    "slug" in body &&
+    typeof body.slug === "string"
       ? body.slug.trim()
       : "";
 
@@ -27,7 +30,8 @@ export default async function incr(req: NextRequest): Promise<NextResponse> {
   }
 
   const forwardedFor = req.headers.get("x-forwarded-for");
-  const ip = forwardedFor?.split(",")[0]?.trim() || req.headers.get("x-real-ip") || null;
+  const ip =
+    forwardedFor?.split(",")[0]?.trim() || req.headers.get("x-real-ip") || null;
   if (ip) {
     // Hash the IP in order to not store it directly in your db.
     const buf = await crypto.subtle.digest(

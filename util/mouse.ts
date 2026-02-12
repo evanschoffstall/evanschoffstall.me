@@ -10,11 +10,11 @@ export function useMousePosition(): MousePosition {
     x: 0,
     y: 0,
   });
-  const rafRef = useRef<number>();
+  const rafRef = useRef<number | null>(null);
 
   useEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
-      if (rafRef.current) {
+      if (rafRef.current !== null) {
         cancelAnimationFrame(rafRef.current);
       }
       rafRef.current = requestAnimationFrame(() => {
@@ -26,7 +26,7 @@ export function useMousePosition(): MousePosition {
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
-      if (rafRef.current) {
+      if (rafRef.current !== null) {
         cancelAnimationFrame(rafRef.current);
       }
     };
