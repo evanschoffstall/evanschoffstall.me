@@ -67,7 +67,9 @@ export default function RootLayout({
         className={`bg-black ${process.env.NODE_ENV === "development" ? "debug-screens" : undefined
           }`}
       >
-        {children}
+        <div className="fixed inset-0 bg-gradient-to-tr from-zinc-900/20 via-black to-zinc-800/20 pointer-events-none" />
+        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-zinc-800/5 via-transparent to-transparent pointer-events-none" />
+        <div className="relative">{children}</div>
       </body>
     </html>
   );
