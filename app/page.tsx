@@ -40,7 +40,7 @@ const highlights = [
 
 export default function Home() {
   return (
-    <div className="relative w-screen min-h-screen overflow-hidden bg-gradient-to-tl from-black via-zinc-600/20 to-black">
+    <div className="relative w-full min-h-screen overflow-hidden bg-gradient-to-tl from-black via-zinc-600/20 to-black">
       <Particles className="absolute inset-0 -z-10 animate-fade-in" quantity={200} />
 
       {/* Nav */}
