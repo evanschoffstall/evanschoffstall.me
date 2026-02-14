@@ -24,21 +24,29 @@ function normalizeRepoHref(repository: string): string {
   return `https://github.com/${trimmed}`;
 }
 
+function normalizeExternalHref(url: string): string {
+  const trimmed = url.trim();
+  if (!trimmed) return "";
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  return `https://${trimmed}`;
+}
+
 export function Header({ project, views }: Props) {
   const { ref, isIntersecting } = useIsIntersecting<HTMLElement>();
 
   const links: { label: string; href: string }[] = [];
   const repoHref = project.repository ? normalizeRepoHref(project.repository) : "";
+  const websiteHref = project.url ? normalizeExternalHref(project.url) : "";
   if (repoHref) {
     links.push({
       label: "GitHub",
       href: repoHref,
     });
   }
-  if (project.url?.trim()) {
+  if (websiteHref) {
     links.push({
       label: "Website",
-      href: project.url.trim(),
+      href: websiteHref,
     });
   }
   return (
