@@ -27,6 +27,7 @@
     ".vscode": true,
     ".clautana": true,
     "tsconfig.tsbuildinfo": true,
-    ".next": true
+    ".next": true,
+    "contentlayer.generated.d.ts": true
   }
 }
