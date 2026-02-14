@@ -26,7 +26,7 @@ export default async function PostPage({ params }: Props) {
   const { slug } = await params;
   const project = allProjects.find((project) => project.slug === slug);
 
-  if (!project) {
+  if (!project || !project.published) {
     notFound();
   }
 
