@@ -25,6 +25,8 @@
     "tsconfig.json": true,
     ".clautana/messages": true,
     ".vscode": true,
-    ".clautana": true
+    ".clautana": true,
+    "tsconfig.tsbuildinfo": true,
+    ".next": true
   }
 }
