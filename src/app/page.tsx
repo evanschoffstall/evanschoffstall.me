@@ -8,17 +8,17 @@ export const revalidate = 60;
 
 export default async function Home() {
   const views = await getProjectViews(allProjects.map((project) => project.slug));
-  const { featured, top2, top3 } = pickFeaturedProjects(allProjects);
+  const featuredSelection = pickFeaturedProjects(allProjects);
 
-  const grouped = featured && top2 && top3
-    ? groupAndSortProjects(allProjects, [featured.slug, top2.slug, top3.slug])
+  const grouped = featuredSelection
+    ? groupAndSortProjects(allProjects, [featuredSelection.featured.slug, featuredSelection.top2.slug, featuredSelection.top3.slug])
     : null;
 
-  const projectData = featured && top2 && top3 && grouped
+  const projectData = featuredSelection && grouped
     ? {
-      featured,
-      top2,
-      top3,
+      featured: featuredSelection.featured,
+      top2: featuredSelection.top2,
+      top3: featuredSelection.top3,
       sorted: grouped.sorted,
       sortedContributions: grouped.sortedContributions,
       sortedLegacy: grouped.sortedLegacy,

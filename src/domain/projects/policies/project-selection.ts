@@ -14,13 +14,37 @@ function dateToTime(date: string | null | undefined): number {
 
 export function pickFeaturedProjects(projects: Project[]) {
   const published = projects.filter((p) => p.published);
+  if (published.length < 3) {
+    return null;
+  }
 
-  const featured = published.find(
-    (p) => p.slug === FEATURED_PROJECT_SLUGS.featured,
+  const preferredOrder = [
+    FEATURED_PROJECT_SLUGS.featured,
+    FEATURED_PROJECT_SLUGS.top2,
+    FEATURED_PROJECT_SLUGS.top3,
+  ];
+
+  const preferred = preferredOrder
+    .map((slug) => published.find((p) => p.slug === slug))
+    .filter((project): project is Project => Boolean(project));
+
+  const fallback = [...published].sort(
+    (a, b) => dateToTime(b.date) - dateToTime(a.date),
   );
-  const top2 = published.find((p) => p.slug === FEATURED_PROJECT_SLUGS.top2);
-  const top3 = published.find((p) => p.slug === FEATURED_PROJECT_SLUGS.top3);
 
+  const selected = [...preferred];
+  for (const project of fallback) {
+    if (selected.length >= 3) break;
+    if (!selected.some((current) => current.slug === project.slug)) {
+      selected.push(project);
+    }
+  }
+
+  if (selected.length < 3) {
+    return null;
+  }
+
+  const [featured, top2, top3] = selected;
   return { featured, top2, top3 };
 }
 
