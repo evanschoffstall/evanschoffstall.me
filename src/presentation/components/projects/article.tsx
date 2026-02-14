@@ -1,4 +1,4 @@
-import { formatCompactNumber, formatMediumDate } from "@/lib/format";
+import { formatCompactNumber, formatMediumDate } from "@/shared/lib/format";
 import type { Project } from "contentlayer/generated";
 import { ArrowRight, Eye } from "lucide-react";
 import Link from "next/link";

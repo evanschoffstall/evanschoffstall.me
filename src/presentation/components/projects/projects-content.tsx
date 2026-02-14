@@ -1,10 +1,10 @@
 "use client";
 
-import { EASE_IN_OUT, fadeInUp } from "@/lib/motion";
+import { EASE_IN_OUT, fadeInUp } from "@/shared/lib/motion";
 import type { Project } from "contentlayer/generated";
 import { motion } from "framer-motion";
-import { Card } from "../components/card";
-import { Glow } from "../components/glow";
+import { Card } from "../common/card";
+import { Glow } from "../common/glow";
 import { Article } from "./article";
 import { ProjectHeroCard } from "./project-hero-card";
 
