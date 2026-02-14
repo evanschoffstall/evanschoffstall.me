@@ -1,7 +1,7 @@
 "use client";
 
-import { useIsIntersecting } from "@/app/hooks/use-is-intersecting";
-import { formatCompactNumber } from "@/lib/format";
+import { useIsIntersecting } from "@/presentation/hooks/use-is-intersecting";
+import { formatCompactNumber } from "@/shared/lib/format";
 import { ArrowLeft, Eye, Github } from "lucide-react";
 import Link from "next/link";
 

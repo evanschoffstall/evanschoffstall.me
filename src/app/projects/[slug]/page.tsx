@@ -1,5 +1,5 @@
-import { Mdx } from "@/app/components/mdx";
-import { getProjectView } from "@/lib/pageviews";
+import { getProjectView } from "@/application/services/pageviews";
+import { Mdx } from "@/presentation/components/common/mdx";
 import { allProjects } from "contentlayer/generated";
 import { notFound } from "next/navigation";
 import { Header } from "./header";
