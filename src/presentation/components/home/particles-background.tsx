@@ -1,4 +1,4 @@
-import Particles from "./particles";
+import Particles from "../common/particles";
 
 type Props = {
   quantity?: number;

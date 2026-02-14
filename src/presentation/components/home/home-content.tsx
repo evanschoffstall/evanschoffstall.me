@@ -1,12 +1,12 @@
 "use client";
-import { Glow } from "@/app/components/glow";
-import { fadeIn, fadeInUp } from "@/lib/motion";
+import { fadeIn, fadeInUp } from "@/shared/lib/motion";
 import { motion } from "framer-motion";
 import { ArrowRight, Code2, Github, Linkedin, Mail, RefreshCw, Rss, Terminal, Twitter, Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useState } from "react";
-import { Card } from "./card";
+import { Card } from "../common/card";
+import { Glow } from "../common/glow";
 import { HeroName } from "./hero-name";
 
 type Props = {

@@ -3,9 +3,9 @@
 import type { Project } from "contentlayer/generated";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
+import { Navigation } from "../common/nav";
 import { ProjectsContent } from "../projects/projects-content";
 import { HomeContent } from "./home-content";
-import { Navigation } from "./nav";
 
 type ProjectData = {
   featured: Project;
