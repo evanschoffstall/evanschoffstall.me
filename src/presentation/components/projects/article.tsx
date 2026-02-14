@@ -1,4 +1,4 @@
-import { formatCompactNumber, formatMediumDate } from "@/shared/lib/format";
+import { formatCompactNumber, formatDateTime, formatMediumDate } from "@/shared/lib/format";
 import type { Project } from "contentlayer/generated";
 import { ArrowRight, Eye } from "lucide-react";
 import Link from "next/link";
@@ -9,8 +9,7 @@ type Props = {
 };
 
 export function Article({ project, views }: Props) {
-  const dateObj = project.date ? new Date(project.date) : null;
-  const dateTime = dateObj && !Number.isNaN(dateObj.getTime()) ? dateObj.toISOString() : null;
+  const dateTime = project.date ? formatDateTime(project.date) : "";
 
   return (
     <Link href={`/projects/${project.slug}`}>

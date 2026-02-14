@@ -13,6 +13,13 @@ export function formatMediumDate(date: string | Date): string {
   return DEFAULT_DATE_FORMATTER.format(dateObj);
 }
 
+export function formatDateTime(date: string | Date): string {
+  const dateObj = typeof date === "string" ? new Date(date) : date;
+  const time = dateObj.getTime();
+  if (Number.isNaN(time)) return "";
+  return dateObj.toISOString();
+}
+
 export function formatCompactNumber(value: number): string {
   return DEFAULT_COMPACT_NUMBER.format(value);
 }
