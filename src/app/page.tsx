@@ -1,8 +1,8 @@
-import { getProjectViews } from "@/lib/pageviews";
+import { getProjectViews } from "@/application/services/pageviews";
+import { groupAndSortProjects, pickFeaturedProjects } from "@/domain/projects/policies/project-selection";
+import { HomeSections } from "@/presentation/components/home/home-sections";
+import { ParticlesBackground } from "@/presentation/components/home/particles-background";
 import { allProjects } from "contentlayer/generated";
-import { HomeSections } from "./components/home-sections";
-import { ParticlesBackground } from "./components/particles-background";
-import { groupAndSortProjects, pickFeaturedProjects } from "./projects/project-utils";
 
 export const revalidate = 60;
 
