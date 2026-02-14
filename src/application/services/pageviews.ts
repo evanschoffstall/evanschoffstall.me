@@ -17,7 +17,12 @@ function toSafeViewCount(value: unknown): number {
 
 export async function getProjectView(slug: string): Promise<number> {
   if (!redis) return 0;
-  return toSafeViewCount(await redis.get(projectPageviewsKey(slug)));
+  try {
+    return toSafeViewCount(await redis.get(projectPageviewsKey(slug)));
+  } catch (error) {
+    console.error("Failed to fetch project view count:", error);
+    return 0;
+  }
 }
 
 export async function getProjectViews(
@@ -25,13 +30,18 @@ export async function getProjectViews(
 ): Promise<Record<string, number>> {
   if (!redis || slugs.length === 0) return {};
 
-  const values = await redis.mget<unknown[]>(
-    ...slugs.map((slug) => projectPageviewsKey(slug)),
-  );
+  try {
+    const values = await redis.mget<unknown[]>(
+      ...slugs.map((slug) => projectPageviewsKey(slug)),
+    );
 
-  const views: Record<string, number> = {};
-  for (let i = 0; i < slugs.length; i++) {
-    views[slugs[i]] = toSafeViewCount(values[i]);
+    const views: Record<string, number> = {};
+    for (let i = 0; i < slugs.length; i++) {
+      views[slugs[i]] = toSafeViewCount(values[i]);
+    }
+    return views;
+  } catch (error) {
+    console.error("Failed to fetch project view counts:", error);
+    return {};
   }
-  return views;
 }
