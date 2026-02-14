@@ -1,6 +1,6 @@
 "use client";
 
-import { useMousePosition } from "@/app/hooks/use-mouse-position";
+import { useMousePosition } from "@/presentation/hooks/use-mouse-position";
 import { useEffect, useRef } from "react";
 
 interface ParticlesProps {

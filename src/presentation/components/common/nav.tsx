@@ -1,5 +1,5 @@
 "use client";
-import { useIsIntersecting } from "@/app/hooks/use-is-intersecting";
+import { useIsIntersecting } from "@/presentation/hooks/use-is-intersecting";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 

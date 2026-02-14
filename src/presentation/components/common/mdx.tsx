@@ -1,5 +1,5 @@
 "use client";
-import { cn } from "@/lib/cn";
+import { cn } from "@/shared/lib/cn";
 import Image from "next/image";
 import Link from "next/link";
 import * as React from "react";
