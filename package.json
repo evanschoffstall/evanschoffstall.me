@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "node -e \"require('fs').rmSync('.next/dev/types',{recursive:true,force:true})\" && NODE_ENV=development contentlayer build && next dev",
     "build": "node -e \"require('fs').rmSync('.next/dev/types',{recursive:true,force:true})\" && NODE_ENV=production contentlayer build && next build",
-    "typecheck": "node -e \"require('fs').rmSync('.next/dev/types',{recursive:true,force:true})\" && tsc --noEmit",
+    "typecheck": "node -e \"require('fs').rmSync('.next/dev/types',{recursive:true,force:true})\" && node -e \"const fs=require('fs');const {spawnSync}=require('child_process');const result=spawnSync('contentlayer build',{stdio:'inherit',shell:true,env:{...process.env,NODE_ENV:'production'}});if(result.status!==0&&!fs.existsSync('.contentlayer/generated'))process.exit(result.status??1);\" && tsc --noEmit",
     "start": "next start"
   },
   "dependencies": {
