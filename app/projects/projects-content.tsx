@@ -3,7 +3,6 @@
 import { EASE_IN_OUT, fadeInUp } from "@/lib/motion";
 import type { Project } from "contentlayer/generated";
 import { motion } from "framer-motion";
-import { useEffect } from "react";
 import { Card } from "../components/card";
 import { Glow } from "../components/glow";
 import { Article } from "./article";
@@ -20,10 +19,6 @@ type Props = {
 };
 
 export function ProjectsContent({ featured, top2, top3, sorted, sortedContributions, sortedLegacy, views }: Props) {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
   return (
     <div className="px-6 mx-auto space-y-8 max-w-7xl lg:px-8">
       <motion.div

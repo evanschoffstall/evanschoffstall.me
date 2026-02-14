@@ -3,8 +3,12 @@ import { useIsIntersecting } from "@/app/hooks/use-is-intersecting";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
+type Props = {
+	href?: string;
+	onBack?: () => void;
+};
 
-export function Navigation() {
+export function Navigation({ href = "/", onBack }: Props) {
 	const { ref, isIntersecting } = useIsIntersecting<HTMLElement>();
 
 	return (
@@ -16,12 +20,22 @@ export function Navigation() {
 					}`}
 			>
 				<div className="flex flex-row items-center justify-between p-4">
-
-					<Link
-						href="/"
-						className="duration-200 text-zinc-300 hover:text-zinc-100">
-						<ArrowLeft className="w-6 h-6 " />
-					</Link>
+					{onBack ? (
+						<button
+							type="button"
+							onClick={onBack}
+							className="duration-200 text-zinc-300 hover:text-zinc-100"
+							aria-label="Back"
+						>
+							<ArrowLeft className="w-6 h-6 " />
+						</button>
+					) : (
+						<Link
+							href={href}
+							className="duration-200 text-zinc-300 hover:text-zinc-100">
+							<ArrowLeft className="w-6 h-6 " />
+						</Link>
+					)}
 				</div>
 			</div>
 		</header>

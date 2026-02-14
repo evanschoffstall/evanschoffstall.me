@@ -2,12 +2,16 @@
 import { Glow } from "@/app/components/glow";
 import { fadeIn, fadeInUp } from "@/lib/motion";
 import { motion } from "framer-motion";
-import { ArrowRight, Code2, Github, Linkedin, Mail, Rss, Terminal, Twitter, Users } from "lucide-react";
+import { ArrowRight, Code2, Github, Linkedin, Mail, RefreshCw, Rss, Terminal, Twitter, Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useState } from "react";
 import { Card } from "./card";
 import { HeroName } from "./hero-name";
+
+type Props = {
+  onViewProjects?: () => void;
+};
 
 // ========================================
 // CONTENT - Edit all bio text here
@@ -66,10 +70,6 @@ const content = {
 
 // ========================================
 
-const navigation = [
-  { name: "Projects", href: "/projects" }
-];
-
 const socials = [
   { icon: <Github className="w-4 h-4" />, href: "https://github.com/evanschoffstall", label: "GitHub" },
   { icon: <Linkedin className="w-4 h-4" />, href: "https://www.linkedin.com/in/evan-schoffstall-2a9531163/", label: "LinkedIn" },
@@ -77,11 +77,17 @@ const socials = [
   { icon: <Mail className="w-4 h-4" />, href: "mailto:hello@evanschoffstall.me", label: "Email" },
 ];
 
-export function HomeContent() {
+export function HomeContent({ onViewProjects }: Props) {
   const [nameSettled, setNameSettled] = useState(false);
+  const [heroRunId, setHeroRunId] = useState(0);
 
   const handleSettled = useCallback(() => {
     setNameSettled(true);
+  }, []);
+
+  const handleReplayHero = useCallback(() => {
+    setNameSettled(false);
+    setHeroRunId((runId) => runId + 1);
   }, []);
 
   return (
@@ -95,15 +101,6 @@ export function HomeContent() {
       >
         <div className="flex items-center justify-end px-6 py-4">
           <div className="flex items-center gap-4">
-            {navigation.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors duration-200">
-                {item.name}
-              </Link>
-            ))}
-            <span className="w-px h-3 bg-zinc-800" />
             {socials.map((s) => (
               <Link
                 key={s.label}
@@ -115,13 +112,22 @@ export function HomeContent() {
                 {s.icon}
               </Link>
             ))}
+            <span className="w-px h-3 bg-zinc-800" />
+            <button
+              type="button"
+              onClick={handleReplayHero}
+              aria-label="Replay intro"
+              className="text-zinc-600 hover:text-zinc-300 transition-colors duration-200"
+            >
+              <RefreshCw className="w-4 h-4" />
+            </button>
           </div>
         </div>
       </motion.nav>
 
       {/* Centered stack: name + tagline + card */}
       <div className="flex flex-col items-center justify-center min-h-screen px-6 py-20">
-        <HeroName onSettled={handleSettled} />
+        <HeroName key={heroRunId} onSettled={handleSettled} />
 
         {/* About card */}
         <motion.div
@@ -156,12 +162,13 @@ export function HomeContent() {
                 <p className="text-xs text-zinc-500 mt-0.5">{content.subtitle}</p>
               </div>
               <div className="ml-auto hidden sm:block">
-                <Link
-                  href="/projects"
+                <button
+                  type="button"
+                  onClick={onViewProjects}
                   className="inline-flex items-center gap-1.5 rounded-md border border-zinc-800 bg-zinc-900 px-3 py-1.5 text-xs font-medium text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100 hover:border-zinc-700 transition-all duration-200 shadow-sm">
                   View projects
                   <ArrowRight className="w-3 h-3" />
-                </Link>
+                </button>
               </div>
             </motion.div>
 
@@ -243,12 +250,13 @@ export function HomeContent() {
                 ease: [0.16, 1, 0.3, 1] as const,
               }}
             >
-              <Link
-                href="/projects"
+              <button
+                type="button"
+                onClick={onViewProjects}
                 className="flex items-center justify-center gap-1.5 rounded-md border border-zinc-800 bg-zinc-900 px-3 py-2 text-xs font-medium text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100 transition-all duration-200 w-full">
                 View projects
                 <ArrowRight className="w-3 h-3" />
-              </Link>
+              </button>
             </motion.div>
           </Card>
         </motion.div>
