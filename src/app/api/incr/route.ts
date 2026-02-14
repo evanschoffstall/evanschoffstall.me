@@ -1,10 +1,16 @@
 import { projectPageviewsKey } from "@/application/services/pageviews";
 import { redis } from "@/infrastructure/redis/client";
+import { allProjects } from "contentlayer/generated";
 import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = "edge";
 const MAX_SLUG_LENGTH = 128;
 const VALID_SLUG_PATTERN = /^[A-Za-z0-9._-]+$/;
+const PUBLISHED_PROJECT_SLUGS = new Set(
+  allProjects
+    .filter((project) => project.published)
+    .map((project) => project.slug),
+);
 
 export function GET(): NextResponse {
   return new NextResponse("use POST", { status: 405 });
@@ -36,6 +42,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   }
   if (slug.length > MAX_SLUG_LENGTH || !VALID_SLUG_PATTERN.test(slug)) {
     return new NextResponse("Invalid slug", { status: 400 });
+  }
+  if (!PUBLISHED_PROJECT_SLUGS.has(slug)) {
+    return new NextResponse("Unknown slug", { status: 404 });
   }
   if (!redis) {
     return new NextResponse(null, { status: 202 });
