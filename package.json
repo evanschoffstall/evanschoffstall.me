@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "node -e \"require('fs').rmSync('.next/dev/types',{recursive:true,force:true})\" && NODE_ENV=development contentlayer build && next dev",
-    "build": "node -e \"require('fs').rmSync('.next/dev/types',{recursive:true,force:true})\" && NODE_ENV=production contentlayer build && next build",
-    "typecheck": "node -e \"require('fs').rmSync('.next/dev/types',{recursive:true,force:true})\" && node -e \"const fs=require('fs');const {spawnSync}=require('child_process');const result=spawnSync('contentlayer build',{stdio:'inherit',shell:true,env:{...process.env,NODE_ENV:'production'}});if(result.status!==0&&!fs.existsSync('.contentlayer/generated'))process.exit(result.status??1);\" && tsc --noEmit",
+    "contentlayer:build": "node ./scripts/contentlayer-build.cjs",
+    "dev": "node -e \"require('fs').rmSync('.next',{recursive:true,force:true})\" && NODE_ENV=development npm run contentlayer:build && next dev",
+    "build": "node -e \"require('fs').rmSync('.next',{recursive:true,force:true})\" && NODE_ENV=production npm run contentlayer:build && next build",
+    "typecheck": "node -e \"require('fs').rmSync('.next',{recursive:true,force:true})\" && NODE_ENV=production npm run contentlayer:build && tsc --noEmit",
     "start": "next start"
   },
   "dependencies": {
