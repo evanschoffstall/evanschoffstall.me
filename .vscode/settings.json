@@ -7,10 +7,24 @@
   },
   "cSpell.words": ["contentlayer"],
   "files.exclude": {
-    "**/*.meta": false,
-    ".contentlayer": false,
-    "bun.lock": false,
-    "next-env.d.ts": false,
-    "node_modules": false
+    "**/*.meta": true,
+    ".contentlayer": true,
+    "bun.lock": true,
+    "next-env.d.ts": true,
+    "node_modules": true,
+    ".env.example": true,
+    ".gitignore": true,
+    "contentlayer.config.js": true,
+    "global.css": true,
+    "LICENSE": true,
+    "next.config.mjs": true,
+    "package.json": true,
+    "postcss.config.js": true,
+    "README.md": true,
+    "tailwind.config.js": true,
+    "tsconfig.json": true,
+    ".clautana/messages": true,
+    ".vscode": true,
+    ".clautana": true
   }
 }
