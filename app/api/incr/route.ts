@@ -3,6 +3,8 @@ import { redis } from "@/lib/redis";
 import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = "edge";
+const MAX_SLUG_LENGTH = 128;
+const VALID_SLUG_PATTERN = /^[A-Za-z0-9._-]+$/;
 
 export function GET(): NextResponse {
   return new NextResponse("use POST", { status: 405 });
@@ -31,6 +33,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   if (!slug) {
     return new NextResponse("Slug not found", { status: 400 });
+  }
+  if (slug.length > MAX_SLUG_LENGTH || !VALID_SLUG_PATTERN.test(slug)) {
+    return new NextResponse("Invalid slug", { status: 400 });
   }
   if (!redis) {
     return new NextResponse(null, { status: 202 });
