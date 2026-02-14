@@ -29,16 +29,16 @@ export function Header({ project, views }: Props) {
 
   const links: { label: string; href: string }[] = [];
   const repoHref = project.repository ? normalizeRepoHref(project.repository) : "";
-  if (project.repository) {
+  if (repoHref) {
     links.push({
       label: "GitHub",
       href: repoHref,
     });
   }
-  if (project.url) {
+  if (project.url?.trim()) {
     links.push({
       label: "Website",
-      href: project.url,
+      href: project.url.trim(),
     });
   }
   return (
