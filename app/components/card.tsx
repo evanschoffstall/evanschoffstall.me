@@ -22,21 +22,18 @@ export function Card({ children }: PropsWithChildren) {
 			className="overflow-hidden relative duration-700 border rounded-xl hover:bg-zinc-800/10 group md:gap-8 hover:border-zinc-400/50 border-zinc-600 shadow-2xl shadow-zinc-900/50"
 		>
 			<div className="pointer-events-none">
-				<div className="absolute inset-0 z-0 transition duration-1000 [mask-image:linear-gradient(black,transparent)]" />
-				<div className="absolute inset-0 bg-gradient-to-br from-zinc-800/10 via-transparent to-zinc-700/10" />
+				<div className="absolute inset-0 z-0  transition duration-1000 [mask-image:linear-gradient(black,transparent)]" />
 				<motion.div
-					className="absolute inset-0 z-10  bg-gradient-to-br opacity-100  via-zinc-100/10  transition duration-1000 group-hover:opacity-50 "
+					className="absolute inset-0 z-10 bg-gradient-to-br from-zinc-100/20 via-zinc-100/10 to-transparent opacity-100 transition duration-1000 group-hover:opacity-50"
 					style={style}
 				/>
 				<motion.div
-					className="absolute inset-0 z-10 opacity-0 mix-blend-overlay transition duration-1000 group-hover:opacity-100"
+					className="absolute inset-0 z-10 bg-gradient-to-br from-zinc-100/20 via-zinc-100/10 to-transparent opacity-0 mix-blend-overlay transition duration-1000 group-hover:opacity-100"
 					style={style}
 				/>
 			</div>
 
-			<div className="relative z-20">
-				{children}
-			</div>
+			{children}
 		</div>
 	);
 }
