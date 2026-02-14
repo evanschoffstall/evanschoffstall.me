@@ -2,7 +2,7 @@
 
 import type { Project } from "contentlayer/generated";
 import { AnimatePresence, motion } from "framer-motion";
-import { useCallback, useLayoutEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ProjectsContent } from "../projects/projects-content";
 import { HomeContent } from "./home-content";
 import { Navigation } from "./nav";
@@ -39,7 +39,7 @@ export function HomeSections({ projectData }: Props) {
     });
   }, []);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const syncFromHash = () => {
       const isProjectsHash = window.location.hash === "#projects";
       setSkipInitialProjectsEnter((previous) => previous || isProjectsHash);
