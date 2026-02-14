@@ -1,4 +1,4 @@
-import { redis } from "@/lib/redis";
+import { redis } from "@/infrastructure/redis/client";
 
 export function projectPageviewsKey(slug: string): string {
   return ["pageviews", "projects", slug].join(":");

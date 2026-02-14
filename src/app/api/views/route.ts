@@ -1,4 +1,4 @@
-import { getProjectViews } from "@/lib/pageviews";
+import { getProjectViews } from "@/application/services/pageviews";
 import { allProjects } from "contentlayer/generated";
 import { NextResponse } from "next/server";
 

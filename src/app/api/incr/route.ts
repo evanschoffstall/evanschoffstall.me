@@ -1,5 +1,5 @@
-import { projectPageviewsKey } from "@/lib/pageviews";
-import { redis } from "@/lib/redis";
+import { projectPageviewsKey } from "@/application/services/pageviews";
+import { redis } from "@/infrastructure/redis/client";
 import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = "edge";
