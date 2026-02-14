@@ -103,7 +103,7 @@ const components: Record<string, React.ElementType> = {
 			<a
 				href={href}
 				className={classes}
-				rel={props.rel ?? "noreferrer"}
+				rel={props.rel ?? "noopener noreferrer"}
 				target={props.target ?? "_blank"}
 				{...props}
 			/>
