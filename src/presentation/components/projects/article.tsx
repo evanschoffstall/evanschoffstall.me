@@ -1,4 +1,5 @@
 import { formatCompactNumber, formatDateTime, formatMediumDate } from "@/shared/lib/format";
+import { saveProjectsScrollPosition } from "@/shared/lib/projects-scroll";
 import type { Project } from "contentlayer/generated";
 import { ArrowRight, Eye } from "lucide-react";
 import Link from "next/link";
@@ -12,7 +13,7 @@ export function Article({ project, views }: Props) {
   const dateTime = project.date ? formatDateTime(project.date) : "";
 
   return (
-    <Link href={`/projects/${project.slug}`}>
+    <Link href={`/projects/${project.slug}`} onClick={saveProjectsScrollPosition}>
       <article className="flex items-center justify-between gap-4 p-4 md:px-6 md:py-5 h-full">
         <div className="min-w-0 flex-1 space-y-1">
           <div className="flex items-center gap-3">

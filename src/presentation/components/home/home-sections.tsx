@@ -1,8 +1,10 @@
 "use client";
 
+import { ANIMATION } from "@/shared/constants";
+import { consumeProjectsScrollPosition } from "@/shared/lib/projects-scroll";
 import type { Project } from "contentlayer/generated";
 import { AnimatePresence, motion } from "framer-motion";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { Navigation } from "../common/nav";
 import { ProjectsContent } from "../projects/projects-content";
 import { HomeContent } from "./home-content";
@@ -23,7 +25,8 @@ type Props = {
 
 export function HomeSections({ projectData }: Props) {
   const [showProjects, setShowProjects] = useState(false);
-  const [skipInitialProjectsEnter, setSkipInitialProjectsEnter] = useState(false);
+  const [skipInitialProjectsEnter, setSkipInitialProjectsEnter] =
+    useState(false);
 
   const handleViewProjects = useCallback(() => {
     setSkipInitialProjectsEnter(false);
@@ -39,6 +42,12 @@ export function HomeSections({ projectData }: Props) {
     });
   }, []);
 
+  useLayoutEffect(() => {
+    const isProjectsHash = window.location.hash === "#projects";
+    setSkipInitialProjectsEnter((previous) => previous || isProjectsHash);
+    setShowProjects(isProjectsHash);
+  }, []);
+
   useEffect(() => {
     const syncFromHash = () => {
       const isProjectsHash = window.location.hash === "#projects";
@@ -46,7 +55,6 @@ export function HomeSections({ projectData }: Props) {
       setShowProjects(isProjectsHash);
     };
 
-    syncFromHash();
     window.addEventListener("hashchange", syncFromHash);
 
     return () => {
@@ -54,14 +62,37 @@ export function HomeSections({ projectData }: Props) {
     };
   }, []);
 
+  useEffect(() => {
+    if (!showProjects) {
+      return;
+    }
+
+    const storedPosition = consumeProjectsScrollPosition();
+    if (storedPosition === null) {
+      return;
+    }
+
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: storedPosition, behavior: "auto" });
+    });
+  }, [showProjects]);
+
   return (
     <div className="relative">
       <motion.section
         animate={{ opacity: showProjects ? 0 : 1 }}
-        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: ANIMATION.FADE_DURATION, ease: ANIMATION.EASE }}
         className={showProjects ? "hidden" : "pointer-events-auto"}
       >
-        <HomeContent onViewProjects={handleViewProjects} />
+        <HomeContent
+          onViewProjects={handleViewProjects}
+          featuredProject={projectData?.featured}
+          featuredViews={
+            projectData
+              ? (projectData.views[projectData.featured.slug] ?? 0)
+              : 0
+          }
+        />
       </motion.section>
 
       <AnimatePresence initial={false}>
@@ -73,7 +104,10 @@ export function HomeSections({ projectData }: Props) {
             initial={skipInitialProjectsEnter ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            transition={{
+              duration: ANIMATION.FADE_DURATION,
+              ease: ANIMATION.EASE,
+            }}
           >
             <Navigation onBack={handleBack} />
             {projectData ? (
@@ -88,7 +122,9 @@ export function HomeSections({ projectData }: Props) {
               />
             ) : (
               <div className="px-6 mx-auto max-w-7xl lg:px-8 py-16 md:py-24">
-                <p className="text-zinc-400">Some featured projects are not available.</p>
+                <p className="text-zinc-400">
+                  Some featured projects are not available.
+                </p>
               </div>
             )}
           </motion.section>
