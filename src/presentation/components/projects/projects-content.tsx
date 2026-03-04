@@ -41,7 +41,10 @@ function AnimatedDivider() {
   );
 }
 
-function ProjectCardsList({ projects, views }: Pick<ProjectListSectionProps, "projects" | "views">) {
+function ProjectCardsList({
+  projects,
+  views,
+}: Pick<ProjectListSectionProps, "projects" | "views">) {
   return (
     <motion.div
       className="space-y-2 mt-8"
@@ -65,7 +68,11 @@ function ProjectCardsList({ projects, views }: Pick<ProjectListSectionProps, "pr
   );
 }
 
-function ProjectListSection({ projects, views, title }: ProjectListSectionProps) {
+function ProjectListSection({
+  projects,
+  views,
+  title,
+}: ProjectListSectionProps) {
   if (projects.length === 0) {
     return null;
   }
@@ -97,7 +104,7 @@ export function ProjectsContent({
   views,
 }: Props) {
   return (
-    <div className="px-6 mx-auto space-y-8 max-w-7xl lg:px-8">
+    <div className="px-6 mx-auto space-y-8 max-w-3xl">
       <motion.div initial="hidden" animate="visible" variants={fadeInUp}>
         <h2 className="text-3xl font-bold tracking-tight text-zinc-100 sm:text-4xl">
           Projects
@@ -132,7 +139,11 @@ export function ProjectsContent({
           />
         </motion.div>
         {[top2, top3].map((project) => (
-          <motion.div key={project.slug} className="relative" variants={fadeInUp}>
+          <motion.div
+            key={project.slug}
+            className="relative"
+            variants={fadeInUp}
+          >
             <ProjectHeroCard
               project={project}
               views={views[project.slug] ?? 0}
@@ -147,7 +158,11 @@ export function ProjectsContent({
         views={views}
         title="Contributions"
       />
-      <ProjectListSection projects={sortedLegacy} views={views} title="Legacy" />
+      <ProjectListSection
+        projects={sortedLegacy}
+        views={views}
+        title="Legacy"
+      />
     </div>
   );
 }
