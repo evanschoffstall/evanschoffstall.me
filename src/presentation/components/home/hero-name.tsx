@@ -7,6 +7,19 @@ interface HeroNameProps {
   skipInitialAnimation?: boolean;
 }
 
+/** Resolves once the browser has fully loaded all resources and fonts. */
+function waitForPageReady(): Promise<void> {
+  return new Promise((resolve) => {
+    const proceed = () => document.fonts.ready.then(() => resolve());
+
+    if (document.readyState === "complete") {
+      proceed();
+    } else {
+      window.addEventListener("load", proceed, { once: true });
+    }
+  });
+}
+
 export function HeroName({ onSettled, skipInitialAnimation = false }: HeroNameProps) {
   const placeholderRef = useRef<HTMLDivElement>(null);
   const controls = useAnimationControls();
@@ -19,6 +32,7 @@ export function HeroName({ onSettled, skipInitialAnimation = false }: HeroNamePr
     }
 
     async function runSequence() {
+      await waitForPageReady();
       // Phase 1: fade in + expand at dead center of screen
       await controls.start({
         opacity: 1,
