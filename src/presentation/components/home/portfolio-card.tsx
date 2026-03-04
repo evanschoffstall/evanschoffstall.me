@@ -212,7 +212,7 @@ export function PortfolioCard({ onViewProjects, nameSettled }: Props) {
 
       {/* ── BIO ── */}
       <motion.p
-        className="px-5 md:px-6 py-4 text-[13px] leading-relaxed text-zinc-400"
+        className="px-5 md:px-6 py-4 text-sm leading-relaxed text-zinc-400"
         variants={item}
       >
         Technologist and engineer with expertise spanning code to teams to
