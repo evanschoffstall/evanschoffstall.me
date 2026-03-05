@@ -98,9 +98,9 @@ const socials = [
 ];
 
 const tierStyle: Record<string, string> = {
-  primary: "bg-zinc-800/60 text-zinc-300 ring-zinc-700/50",
-  infra: "bg-sky-950/30 text-sky-400/80 ring-sky-800/30",
-  data: "bg-emerald-950/30 text-emerald-400/80 ring-emerald-800/30",
+  primary: "bg-zinc-800/60 text-zinc-300 ring-zinc-700/50 group-hover:text-zinc-200 group-hover:ring-zinc-600/60 transition-colors duration-300",
+  infra:   "bg-sky-950/30 text-sky-400/80 ring-sky-800/30 group-hover:text-sky-300/80 group-hover:ring-sky-700/40 transition-colors duration-300",
+  data:    "bg-emerald-950/30 text-emerald-400/80 ring-emerald-800/30 group-hover:text-emerald-300/80 group-hover:ring-emerald-700/40 transition-colors duration-300",
 };
 
 const stagger = {
@@ -145,10 +145,10 @@ export function PortfolioCard({ onViewProjects, nameSettled }: Props) {
             <span className="absolute bottom-0.5 right-0.5 w-3 h-3 rounded-full bg-emerald-500 ring-2 ring-zinc-900" />
           </div>
           <div>
-            <p className="text-base font-semibold text-zinc-100 tracking-tight">
+            <p className="text-base font-semibold text-zinc-100 tracking-tight group-hover:text-white transition-colors duration-300">
               Evan Schoffstall
             </p>
-            <p className="text-xs text-zinc-500 mt-0.5">
+            <p className="text-xs text-zinc-500 mt-0.5 group-hover:text-zinc-400 transition-colors duration-300">
               Technologist · Engineer · Business Officer
             </p>
             {/* Social row */}
@@ -185,11 +185,11 @@ export function PortfolioCard({ onViewProjects, nameSettled }: Props) {
       </motion.div>
 
       {/* ── DIVIDER ── */}
-      <div className="mx-5 md:mx-6 h-px bg-zinc-800/70" />
+      <div className="mx-5 md:mx-6 h-px bg-zinc-800/70 transition-colors duration-700 group-hover:bg-zinc-700/60" />
 
       {/* ── BIO ── */}
       <motion.p
-        className="px-5 md:px-6 py-4 text-sm leading-relaxed text-zinc-400"
+        className="px-5 md:px-6 py-4 text-sm leading-relaxed text-zinc-400 group-hover:text-zinc-300 transition-colors duration-300"
         variants={item}
       >
         Technologist and engineer with expertise spanning code to teams to
@@ -207,16 +207,16 @@ export function PortfolioCard({ onViewProjects, nameSettled }: Props) {
           <motion.div
             key={h.label}
             className={cn(
-              "flex items-start gap-3 rounded-lg px-3.5 py-3 ring-1",
+              "flex items-start gap-3 rounded-lg px-3.5 py-3 ring-1 transition-colors duration-300",
               h.bg,
               h.ring,
             )}
             variants={item}
           >
-            <span className={cn("mt-0.5 shrink-0", h.color)}>{h.icon}</span>
+            <span className={cn("mt-0.5 shrink-0 transition-colors duration-300", h.color)}>{h.icon}</span>
             <div>
-              <p className={cn("text-xs font-semibold", h.color)}>{h.label}</p>
-              <p className="text-[11px] text-zinc-500 mt-0.5 leading-snug">
+              <p className={cn("text-xs font-semibold transition-colors duration-300 group-hover:text-zinc-300", h.color)}>{h.label}</p>
+              <p className="text-[11px] text-zinc-500 mt-0.5 leading-snug group-hover:text-zinc-400 transition-colors duration-300">
                 {h.sub}
               </p>
             </div>
@@ -225,11 +225,11 @@ export function PortfolioCard({ onViewProjects, nameSettled }: Props) {
       </motion.div>
 
       {/* ── DIVIDER ── */}
-      <div className="mx-5 md:mx-6 h-px bg-zinc-800/70" />
+      <div className="mx-5 md:mx-6 h-px bg-zinc-800/70 transition-colors duration-700 group-hover:bg-zinc-700/60" />
 
       {/* ── STACK TAGS ── */}
       <motion.div className="px-5 md:px-6 py-5" variants={item}>
-        <p className="text-[11px] font-medium text-zinc-500 uppercase tracking-widest mb-3">
+        <p className="text-[11px] font-medium text-zinc-500 uppercase tracking-widest mb-3 group-hover:text-zinc-400 transition-colors duration-300">
           Core Stack
         </p>
         <div className="flex flex-wrap gap-1.5">
