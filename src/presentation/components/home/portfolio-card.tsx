@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/shared/lib/cn";
-import { motion, useMotionTemplate, useSpring } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   Code2,
   Github,
@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import type { MouseEvent } from "react";
 
 type Props = {
   onViewProjects?: () => void;
@@ -27,33 +26,33 @@ const highlights = [
     icon: <Terminal className="w-3.5 h-3.5" />,
     label: "15+ Years",
     sub: "Gov · Enterprise · Startup",
-    color: "text-violet-400",
-    bg: "bg-violet-950/40",
-    ring: "ring-violet-800/50",
+    color: "text-zinc-400",
+    bg: "bg-zinc-800/40",
+    ring: "ring-zinc-700/50",
   },
   {
     icon: <Code2 className="w-3.5 h-3.5" />,
     label: "Full Stack",
     sub: "TS · Rust · K8s",
-    color: "text-sky-400",
-    bg: "bg-sky-950/40",
-    ring: "ring-sky-800/50",
+    color: "text-zinc-400",
+    bg: "bg-zinc-800/40",
+    ring: "ring-zinc-700/50",
   },
   {
     icon: <Users className="w-3.5 h-3.5" />,
     label: "Builder & Leader",
     sub: "IC to Executive",
-    color: "text-amber-400",
-    bg: "bg-amber-950/40",
-    ring: "ring-amber-800/50",
+    color: "text-zinc-400",
+    bg: "bg-zinc-800/40",
+    ring: "ring-zinc-700/50",
   },
   {
     icon: <Rss className="w-3.5 h-3.5" />,
     label: "Open Source",
     sub: "LibreRSS · resh",
-    color: "text-emerald-400",
-    bg: "bg-emerald-950/40",
-    ring: "ring-emerald-800/50",
+    color: "text-zinc-400",
+    bg: "bg-zinc-800/40",
+    ring: "ring-zinc-700/50",
   },
 ];
 
@@ -117,37 +116,15 @@ const item = {
 };
 
 export function PortfolioCard({ onViewProjects, nameSettled }: Props) {
-  const mouseX = useSpring(0, { stiffness: 500, damping: 100 });
-  const mouseY = useSpring(0, { stiffness: 500, damping: 100 });
-
-  function onMouseMove(event: MouseEvent<HTMLDivElement>) {
-    const { currentTarget, clientX, clientY } = event;
-    const { left, top } = currentTarget.getBoundingClientRect();
-    mouseX.set(clientX - left);
-    mouseY.set(clientY - top);
-  }
-
-  const maskImage = useMotionTemplate`radial-gradient(260px at ${mouseX}px ${mouseY}px, white, transparent)`;
-  const style = { maskImage, WebkitMaskImage: maskImage };
-
   return (
     <motion.div
-      onMouseMove={onMouseMove}
-      className="relative overflow-hidden rounded-xl border border-zinc-700/60 bg-zinc-900/40 shadow-2xl shadow-zinc-900/50 group"
+      className="relative overflow-hidden rounded-xl duration-700 border border-zinc-700/60 bg-zinc-900/60 shadow-2xl shadow-zinc-900/50 hover:bg-zinc-800/10 hover:border-zinc-600/70 group"
       initial="hidden"
       animate={nameSettled ? "visible" : "hidden"}
       variants={stagger}
     >
       {/* Top edge accent */}
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-zinc-500/40 to-transparent pointer-events-none z-10" />
-
-      {/* Mouse-follow shimmer */}
-      <div className="pointer-events-none absolute inset-0 z-0">
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-br from-zinc-100/10 via-zinc-100/5 to-transparent opacity-0 mix-blend-overlay transition duration-1000 group-hover:opacity-100"
-          style={style}
-        />
-      </div>
 
       {/* ── HEADER ── */}
       <motion.div
