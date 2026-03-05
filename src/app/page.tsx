@@ -5,10 +5,10 @@ import {
 } from "@/domain/projects/policies/project-selection";
 import { HomeSections } from "@/presentation/components/home/home-sections";
 import { ParticlesBackground } from "@/presentation/components/home/particles-background";
-import { ANIMATION, REVALIDATE } from "@/shared/constants";
+import { ANIMATION } from "@/shared/constants";
 import { allProjects } from "contentlayer/generated";
 
-export const revalidate = REVALIDATE.STANDARD;
+export const revalidate = 60;
 
 export default async function Home() {
   const views = await getProjectViews(
