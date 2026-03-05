@@ -1,42 +1,161 @@
+<div align="center" dir="auto">
+<br>
+<a target="_blank" rel="noopener noreferrer" href="/projects/evanschoffstall.me/public/favicon.png"><img src="/projects/evanschoffstall.me/public/favicon.png" width="112" height="112" alt="evanschoffstall.me logo" style="max-width: 100%; height: auto; max-height: 112px;"></a>
 <h1 dir="auto">evanschoffstall.me</h1>
-<p dir="auto">Personal portfolio website built with Next.js 16, showcasing projects and technical writing.</p>
-<h2 dir="auto">✨ Features</h2>
-<ul dir="auto">
-<li>MDX-powered project content with Contentlayer</li>
-<li>View tracking with Upstash Redis</li>
-<li>Syntax highlighting with Shiki</li>
-<li>Smooth animations with Framer Motion</li>
-<li>Responsive design with Tailwind CSS</li>
-</ul>
-<h2 dir="auto">🛠 Tech Stack</h2>
-<ul dir="auto">
-<li><strong>Next.js 16</strong> (App Router) + <strong>React 19</strong></li>
-<li><strong>TypeScript</strong></li>
-<li><strong>Contentlayer</strong> for MDX processing</li>
-<li><strong>Tailwind CSS</strong> with Typography plugin</li>
-<li><strong>Upstash Redis</strong> for analytics</li>
-<li><strong>Shiki</strong> for code syntax highlighting</li>
-<li><strong>Framer Motion</strong> for animations</li>
-</ul>
-<h2 dir="auto">🚀 Getting Started</h2>
-<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> Install dependencies</span>
-bun install
-
-<span class="pl-c"><span class="pl-c">#</span> Run development server</span>
-bun dev</pre></div>
-<p dir="auto">Set up environment variables in <code class="notranslate">.env.local</code>:</p>
-<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">UPSTASH_REDIS_REST_URL=your_redis_url
-UPSTASH_REDIS_REST_TOKEN=your_redis_token</pre></div>
-<h2 dir="auto">📁 Project Structure</h2>
-<pre class="notranslate"><code class="notranslate">app/              # Next.js App Router
-  components/     # React components
-  projects/       # Project pages
-content/
-  projects/       # MDX project files
-lib/              # Utilities and Redis client
-app/api/          # API routes (Route Handlers)
-</code></pre>
-<h2 dir="auto">➕ Adding Projects</h2>
+<p dir="auto"><em>Portfolio. Projects. Built in the open.</em></p>
+<p dir="auto">
+  <a href="https://nextjs.org" rel="nofollow"><img src="https://camo.githubusercontent.com/7752a6797b44c1335725ef6f7e54d068a88e4f9c5e4fb3eccbabad45b15eb9a8/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4e6578742e6a732d31362d3030303030303f7374796c653d666f722d7468652d6261646765266c6f676f3d6e6578742e6a73266c6f676f436f6c6f723d7768697465" alt="Next.js 16" data-canonical-src="https://img.shields.io/badge/Next.js-16-000000?style=for-the-badge&amp;logo=next.js&amp;logoColor=white" style="max-width: 100%;"></a>
+  <a href="https://react.dev" rel="nofollow"><img src="https://camo.githubusercontent.com/b633b921b026bc7adc43010e08acaaea4b4c6a06264197f2a0a50f70fc94129f/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f52656163742d31392d3631444146423f7374796c653d666f722d7468652d6261646765266c6f676f3d7265616374266c6f676f436f6c6f723d626c61636b" alt="React 19" data-canonical-src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&amp;logo=react&amp;logoColor=black" style="max-width: 100%;"></a>
+  <a href="https://www.typescriptlang.org" rel="nofollow"><img src="https://camo.githubusercontent.com/b7fbd1ac133b18867505a43ca849fbf3fcf2042622067586e39e680fb585e564/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f547970655363726970742d352d3331373843363f7374796c653d666f722d7468652d6261646765266c6f676f3d74797065736372697074266c6f676f436f6c6f723d7768697465" alt="TypeScript 5" data-canonical-src="https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&amp;logo=typescript&amp;logoColor=white" style="max-width: 100%;"></a>
+  <a href="https://bun.sh" rel="nofollow"><img src="https://camo.githubusercontent.com/e32cceedfa148dcbb2fc4d8a6c09a7ed213add295b295690b393ba9b02e8c77d/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f42756e2d72756e74696d652d4639463145313f7374796c653d666f722d7468652d6261646765266c6f676f3d62756e266c6f676f436f6c6f723d626c61636b" alt="Bun" data-canonical-src="https://img.shields.io/badge/Bun-runtime-F9F1E1?style=for-the-badge&amp;logo=bun&amp;logoColor=black" style="max-width: 100%;"></a>
+  <a href="LICENSE"><img src="https://camo.githubusercontent.com/f77c46cfd34df0f2783a9d96cc43ac41093d5ede3f6ff47dac0b1cfc7bf3a2c7/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4c6963656e73652d4d49542d3232633535653f7374796c653d666f722d7468652d6261646765" alt="MIT License" data-canonical-src="https://img.shields.io/badge/License-MIT-22c55e?style=for-the-badge" style="max-width: 100%;"></a>
+</p>
+<p dir="auto">Personal portfolio built with Next.js 16 — MDX-powered project pages, live view counts,<br>syntax-highlighted code, and smooth animations. Fast, minimal, and fully open source.</p>
+<br>
+</div>
+<hr>
+<h2 dir="auto">What is this?</h2>
+<p dir="auto">This is my personal portfolio site. It hosts write-ups for my projects, tracks page views with Upstash Redis, and renders MDX content via Contentlayer. The design prioritizes speed and clarity over flash.</p>
+<hr>
+<h2 dir="auto">Features</h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th></th>
+<th>Feature</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>📝</td>
+<td><strong>MDX project pages</strong></td>
+<td>Write project content in Markdown with React components</td>
+</tr>
+<tr>
+<td>👁️</td>
+<td><strong>Live view counts</strong></td>
+<td>Per-page view tracking powered by Upstash Redis</td>
+</tr>
+<tr>
+<td>🎨</td>
+<td><strong>Syntax highlighting</strong></td>
+<td>Beautiful code blocks via Shiki</td>
+</tr>
+<tr>
+<td>✨</td>
+<td><strong>Smooth animations</strong></td>
+<td>Page and element transitions with Framer Motion</td>
+</tr>
+<tr>
+<td>📱</td>
+<td><strong>Responsive layout</strong></td>
+<td>Tailwind CSS — looks right on every screen</td>
+</tr>
+<tr>
+<td>🗂️</td>
+<td><strong>Contentlayer</strong></td>
+<td>Type-safe MDX processing with hot reload in dev</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
+<h2 dir="auto">Quick Start</h2>
+<h3 dir="auto">1 · Install dependencies</h3>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">bun install</pre></div>
+<h3 dir="auto">2 · Configure your environment</h3>
+<p dir="auto">Create <code class="notranslate">.env.local</code> at the project root:</p>
+<div class="highlight highlight-source-dotenv" dir="auto"><pre class="notranslate"><span class="pl-v">UPSTASH_REDIS_REST_URL</span><span class="pl-k">=</span><span class="pl-s">your_redis_url</span>
+<span class="pl-v">UPSTASH_REDIS_REST_TOKEN</span><span class="pl-k">=</span><span class="pl-s">your_redis_token</span></pre></div>
+<h3 dir="auto">3 · Start the dev server</h3>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">bun dev</pre></div>
+<p dir="auto">Open <strong><a href="http://localhost:3000" rel="nofollow">http://localhost:3000</a></strong> and you're live.</p>
+<hr>
+<h2 dir="auto">Stack</h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Layer</th>
+<th>Technology</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>⚡ Framework</td>
+<td>Next.js 16 · React 19 · TypeScript 5</td>
+</tr>
+<tr>
+<td>🎨 UI</td>
+<td>Tailwind CSS · Framer Motion · Lucide Icons</td>
+</tr>
+<tr>
+<td>📝 Content</td>
+<td>Contentlayer · MDX · Shiki</td>
+</tr>
+<tr>
+<td>📊 Analytics</td>
+<td>Upstash Redis</td>
+</tr>
+<tr>
+<td>🏎️ Runtime</td>
+<td>Bun</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
+<h2 dir="auto">Scripts</h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">bun dev</code></td>
+<td>Start dev server with Contentlayer watch</td>
+</tr>
+<tr>
+<td><code class="notranslate">bun build</code></td>
+<td>Build for production</td>
+</tr>
+<tr>
+<td><code class="notranslate">bun start</code></td>
+<td>Start production server</td>
+</tr>
+<tr>
+<td><code class="notranslate">bun run contentlayer:build</code></td>
+<td>One-shot Contentlayer build</td>
+</tr>
+<tr>
+<td><code class="notranslate">bun run readmes:download</code></td>
+<td>Fetch latest READMEs from GitHub</td>
+</tr>
+<tr>
+<td><code class="notranslate">bun run clean</code></td>
+<td>Remove <code class="notranslate">.next</code>, <code class="notranslate">.cache</code>, and <code class="notranslate">.contentlayer</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">bun run types</code></td>
+<td>TypeScript type check (no emit)</td>
+</tr>
+<tr>
+<td><code class="notranslate">bun run lint</code></td>
+<td>Run linter</td>
+</tr>
+<tr>
+<td><code class="notranslate">bun run check</code></td>
+<td>Run project checks</td>
+</tr>
+<tr>
+<td><code class="notranslate">bun test</code></td>
+<td>Run test suite</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
+<h2 dir="auto">Adding a Project</h2>
 <p dir="auto">Create a new MDX file in <code class="notranslate">content/projects/</code>:</p>
 <div class="highlight highlight-source-mdx" dir="auto"><pre class="notranslate"><span class="pl-s">---</span>
 <span class="pl-ent">title</span>: <span class="pl-s"><span class="pl-pds">"</span>Project Title<span class="pl-pds">"</span></span>
@@ -45,16 +164,34 @@ app/api/          # API routes (Route Handlers)
 <span class="pl-ent">published</span>: <span class="pl-c1">true</span>
 <span class="pl-ent">url</span>: <span class="pl-s"><span class="pl-pds">"</span>https://project-url.com<span class="pl-pds">"</span></span>
 <span class="pl-ent">repository</span>: <span class="pl-s"><span class="pl-pds">"</span>https://github.com/user/repo<span class="pl-pds">"</span></span>
+<span class="pl-ent">contributor</span>: <span class="pl-s">false </span><span class="pl-c"><span class="pl-c">#</span> true if you contributed to but didn't create it</span>
+<span class="pl-ent">legacy</span>: <span class="pl-s">false </span><span class="pl-c"><span class="pl-c">#</span> true to mark as archived / old work</span>
 <span class="pl-s">---</span>
 
 Your content here...</pre></div>
-<h2 dir="auto">💻 Scripts</h2>
-<ul dir="auto">
-<li><code class="notranslate">bun dev</code> - Start development server</li>
-<li><code class="notranslate">bun build</code> - Build for production</li>
-<li><code class="notranslate">bun start</code> - Start production server</li>
-</ul>
-<h2 dir="auto">🌐 Deployment</h2>
-<p dir="auto">Optimized for <a href="https://vercel.com" rel="nofollow">Vercel</a>. Configure environment variables and deploy.</p>
+<p dir="auto">Contentlayer picks it up automatically — no registration needed.</p>
 <hr>
-<p dir="auto">Made with ❤️ by Evan Schoffstall</p>
+<h2 dir="auto">Project Structure</h2>
+<pre class="notranslate"><code class="notranslate">evanschoffstall.me/
+├── src/
+│   ├── app/                  # Next.js App Router (pages &amp; API routes)
+│   ├── presentation/
+│   │   ├── components/       # UI components (nav, cards, MDX renderer)
+│   │   └── hooks/            # Shared React hooks
+│   ├── application/          # Use-case / service layer
+│   ├── domain/               # Domain logic and policies
+│   ├── infrastructure/       # Redis client and external adapters
+│   └── shared/               # Cross-cutting utilities (cn, format, motion)
+├── content/
+│   └── projects/             # MDX source files for each project
+├── public/                   # Static assets and downloaded READMEs
+└── scripts/                  # Dev utilities (contentlayer, readme download)
+</code></pre>
+<hr>
+<h2 dir="auto">Deployment</h2>
+<p dir="auto">Optimized for <a href="https://vercel.com" rel="nofollow">Vercel</a>. Set <code class="notranslate">UPSTASH_REDIS_REST_URL</code> and <code class="notranslate">UPSTASH_REDIS_REST_TOKEN</code> in your project environment and deploy.</p>
+<hr>
+<div align="center" dir="auto">
+<p dir="auto">Made with ❤️ by <a href="https://github.com/evanschoffstall">Evan Schoffstall</a></p>
+<p dir="auto">MIT License · Free forever · Open source</p>
+</div>
