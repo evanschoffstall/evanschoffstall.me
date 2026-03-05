@@ -1,0 +1,60 @@
+<h1 dir="auto">evanschoffstall.me</h1>
+<p dir="auto">Personal portfolio website built with Next.js 16, showcasing projects and technical writing.</p>
+<h2 dir="auto">✨ Features</h2>
+<ul dir="auto">
+<li>MDX-powered project content with Contentlayer</li>
+<li>View tracking with Upstash Redis</li>
+<li>Syntax highlighting with Shiki</li>
+<li>Smooth animations with Framer Motion</li>
+<li>Responsive design with Tailwind CSS</li>
+</ul>
+<h2 dir="auto">🛠 Tech Stack</h2>
+<ul dir="auto">
+<li><strong>Next.js 16</strong> (App Router) + <strong>React 19</strong></li>
+<li><strong>TypeScript</strong></li>
+<li><strong>Contentlayer</strong> for MDX processing</li>
+<li><strong>Tailwind CSS</strong> with Typography plugin</li>
+<li><strong>Upstash Redis</strong> for analytics</li>
+<li><strong>Shiki</strong> for code syntax highlighting</li>
+<li><strong>Framer Motion</strong> for animations</li>
+</ul>
+<h2 dir="auto">🚀 Getting Started</h2>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> Install dependencies</span>
+bun install
+
+<span class="pl-c"><span class="pl-c">#</span> Run development server</span>
+bun dev</pre></div>
+<p dir="auto">Set up environment variables in <code class="notranslate">.env.local</code>:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">UPSTASH_REDIS_REST_URL=your_redis_url
+UPSTASH_REDIS_REST_TOKEN=your_redis_token</pre></div>
+<h2 dir="auto">📁 Project Structure</h2>
+<pre class="notranslate"><code class="notranslate">app/              # Next.js App Router
+  components/     # React components
+  projects/       # Project pages
+content/
+  projects/       # MDX project files
+lib/              # Utilities and Redis client
+app/api/          # API routes (Route Handlers)
+</code></pre>
+<h2 dir="auto">➕ Adding Projects</h2>
+<p dir="auto">Create a new MDX file in <code class="notranslate">content/projects/</code>:</p>
+<div class="highlight highlight-source-mdx" dir="auto"><pre class="notranslate"><span class="pl-s">---</span>
+<span class="pl-ent">title</span>: <span class="pl-s"><span class="pl-pds">"</span>Project Title<span class="pl-pds">"</span></span>
+<span class="pl-ent">description</span>: <span class="pl-s"><span class="pl-pds">"</span>Brief description<span class="pl-pds">"</span></span>
+<span class="pl-ent">date</span>: <span class="pl-s"><span class="pl-pds">"</span>2024-01-01<span class="pl-pds">"</span></span>
+<span class="pl-ent">published</span>: <span class="pl-c1">true</span>
+<span class="pl-ent">url</span>: <span class="pl-s"><span class="pl-pds">"</span>https://project-url.com<span class="pl-pds">"</span></span>
+<span class="pl-ent">repository</span>: <span class="pl-s"><span class="pl-pds">"</span>https://github.com/user/repo<span class="pl-pds">"</span></span>
+<span class="pl-s">---</span>
+
+Your content here...</pre></div>
+<h2 dir="auto">💻 Scripts</h2>
+<ul dir="auto">
+<li><code class="notranslate">bun dev</code> - Start development server</li>
+<li><code class="notranslate">bun build</code> - Build for production</li>
+<li><code class="notranslate">bun start</code> - Start production server</li>
+</ul>
+<h2 dir="auto">🌐 Deployment</h2>
+<p dir="auto">Optimized for <a href="https://vercel.com" rel="nofollow">Vercel</a>. Configure environment variables and deploy.</p>
+<hr>
+<p dir="auto">Made with ❤️ by Evan Schoffstall</p>

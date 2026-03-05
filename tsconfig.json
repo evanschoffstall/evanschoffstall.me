@@ -41,5 +41,27 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "**/node_modules/**",
+    ".next",
+    ".next/**",
+    "**/.next/**",
+    "dist",
+    "dist/**",
+    "build",
+    "build/**",
+    "coverage",
+    "coverage/**",
+    ".cache",
+    ".cache/**",
+    "drizzle/meta",
+    "drizzle/meta/**",
+    "src/components/ui/**",
+    "src/__tests__/**",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx"
+  ]
 }

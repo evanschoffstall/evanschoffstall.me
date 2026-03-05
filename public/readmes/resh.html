@@ -1,0 +1,63 @@
+<h1 dir="auto">resh</h1>
+<p dir="auto"><code class="notranslate">resh</code> is a secure restricted production-grade ssh-compatible shell built in rust</p>
+<h2 dir="auto">Usage</h2>
+<p dir="auto">Define aliases for the commands you want to allow in the <em>commands</em> section of<br>
+<code class="notranslate">/etc/resh.toml</code>:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">$ cat /etc/resh.toml
+[commands]
+foo = <span class="pl-s"><span class="pl-pds">"</span>echo hello<span class="pl-pds">"</span></span>
+[user_commands.john]
+<span class="pl-c1">echo</span> = <span class="pl-s"><span class="pl-pds">"</span>echo %@<span class="pl-pds">"</span></span>
+foo = <span class="pl-s"><span class="pl-pds">"</span>echo hello override<span class="pl-pds">"</span></span></pre></div>
+<p dir="auto">Next set resh as the login shell for the user you want to restrict. The user<br>
+will now only be able to execute the whitelisted commands:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> su - example_user</span>
+Usage: -resh <span class="pl-k">&lt;</span>command alias<span class="pl-k">&gt;</span>
+<span class="pl-c"><span class="pl-c">#</span> su - example_user bar</span>
+Undefined <span class="pl-c1">command</span> alias: bar
+<span class="pl-c"><span class="pl-c">#</span>  su - example_user foo</span>
+hello</pre></div>
+<p dir="auto">Or interactive mode:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> su - example_user</span>
+resh <span class="pl-k">&gt;</span>
+<span class="pl-c"><span class="pl-c">#</span> foo</span>
+hello
+resh <span class="pl-k">&gt;</span></pre></div>
+<p dir="auto">using ssh:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">$ ssh example_user@localhost foo
+hello</pre></div>
+<h3 dir="auto">Alternative config file locations</h3>
+<p dir="auto">You can specify an alternative config file by setting the <code class="notranslate">RESH_CONFIG</code><br>
+environmental variable. For example, to specify a config file per ssh key:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">$ cat <span class="pl-k">~</span>example_user/.ssh/authorized_keys
+environment=<span class="pl-s"><span class="pl-pds">"</span>RESH_CONFIG=/home/test/resh.toml<span class="pl-pds">"</span></span> AAAAB3NzaC1yc2EAAAADAQABAAACAQD7BsnSaa0gkPJDGZM7psAEkx+68ILJlKHS6MlUfVpQu7UoercvJXqctHczeIEf1eJToK7RmiKufoicLkHQplRpI9kP4IDAx2V0LO4BRncIOyF8wk6I7N6k6glAxePA4MgPaSsFp8SyXYW9wy+0491YHr9sWaqaKG78OQSCyf+/wwynRnwdn2u0dcRl064CGxrYleGe0AHHOSl9jj9J2Ve6M7pjZLuixRLqB2VBYyIAwy/zO7dvuxxvLIGr31TqKdLnnUvLKeInn5IU+UPMxuHG9DC9yLnif29OUzNRERTF4utkRI+ywByFTj/QePp+uTvmVv0PtkGwm77LKxeBP7jP3Hhe2uvf5clApcF+6EjFBNKWxVReH35NGPasY8DNL7Mt5CfBZcdi4nhQZyCQ7Z/XlXmJRMxmYsowhHQB8HkOM8MpHPqP9EBf9eTnxhMaA5qnrSy/z+1vdKHVXc4camSF8z7dRJKDmuoYl+aPcjS5MX6AEVz5gtFsizjhLq+mp2HkvskSZCPY87D0/hriPPtSMUlhh4XKyFJ2VzkfIr1uqQlaN1tIPdCAdUDjH5o5fnqSFHqkD8iah8OiNhmGLk2VPiYohnMLcDdLGtPMkOpX3ODgjNOTcaUfaMZW4IacVcHA2A11Zxe8r73qcjKjcX5mEppMa1Z2vosqJn2dGTasHQ== example_user@example</pre></div>
+<h3 dir="auto">Use resh without changing the login shell</h3>
+<p dir="auto">If you don't want to change the user's login shell, you can force resh on a<br>
+per-key basis by setting the <code class="notranslate">command</code> option for the ssh public key:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">$ cat <span class="pl-k">~</span>example_user/.ssh/authorized_keys
+command=<span class="pl-s"><span class="pl-pds">"</span>/usr/local/bin/resh<span class="pl-pds">"</span></span> AAAAB3NzaC1yc2EAAAADAQABAAACAQD7BsnSaa0gkPJDGZM7psAEkx+68ILJlKHS6MlUfVpQu7UoercvJXqctHczeIEf1eJToK7RmiKufoicLkHQplRpI9kP4IDAx2V0LO4BRncIOyF8wk6I7N6k6glAxePA4MgPaSsFp8SyXYW9wy+0491YHr9sWaqaKG78OQSCyf+/wwynRnwdn2u0dcRl064CGxrYleGe0AHHOSl9jj9J2Ve6M7pjZLuixRLqB2VBYyIAwy/zO7dvuxxvLIGr31TqKdLnnUvLKeInn5IU+UPMxuHG9DC9yLnif29OUzNRERTF4utkRI+ywByFTj/QePp+uTvmVv0PtkGwm77LKxeBP7jP3Hhe2uvf5clApcF+6EjFBNKWxVReH35NGPasY8DNL7Mt5CfBZcdi4nhQZyCQ7Z/XlXmJRMxmYsowhHQB8HkOM8MpHPqP9EBf9eTnxhMaA5qnrSy/z+1vdKHVXc4camSF8z7dRJKDmuoYl+aPcjS5MX6AEVz5gtFsizjhLq+mp2HkvskSZCPY87D0/hriPPtSMUlhh4XKyFJ2VzkfIr1uqQlaN1tIPdCAdUDjH5o5fnqSFHqkD8iah8OiNhmGLk2VPiYohnMLcDdLGtPMkOpX3ODgjNOTcaUfaMZW4IacVcHA2A11Zxe8r73qcjKjcX5mEppMa1Z2vosqJn2dGTasHQ== example_user@example</pre></div>
+<h3 dir="auto">Full ssh <em><code class="notranslate">authorized_keys</code></em> example</h3>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">$ cat <span class="pl-k">~</span>example_user/.ssh/authorized_keys
+command=<span class="pl-s"><span class="pl-pds">"</span>/usr/local/bin/resh<span class="pl-pds">"</span></span>,environment=<span class="pl-s"><span class="pl-pds">"</span>RESH_CONFIG=/usr/local/etc/resh.toml<span class="pl-pds">"</span></span>,restrict AAAAB3NzaC1yc2EAAAADAQABAAACAQD7BsnSaa0gkPJDGZM7psAEkx+68ILJlKHS6MlUfVpQu7UoercvJXqctHczeIEf1eJToK7RmiKufoicLkHQplRpI9kP4IDAx2V0LO4BRncIOyF8wk6I7N6k6glAxePA4MgPaSsFp8SyXYW9wy+0491YHr9sWaqaKG78OQSCyf+/wwynRnwdn2u0dcRl064CGxrYleGe0AHHOSl9jj9J2Ve6M7pjZLuixRLqB2VBYyIAwy/zO7dvuxxvLIGr31TqKdLnnUvLKeInn5IU+UPMxuHG9DC9yLnif29OUzNRERTF4utkRI+ywByFTj/QePp+uTvmVv0PtkGwm77LKxeBP7jP3Hhe2uvf5clApcF+6EjFBNKWxVReH35NGPasY8DNL7Mt5CfBZcdi4nhQZyCQ7Z/XlXmJRMxmYsowhHQB8HkOM8MpHPqP9EBf9eTnxhMaA5qnrSy/z+1vdKHVXc4camSF8z7dRJKDmuoYl+aPcjS5MX6AEVz5gtFsizjhLq+mp2HkvskSZCPY87D0/hriPPtSMUlhh4XKyFJ2VzkfIr1uqQlaN1tIPdCAdUDjH5o5fnqSFHqkD8iah8OiNhmGLk2VPiYohnMLcDdLGtPMkOpX3ODgjNOTcaUfaMZW4IacVcHA2A11Zxe8r73qcjKjcX5mEppMa1Z2vosqJn2dGTasHQ== example_user@example</pre></div>
+<p dir="auto">For more information on the options you can specify in the <code class="notranslate">authorized_keys</code><br>
+file, refer to the <em><code class="notranslate">AUTHORIZED_KEYS FILE FORMAT</code></em> section of <code class="notranslate">man 8 sshd</code>. You<br>
+may especially be interested in the <code class="notranslate">restrict</code> option, which disables<br>
+features like tcp port forwarding.</p>
+<h2 dir="auto">Building</h2>
+<p dir="auto">To build resh, you will need rust and cargo installed, for which I'll refer to<br>
+the <a href="https://www.rust-lang.org/tools/install" rel="nofollow">official documentation</a>, but<br>
+don't forget to check your local package manager. Then, from the repo root<br>
+directory:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">cargo build --release</pre></div>
+<p dir="auto">The resulting binary will be written to <code class="notranslate">target/release/resh</code>.</p>
+<h2 dir="auto">Installation</h2>
+<p dir="auto"><code class="notranslate">cargo install resh</code> will install resh to <code class="notranslate">~/.cargo/bin</code>, which should be in in<br>
+your <code class="notranslate">$PATH</code> if cargo is installed correctly.</p>
+<h2 dir="auto">Future ideas</h2>
+<ul dir="auto">
+<li>Possibly support an <em>IncludeDir</em> option in the config file, for easier<br>
+provisioning from e.g. puppet or ansible.</li>
+<li>Provide pre-build binaries for OpenBSD, FreeBSD and linux.</li>
+</ul>
+<h2 dir="auto">Feedback &amp; Questions</h2>
+<p dir="auto">If you've got any feedback or questions, please don't hesitate :)</p>

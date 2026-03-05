@@ -1,11 +1,12 @@
 import { projectPageviewsKey } from "@/application/services/pageviews";
+import { extractSlugFromBody } from "@/domain/projects/validation";
 import { redis } from "@/infrastructure/redis/client";
+import { RATE_LIMITING } from "@/shared/constants";
 import { allProjects } from "contentlayer/generated";
 import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = "edge";
-const MAX_SLUG_LENGTH = 128;
-const VALID_SLUG_PATTERN = /^[A-Za-z0-9._-]+$/;
+
 const PUBLISHED_PROJECT_SLUGS = new Set(
   allProjects
     .filter((project) => project.published)
@@ -29,19 +30,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return new NextResponse("invalid json", { status: 400 });
   }
 
-  const slug =
-    body &&
-    typeof body === "object" &&
-    "slug" in body &&
-    typeof (body as { slug?: unknown }).slug === "string"
-      ? (body as { slug: string }).slug.trim()
-      : "";
+  const slug = extractSlugFromBody(body);
 
   if (!slug) {
-    return new NextResponse("Slug not found", { status: 400 });
-  }
-  if (slug.length > MAX_SLUG_LENGTH || !VALID_SLUG_PATTERN.test(slug)) {
-    return new NextResponse("Invalid slug", { status: 400 });
+    return new NextResponse("Invalid or missing slug", { status: 400 });
   }
   if (!PUBLISHED_PROJECT_SLUGS.has(slug)) {
     return new NextResponse("Unknown slug", { status: 404 });
@@ -53,25 +45,29 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const forwardedFor = req.headers.get("x-forwarded-for");
   const ip =
     forwardedFor?.split(",")[0]?.trim() || req.headers.get("x-real-ip") || null;
-  if (ip) {
-    const buf = await crypto.subtle.digest(
-      "SHA-256",
-      new TextEncoder().encode(ip),
-    );
-    const hash = Array.from(new Uint8Array(buf))
-      .map((b) => b.toString(16).padStart(2, "0"))
-      .join("");
-
-    const isNew = await redis.set(["deduplicate", hash, slug].join(":"), true, {
-      nx: true,
-      ex: 24 * 60 * 60,
-    });
-    if (!isNew) {
-      return new NextResponse(null, { status: 202 });
-    }
-  }
-
   try {
+    if (ip) {
+      const buf = await crypto.subtle.digest(
+        "SHA-256",
+        new TextEncoder().encode(ip),
+      );
+      const hash = Array.from(new Uint8Array(buf))
+        .map((b) => b.toString(16).padStart(2, "0"))
+        .join("");
+
+      const isNew = await redis.set(
+        ["deduplicate", hash, slug].join(":"),
+        true,
+        {
+          nx: true,
+          ex: RATE_LIMITING.VIEW_DEDUP_WINDOW_SECONDS,
+        },
+      );
+      if (!isNew) {
+        return new NextResponse(null, { status: 202 });
+      }
+    }
+
     await redis.incr(projectPageviewsKey(slug));
     return new NextResponse(null, { status: 202 });
   } catch (error) {

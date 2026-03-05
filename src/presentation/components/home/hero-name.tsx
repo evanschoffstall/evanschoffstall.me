@@ -4,15 +4,35 @@ import { useEffect, useRef, useState } from "react";
 
 interface HeroNameProps {
   onSettled?: () => void;
+  skipInitialAnimation?: boolean;
 }
 
-export function HeroName({ onSettled }: HeroNameProps) {
+/** Resolves once the browser has fully loaded all resources and fonts. */
+function waitForPageReady(): Promise<void> {
+  return new Promise((resolve) => {
+    const proceed = () => document.fonts.ready.then(() => resolve());
+
+    if (document.readyState === "complete") {
+      proceed();
+    } else {
+      window.addEventListener("load", proceed, { once: true });
+    }
+  });
+}
+
+export function HeroName({ onSettled, skipInitialAnimation = false }: HeroNameProps) {
   const placeholderRef = useRef<HTMLDivElement>(null);
   const controls = useAnimationControls();
-  const [settled, setSettled] = useState(false);
+  const [settled, setSettled] = useState(skipInitialAnimation);
 
   useEffect(() => {
+    if (skipInitialAnimation) {
+      onSettled?.();
+      return;
+    }
+
     async function runSequence() {
+      await waitForPageReady();
       // Phase 1: fade in + expand at dead center of screen
       await controls.start({
         opacity: 1,
@@ -49,7 +69,7 @@ export function HeroName({ onSettled }: HeroNameProps) {
     }
 
     runSequence();
-  }, [controls, onSettled]);
+  }, [controls, onSettled, skipInitialAnimation]);
 
   const titleClasses =
     "z-10 text-4xl text-transparent bg-white cursor-default text-edge-outline font-display sm:text-6xl md:text-7xl lg:text-9xl whitespace-nowrap bg-clip-text";

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-label="logo">
+  <title>logo</title>
+
+  <!-- black disk -->
+  <circle cx="12" cy="12" r="12" fill="#000"/>
+
+  <!-- glyph -->
+  <g stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+
+    <!-- vertical branch -->
+    <path d="M9 6.5 V14.5" />
+
+    <!-- smoother curved branch -->
+    <path d="M9.8 14.8 C11.5 13.2 12.5 12.6 14.2 11.6 C15.8 10.6 16.3 10 16.5 9.2" />
+
+  </g>
+
+  <!-- nodes -->
+  <circle cx="9" cy="16.5" r="1.8" fill="#000" stroke="#fff" stroke-width="2"/>
+  <circle cx="17" cy="9" r="1.8" fill="#000" stroke="#fff" stroke-width="2"/>
+
+</svg>

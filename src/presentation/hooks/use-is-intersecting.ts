@@ -8,7 +8,11 @@ type Options = {
   threshold?: number | number[];
 };
 
-export function useIsIntersecting<T extends Element>(options?: Options) {
+export function useIsIntersecting<T extends Element>(
+  root?: Element | null,
+  rootMargin?: string,
+  threshold?: number | number[],
+) {
   const ref = useRef<T | null>(null);
   const [isIntersecting, setIsIntersecting] = useState(true);
 
@@ -17,12 +21,12 @@ export function useIsIntersecting<T extends Element>(options?: Options) {
 
     const observer = new IntersectionObserver(
       ([entry]) => setIsIntersecting(entry.isIntersecting),
-      options,
+      { root, rootMargin, threshold },
     );
 
     observer.observe(ref.current);
     return () => observer.disconnect();
-  }, [options?.root, options?.rootMargin, options?.threshold]);
+  }, [root, rootMargin, threshold]);
 
   return { ref, isIntersecting };
 }
