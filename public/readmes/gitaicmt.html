@@ -1,223 +1,144 @@
 <div align="center" dir="auto">
-  <br />
-  <h1 dir="auto">gitaicmt</h1>
-  <a
-    target="_blank"
-    rel="noopener noreferrer"
-    href="/projects/gitaicmt/logo.svg"
-    ><img
-      src="/projects/gitaicmt/logo.svg"
-      width="112"
-      height="112"
-      alt="gitaicmt logo"
-      style="max-width: 100%; height: auto; max-height: 112px"
-  /></a>
-  <p dir="auto"><em>Run it. Done.</em></p>
-  <p dir="auto">
-    <a href="https://www.typescriptlang.org" rel="nofollow"
-      ><img
-        src="https://camo.githubusercontent.com/b7fbd1ac133b18867505a43ca849fbf3fcf2042622067586e39e680fb585e564/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f547970655363726970742d352d3331373843363f7374796c653d666f722d7468652d6261646765266c6f676f3d74797065736372697074266c6f676f436f6c6f723d7768697465"
-        alt="TypeScript 5"
-        data-canonical-src="https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&amp;logo=typescript&amp;logoColor=white"
-        style="max-width: 100%"
-    /></a>
-    <a href="https://bun.sh" rel="nofollow"
-      ><img
-        src="https://camo.githubusercontent.com/e32cceedfa148dcbb2fc4d8a6c09a7ed213add295b295690b393ba9b02e8c77d/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f42756e2d72756e74696d652d4639463145313f7374796c653d666f722d7468652d6261646765266c6f676f3d62756e266c6f676f436f6c6f723d626c61636b"
-        alt="Bun"
-        data-canonical-src="https://img.shields.io/badge/Bun-runtime-F9F1E1?style=for-the-badge&amp;logo=bun&amp;logoColor=black"
-        style="max-width: 100%"
-    /></a>
-    <a href="https://openai.com" rel="nofollow"
-      ><img
-        src="https://camo.githubusercontent.com/a5ad26375eda02884876be919bcc2074bcca1bdaca4928b8d6c0c3513a6ad0df/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4f70656e41492d636f6d70617469626c652d3431323939313f7374796c653d666f722d7468652d6261646765266c6f676f3d6f70656e6169266c6f676f436f6c6f723d7768697465"
-        alt="OpenAI"
-        data-canonical-src="https://img.shields.io/badge/OpenAI-compatible-412991?style=for-the-badge&amp;logo=openai&amp;logoColor=white"
-        style="max-width: 100%"
-    /></a>
-    <a href="LICENSE"
-      ><img
-        src="https://camo.githubusercontent.com/f77c46cfd34df0f2783a9d96cc43ac41093d5ede3f6ff47dac0b1cfc7bf3a2c7/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4c6963656e73652d4d49542d3232633535653f7374796c653d666f722d7468652d6261646765"
-        alt="MIT License"
-        data-canonical-src="https://img.shields.io/badge/License-MIT-22c55e?style=for-the-badge"
-        style="max-width: 100%"
-    /></a>
-  </p>
-  <p dir="auto">
-    AI-powered git commit messages that actually make sense.<br />Analyzes your
-    diffs, splits logical changes, and writes Conventional Commits — all
-    hands-free.<br />Auto-stages if nothing is staged. Shows the plan, asks
-    once, done.
-  </p>
-  <br />
-</div>
-<hr />
-<h2 dir="auto">What is gitaicmt?</h2>
+<br>
+<h1 dir="auto">gitaicmt</h1>
+<a target="_blank" rel="noopener noreferrer" href="/projects/gitaicmt/logo.svg"><img src="/projects/gitaicmt/logo.svg" width="112" height="112" alt="gitaicmt logo" style="max-width: 100%; height: auto; max-height: 112px;"></a>
+<p dir="auto"><em>Run it. Done.</em></p>
 <p dir="auto">
-  <strong>gitaicmt</strong> is a CLI tool that reads your staged git diffs,
-  sends them to OpenAI, and produces clean, meaningful commit messages
-  automatically. It can even split a big batch of staged changes into multiple
-  logical commits — no manual message-writing required.
+  <a href="https://www.typescriptlang.org" rel="nofollow"><img src="https://camo.githubusercontent.com/b7fbd1ac133b18867505a43ca849fbf3fcf2042622067586e39e680fb585e564/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f547970655363726970742d352d3331373843363f7374796c653d666f722d7468652d6261646765266c6f676f3d74797065736372697074266c6f676f436f6c6f723d7768697465" alt="TypeScript 5" data-canonical-src="https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&amp;logo=typescript&amp;logoColor=white" style="max-width: 100%;"></a>
+  <a href="https://bun.sh" rel="nofollow"><img src="https://camo.githubusercontent.com/e32cceedfa148dcbb2fc4d8a6c09a7ed213add295b295690b393ba9b02e8c77d/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f42756e2d72756e74696d652d4639463145313f7374796c653d666f722d7468652d6261646765266c6f676f3d62756e266c6f676f436f6c6f723d626c61636b" alt="Bun" data-canonical-src="https://img.shields.io/badge/Bun-runtime-F9F1E1?style=for-the-badge&amp;logo=bun&amp;logoColor=black" style="max-width: 100%;"></a>
+  <a href="https://openai.com" rel="nofollow"><img src="https://camo.githubusercontent.com/a5ad26375eda02884876be919bcc2074bcca1bdaca4928b8d6c0c3513a6ad0df/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4f70656e41492d636f6d70617469626c652d3431323939313f7374796c653d666f722d7468652d6261646765266c6f676f3d6f70656e6169266c6f676f436f6c6f723d7768697465" alt="OpenAI" data-canonical-src="https://img.shields.io/badge/OpenAI-compatible-412991?style=for-the-badge&amp;logo=openai&amp;logoColor=white" style="max-width: 100%;"></a>
+  <a href="LICENSE"><img src="https://camo.githubusercontent.com/f77c46cfd34df0f2783a9d96cc43ac41093d5ede3f6ff47dac0b1cfc7bf3a2c7/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4c6963656e73652d4d49542d3232633535653f7374796c653d666f722d7468652d6261646765" alt="MIT License" data-canonical-src="https://img.shields.io/badge/License-MIT-22c55e?style=for-the-badge" style="max-width: 100%;"></a>
 </p>
-<hr />
+<p dir="auto">AI-powered git commit messages that actually make sense.<br>Analyzes your diffs, splits logical changes, and writes Conventional Commits — all hands-free.<br>Auto-stages if nothing is staged. Shows the plan, asks once, done.</p>
+<br>
+</div>
+<hr>
+<h2 dir="auto">What is gitaicmt?</h2>
+<p dir="auto"><strong>gitaicmt</strong> is a CLI tool that reads your staged git diffs, sends them to OpenAI, and produces clean, meaningful commit messages automatically. It can even split a big batch of staged changes into multiple logical commits — no manual message-writing required.</p>
+<hr>
 <h2 dir="auto">Features</h2>
-<markdown-accessiblity-table
-  ><table role="table">
-    <thead>
-      <tr>
-        <th></th>
-        <th>Feature</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>🧠</td>
-        <td><strong>AI-generated messages</strong></td>
-        <td>GPT analyzes your diffs and writes the commit message for you</td>
-      </tr>
-      <tr>
-        <td>🔀</td>
-        <td><strong>Auto-split commits</strong></td>
-        <td>Groups related changes into separate, logical commits</td>
-      </tr>
-      <tr>
-        <td>🧪</td>
-        <td><strong>Hunk-level splitting</strong></td>
-        <td>
-          Splits unrelated changes within the same file into separate commits
-        </td>
-      </tr>
-      <tr>
-        <td>🚀</td>
-        <td><strong>Fully automated</strong></td>
-        <td>Auto-stages all changes if nothing is manually staged</td>
-      </tr>
-      <tr>
-        <td>📋</td>
-        <td><strong>Plan mode</strong></td>
-        <td>Preview the commit split before executing anything</td>
-      </tr>
-      <tr>
-        <td>📝</td>
-        <td><strong>Conventional Commits</strong></td>
-        <td>
-          Follows the
-          <code class="notranslate">type(scope): description</code> format by
-          default
-        </td>
-      </tr>
-      <tr>
-        <td>⚡</td>
-        <td><strong>Parallel chunk processing</strong></td>
-        <td>Large diffs are chunked and analyzed concurrently</td>
-      </tr>
-      <tr>
-        <td>🔧</td>
-        <td><strong>Fully configurable</strong></td>
-        <td>Model, temperature, subject length, body, language — all yours</td>
-      </tr>
-      <tr>
-        <td>🏗️</td>
-        <td><strong>Pipe-friendly</strong></td>
-        <td>
-          <code class="notranslate">gitaicmt gen</code> outputs to stdout for
-          scripting
-        </td>
-      </tr>
-    </tbody>
-  </table></markdown-accessiblity-table
->
-<hr />
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th></th>
+<th>Feature</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🧠</td>
+<td><strong>AI-generated messages</strong></td>
+<td>GPT analyzes your diffs and writes the commit message for you</td>
+</tr>
+<tr>
+<td>🔀</td>
+<td><strong>Auto-split commits</strong></td>
+<td>Groups related changes into separate, logical commits</td>
+</tr>
+<tr>
+<td>🧪</td>
+<td><strong>Hunk-level splitting</strong></td>
+<td>Splits unrelated changes within the same file into separate commits</td>
+</tr>
+<tr>
+<td>🚀</td>
+<td><strong>Fully automated</strong></td>
+<td>Auto-stages all changes if nothing is manually staged</td>
+</tr>
+<tr>
+<td>📋</td>
+<td><strong>Plan mode</strong></td>
+<td>Preview the commit split before executing anything</td>
+</tr>
+<tr>
+<td>📝</td>
+<td><strong>Conventional Commits</strong></td>
+<td>Follows the <code class="notranslate">type(scope): description</code> format by default</td>
+</tr>
+<tr>
+<td>⚡</td>
+<td><strong>Parallel chunk processing</strong></td>
+<td>Large diffs are chunked and analyzed concurrently</td>
+</tr>
+<tr>
+<td>🔧</td>
+<td><strong>Fully configurable</strong></td>
+<td>Model, temperature, subject length, body, language — all yours</td>
+</tr>
+<tr>
+<td>🏗️</td>
+<td><strong>Pipe-friendly</strong></td>
+<td><code class="notranslate">gitaicmt gen</code> outputs to stdout for scripting</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
 <h2 dir="auto">Quick Start</h2>
 <h3 dir="auto">1 · Install</h3>
-<div class="highlight highlight-source-shell" dir="auto">
-  <pre class="notranslate">
-bun install
-bun run build</pre
-  >
-</div>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">bun install
+bun run build</pre></div>
 <h3 dir="auto">2 · Set your API key</h3>
-<div class="highlight highlight-source-shell" dir="auto">
-  <pre
-    class="notranslate"
-  ><span class="pl-k">export</span> OPENAI_API_KEY=<span class="pl-s"><span class="pl-pds">"</span>sk-...<span class="pl-pds">"</span></span></pre>
-</div>
-<p dir="auto">
-  Or add it to <code class="notranslate">gitaicmt.config.json</code>:
-</p>
-<div class="highlight highlight-source-shell" dir="auto">
-  <pre class="notranslate">gitaicmt init</pre>
-</div>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate"><span class="pl-k">export</span> OPENAI_API_KEY=<span class="pl-s"><span class="pl-pds">"</span>sk-...<span class="pl-pds">"</span></span></pre></div>
+<p dir="auto">Or add it to <code class="notranslate">gitaicmt.config.json</code>:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">gitaicmt init</pre></div>
 <h3 dir="auto">3 · Commit</h3>
-<div class="highlight highlight-source-shell" dir="auto">
-  <pre class="notranslate">gitaicmt</pre>
-</div>
-<p dir="auto">
-  That's it. Changes are auto-detected, analyzed, split into logical groups, and
-  committed with AI-written messages.
-</p>
-<hr />
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">gitaicmt</pre></div>
+<p dir="auto">That's it. Changes are auto-detected, analyzed, split into logical groups, and committed with AI-written messages.</p>
+<hr>
 <h2 dir="auto">Commands</h2>
-<markdown-accessiblity-table
-  ><table role="table">
-    <thead>
-      <tr>
-        <th>Command</th>
-        <th>Alias</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><code class="notranslate">gitaicmt</code></td>
-        <td><code class="notranslate">c</code></td>
-        <td>Auto-detect, split &amp; commit (shows plan, asks y/n)</td>
-      </tr>
-      <tr>
-        <td><code class="notranslate">gitaicmt -y</code></td>
-        <td></td>
-        <td>Same as above, skip confirmation</td>
-      </tr>
-      <tr>
-        <td><code class="notranslate">gitaicmt plan</code></td>
-        <td><code class="notranslate">p</code></td>
-        <td>Preview planned commit groups without committing</td>
-      </tr>
-      <tr>
-        <td><code class="notranslate">gitaicmt single</code></td>
-        <td><code class="notranslate">s</code></td>
-        <td>One commit message for all changes</td>
-      </tr>
-      <tr>
-        <td><code class="notranslate">gitaicmt gen</code></td>
-        <td><code class="notranslate">g</code></td>
-        <td>Generate message to stdout (for piping)</td>
-      </tr>
-      <tr>
-        <td><code class="notranslate">gitaicmt init</code></td>
-        <td></td>
-        <td>
-          Create default <code class="notranslate">gitaicmt.config.json</code>
-        </td>
-      </tr>
-      <tr>
-        <td><code class="notranslate">gitaicmt help</code></td>
-        <td><code class="notranslate">-h</code></td>
-        <td>Show help</td>
-      </tr>
-    </tbody>
-  </table></markdown-accessiblity-table
->
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Command</th>
+<th>Alias</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">gitaicmt</code></td>
+<td><code class="notranslate">c</code></td>
+<td>Auto-detect, split &amp; commit (shows plan, asks y/n)</td>
+</tr>
+<tr>
+<td><code class="notranslate">gitaicmt -y</code></td>
+<td></td>
+<td>Same as above, skip confirmation</td>
+</tr>
+<tr>
+<td><code class="notranslate">gitaicmt plan</code></td>
+<td><code class="notranslate">p</code></td>
+<td>Preview planned commit groups without committing</td>
+</tr>
+<tr>
+<td><code class="notranslate">gitaicmt single</code></td>
+<td><code class="notranslate">s</code></td>
+<td>One commit message for all changes</td>
+</tr>
+<tr>
+<td><code class="notranslate">gitaicmt gen</code></td>
+<td><code class="notranslate">g</code></td>
+<td>Generate message to stdout (for piping)</td>
+</tr>
+<tr>
+<td><code class="notranslate">gitaicmt init</code></td>
+<td></td>
+<td>Create default <code class="notranslate">gitaicmt.config.json</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">gitaicmt help</code></td>
+<td><code class="notranslate">-h</code></td>
+<td>Show help</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
 <blockquote>
-  <p dir="auto">Changes are auto-staged if nothing is manually staged.</p>
+<p dir="auto">Changes are auto-staged if nothing is manually staged.</p>
 </blockquote>
-<hr />
+<hr>
 <h2 dir="auto">Examples</h2>
-<div class="highlight highlight-source-shell" dir="auto">
-  <pre
-    class="notranslate"
-  ><span class="pl-c"><span class="pl-c">#</span> Auto-split into logical commits (shows plan, asks y/n)</span>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> Auto-split into logical commits (shows plan, asks y/n)</span>
 gitaicmt
 
 <span class="pl-c"><span class="pl-c">#</span> Same but skip the confirmation prompt</span>
@@ -230,63 +151,47 @@ gitaicmt plan
 gitaicmt gen <span class="pl-k">|</span> git commit -F -
 
 <span class="pl-c"><span class="pl-c">#</span> One commit for everything</span>
-gitaicmt single</pre>
-</div>
-<hr />
+gitaicmt single</pre></div>
+<hr>
 <h2 dir="auto">Configuration</h2>
-<p dir="auto">
-  Config is loaded and deep-merged in this order (last one wins):
-</p>
+<p dir="auto">Config is loaded and deep-merged in this order (last one wins):</p>
 <ol dir="auto">
-  <li><code class="notranslate">/etc/gitaicmt/config.json</code></li>
-  <li>
-    <code class="notranslate">~/.config/gitaicmt/config.json</code> (or
-    <code class="notranslate">$XDG_CONFIG_HOME/gitaicmt/config.json</code>)
-  </li>
-  <li>
-    <code class="notranslate">./gitaicmt.config.json</code> (or
-    <code class="notranslate">./.gitaicmt.json</code>)
-  </li>
-  <li>
-    <code class="notranslate">OPENAI_API_KEY</code> env var (highest priority —
-    overrides config files)
-  </li>
+<li><code class="notranslate">/etc/gitaicmt/config.json</code></li>
+<li><code class="notranslate">~/.config/gitaicmt/config.json</code> (or <code class="notranslate">$XDG_CONFIG_HOME/gitaicmt/config.json</code>)</li>
+<li><code class="notranslate">./gitaicmt.config.json</code> (or <code class="notranslate">./.gitaicmt.json</code>)</li>
+<li><code class="notranslate">OPENAI_API_KEY</code> env var (highest priority — overrides config files)</li>
 </ol>
 <p dir="auto">Create a local config file:</p>
-<div class="highlight highlight-source-shell" dir="auto">
-  <pre class="notranslate">gitaicmt init</pre>
-</div>
-<hr />
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">gitaicmt init</pre></div>
+<hr>
 <h2 dir="auto">Stack</h2>
-<markdown-accessiblity-table
-  ><table role="table">
-    <thead>
-      <tr>
-        <th>Layer</th>
-        <th>Technology</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>🏎️ Runtime</td>
-        <td>Bun</td>
-      </tr>
-      <tr>
-        <td>📜 Language</td>
-        <td>TypeScript 5</td>
-      </tr>
-      <tr>
-        <td>🧠 AI</td>
-        <td>OpenAI (any model)</td>
-      </tr>
-      <tr>
-        <td>🧪 Tests</td>
-        <td>Bun test</td>
-      </tr>
-    </tbody>
-  </table></markdown-accessiblity-table
->
-<hr />
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Layer</th>
+<th>Technology</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🏎️ Runtime</td>
+<td>Bun</td>
+</tr>
+<tr>
+<td>📜 Language</td>
+<td>TypeScript 5</td>
+</tr>
+<tr>
+<td>🧠 AI</td>
+<td>OpenAI (any model)</td>
+</tr>
+<tr>
+<td>🧪 Tests</td>
+<td>Bun test</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
 <h2 dir="auto">Project Structure</h2>
 <pre class="notranslate"><code class="notranslate">gitaicmt/
 ├── src/
@@ -302,13 +207,8 @@ gitaicmt single</pre>
 ├── package.json
 └── tsconfig.json
 </code></pre>
-<hr />
+<hr>
 <div align="center" dir="auto">
-  <p dir="auto">
-    Made with ❤️ by
-    <a href="https://github.com/evanschoffstall">Evan Schoffstall</a>
-  </p>
-  <p dir="auto">
-    MIT License · Free forever · Let the robots write your commits
-  </p>
+<p dir="auto">Made with ❤️ by <a href="https://github.com/evanschoffstall">Evan Schoffstall</a></p>
+<p dir="auto">MIT License · Free forever · Let the robots write your commits</p>
 </div>
