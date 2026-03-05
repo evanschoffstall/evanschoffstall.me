@@ -6,15 +6,11 @@
     "contentlayer:build": "node ./scripts/contentlayer-build.cjs",
     "contentlayer:dev": "bunx --bun contentlayer dev",
     "readmes:download": "tsx ./scripts/download-project-readmes.ts",
-    "dev": "node ./scripts/dev-with-contentlayer.cjs --turbopack",
-    "dev:local": "node ./scripts/dev-with-contentlayer.cjs --turbopack -H 0.0.0.0 -p 3000",
+    "dev": "bun run contentlayer:build && next dev --turbopack",
+    "dev:local": "bun run contentlayer:build && next dev --turbopack -H 0.0.0.0 -p 3000",
     "build": "next build",
     "clean": "rm -rf .next .cache .contentlayer",
-    "check": "bun scripts/check.ts",
-    "test": "bun test",
-    "test:regen-expectations": "bun run src/__tests__/snapshots/expect-extraction/regen-expections.ts",
     "types": "tsc --noEmit",
-    "lint": "bun scripts/lint.ts",
     "start": "next start"
   },
   "dependencies": {

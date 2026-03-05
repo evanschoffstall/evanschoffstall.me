@@ -93,8 +93,6 @@ Open **[http://localhost:3000](http://localhost:3000)** and you're live.
 | `bun run readmes:download`   | Fetch latest READMEs from GitHub              |
 | `bun run clean`              | Remove `.next`, `.cache`, and `.contentlayer` |
 | `bun run types`              | TypeScript type check (no emit)               |
-| `bun run lint`               | Run linter                                    |
-| `bun run check`              | Run project checks                            |
 | `bun test`                   | Run test suite                                |
 
 ---
