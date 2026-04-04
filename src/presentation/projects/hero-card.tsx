@@ -30,7 +30,7 @@ export function ProjectHeroCard({
   return (
     <>
       <Glow />
-      <Wrapper>
+      <Wrapper className="h-full">
         <Link
           href={`/projects/${project.slug}`}
           onClick={saveProjectsScrollPosition}

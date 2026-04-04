@@ -1,9 +1,13 @@
 "use client";
 
+import { cn } from "@/shared/cn";
 import { motion, useMotionTemplate, useSpring } from "framer-motion";
 import type { MouseEvent, PropsWithChildren } from "react";
 
-export function FeaturedCard({ children }: PropsWithChildren) {
+export function FeaturedCard({
+  children,
+  className,
+}: PropsWithChildren<{ className?: string }>) {
   const mouseX = useSpring(0, { stiffness: 500, damping: 100 });
   const mouseY = useSpring(0, { stiffness: 500, damping: 100 });
 
@@ -20,10 +24,10 @@ export function FeaturedCard({ children }: PropsWithChildren) {
   return (
     <div
       onMouseMove={onMouseMove}
-      className="overflow-hidden relative duration-700 border rounded-xl group md:gap-8 shadow-2xl
-				border-amber-700/40 bg-zinc-900/60
-				hover:border-amber-500/60 hover:bg-amber-950/10
-				shadow-amber-950/30 hover:shadow-amber-900/40"
+      className={cn(
+        "overflow-hidden relative duration-700 border rounded-xl group md:gap-8 shadow-2xl border-amber-900/30 bg-zinc-900/40 hover:border-amber-700/40 hover:bg-amber-950/10 shadow-amber-950/20 hover:shadow-amber-900/30",
+        className,
+      )}
     >
       {/* Top edge accent line */}
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber-500/50 to-transparent" />
