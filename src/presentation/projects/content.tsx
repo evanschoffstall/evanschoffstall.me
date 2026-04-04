@@ -15,8 +15,8 @@ const DIVIDER_ANIMATION = {
 
 type Props = {
   featured: Project;
-  top2: Project;
-  top3: Project;
+  second: Project;
+  third: Project;
   sorted: Project[];
   sortedContributions: Project[];
   sortedLegacy: Project[];
@@ -96,8 +96,8 @@ function ProjectListSection({
 
 export function ProjectsContent({
   featured,
-  top2,
-  top3,
+  second,
+  third,
   sorted,
   sortedContributions,
   sortedLegacy,
@@ -138,8 +138,12 @@ export function ProjectsContent({
             headingId="featured-post"
           />
         </motion.div>
-        {[top2, top3].map((project) => (
-          <motion.div key={project.slug} className="relative" variants={fadeInUp}>
+        {[second, third].map((project) => (
+          <motion.div
+            key={project.slug}
+            className="relative"
+            variants={fadeInUp}
+          >
             <ProjectHeroCard
               project={project}
               views={views[project.slug] ?? 0}

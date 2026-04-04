@@ -1,5 +1,6 @@
 import { getProjectView } from "@/application/pageviews";
 import { Mdx } from "@/presentation/common/mdx";
+import { ScrollArea } from "@/presentation/common/scroll-area";
 import { allProjects } from "contentlayer/generated";
 import "github-markdown-css/github-markdown-light.css";
 import { notFound } from "next/navigation";
@@ -47,35 +48,39 @@ export default async function ProjectPage({ params }: Props) {
   const readmeHtml = await getReadmeHtml(project.slug);
 
   return (
-    <div className="bg-white min-h-screen">
-      <Header project={project} views={views} />
-      <ReportView slug={project.slug} />
+    <div className="h-screen overflow-hidden">
+      <ScrollArea className="h-full w-full">
+        <div className="bg-white min-h-screen">
+          <Header project={project} views={views} />
+          <ReportView slug={project.slug} />
 
-      <div className="px-4 py-12 mx-auto" style={{ maxWidth: "838.67px" }}>
-        {readmeHtml ? (
-          <section
-            className="markdown-body mt-8"
-            /**
-             * SECURITY NOTE: This renders pre-generated HTML from public/readmes/*.html
-             *
-             * These files are generated at build time by scripts/download-project-readmes.ts
-             * from GitHub README files. The HTML is sanitized by GitHub's markdown renderer.
-             *
-             * Risk: If the build script or source READMEs are compromised, XSS is possible.
-             * Mitigation: READMEs are from trusted repositories only. For untrusted content,
-             * use a sanitization library like DOMPurify or render as plain Markdown.
-             *
-             * TODO: Consider adding DOMPurify server-side sanitization for defense-in-depth.
-             */
-            // eslint-disable-next-line react/no-danger
-            dangerouslySetInnerHTML={{ __html: readmeHtml }}
-          />
-        ) : (
-          <section className="prose prose-zinc prose-quoteless max-w-none mt-8">
-            <Mdx code={project.body.code} />
-          </section>
-        )}
-      </div>
+          <div className="px-4 py-12 mx-auto" style={{ maxWidth: "838.67px" }}>
+            {readmeHtml ? (
+              <section
+                className="markdown-body mt-8"
+                /**
+                 * SECURITY NOTE: This renders pre-generated HTML from public/readmes/*.html
+                 *
+                 * These files are generated at build time by scripts/download-project-readmes.ts
+                 * from GitHub README files. The HTML is sanitized by GitHub's markdown renderer.
+                 *
+                 * Risk: If the build script or source READMEs are compromised, XSS is possible.
+                 * Mitigation: READMEs are from trusted repositories only. For untrusted content,
+                 * use a sanitization library like DOMPurify or render as plain Markdown.
+                 *
+                 * TODO: Consider adding DOMPurify server-side sanitization for defense-in-depth.
+                 */
+                // eslint-disable-next-line react/no-danger
+                dangerouslySetInnerHTML={{ __html: readmeHtml }}
+              />
+            ) : (
+              <section className="prose prose-zinc prose-quoteless max-w-none mt-8">
+                <Mdx code={project.body.code} />
+              </section>
+            )}
+          </div>
+        </div>
+      </ScrollArea>
     </div>
   );
 }
