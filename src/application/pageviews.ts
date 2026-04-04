@@ -1,7 +1,41 @@
-import { redis } from "@/infrastructure/redis/client";
+import { redis } from "@/infrastructure/redis";
+import { RATE_LIMITING } from "@/shared/constants";
 
-export function projectPageviewsKey(slug: string): string {
+function projectPageviewsKey(slug: string): string {
   return ["pageviews", "projects", slug].join(":");
+}
+
+/**
+ * Increments the view count for a project, deduplicated by hashed IP.
+ * No-ops silently when Redis is unavailable.
+ * Throws on unexpected Redis errors so the caller can surface a 500.
+ *
+ * @param slug - Validated project slug
+ * @param ip   - Caller IP (null skips deduplication and always increments)
+ */
+export async function incrementProjectView(
+  slug: string,
+  ip: string | null,
+): Promise<void> {
+  if (!redis) return;
+
+  if (ip) {
+    const buf = await crypto.subtle.digest(
+      "SHA-256",
+      new TextEncoder().encode(ip),
+    );
+    const hash = Array.from(new Uint8Array(buf))
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+
+    const isNew = await redis.set(["deduplicate", hash, slug].join(":"), true, {
+      nx: true,
+      ex: RATE_LIMITING.VIEW_DEDUP_WINDOW_SECONDS,
+    });
+    if (!isNew) return;
+  }
+
+  await redis.incr(projectPageviewsKey(slug));
 }
 
 function toSafeViewCount(value: unknown): number {
