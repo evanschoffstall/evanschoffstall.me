@@ -1,18 +1,6 @@
-const SKIP_HOME_INTRO_ONCE_KEY = "skip-home-intro-once";
+import { hasSessionStorage } from "@/shared/session-storage";
 
-function hasSessionStorage(): boolean {
-  if (typeof window === "undefined") {
-    return false;
-  }
-  try {
-    const test = "__storage_test__";
-    window.sessionStorage.setItem(test, test);
-    window.sessionStorage.removeItem(test);
-    return true;
-  } catch {
-    return false;
-  }
-}
+const SKIP_HOME_INTRO_ONCE_KEY = "skip-home-intro-once";
 
 export function markSkipHomeIntroOnce(): void {
   if (!hasSessionStorage()) {

@@ -1,19 +1,7 @@
+import { hasSessionStorage } from "@/shared/session-storage";
+
 const PROJECTS_SCROLL_Y_KEY = "projects:scrollY";
 const PROJECTS_RESTORE_FLAG_KEY = "projects:restore";
-
-function hasSessionStorage(): boolean {
-  if (typeof window === "undefined") {
-    return false;
-  }
-  try {
-    const test = "__storage_test__";
-    window.sessionStorage.setItem(test, test);
-    window.sessionStorage.removeItem(test);
-    return true;
-  } catch {
-    return false;
-  }
-}
 
 export function saveProjectsScrollPosition(): void {
   if (!hasSessionStorage()) {

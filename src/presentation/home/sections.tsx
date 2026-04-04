@@ -1,18 +1,18 @@
 "use client";
 
 import { ANIMATION } from "@/shared/constants";
-import { consumeProjectsScrollPosition } from "@/shared/lib/projects-scroll";
+import { consumeProjectsScrollPosition } from "@/shared/projects-scroll";
 import type { Project } from "contentlayer/generated";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { Navigation } from "../common/nav";
-import { ProjectsContent } from "../projects/projects-content";
-import { HomeContent } from "./home-content";
+import { ProjectsContent } from "../projects/content";
+import { HomeContent } from "./content";
 
 type ProjectData = {
   featured: Project;
-  top2: Project;
-  top3: Project;
+  second: Project;
+  third: Project;
   sorted: Project[];
   sortedContributions: Project[];
   sortedLegacy: Project[];

@@ -1,15 +1,15 @@
 "use client";
 
-import { ScrollArea } from "@/presentation/components/common/scroll-area";
-import { consumeSkipHomeIntroOnce } from "@/shared/lib/home-intro";
-import { fadeIn, fadeInUp } from "@/shared/lib/motion";
+import { ScrollArea } from "@/presentation/common/scroll-area";
+import { consumeSkipHomeIntroOnce } from "@/shared/hero-intro";
+import { fadeIn, fadeInUp } from "@/shared/motion";
 import type { Project } from "contentlayer/generated";
 import { motion } from "framer-motion";
 import { Github, Linkedin, Mail, RefreshCw, Twitter } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useState } from "react";
 import { HeroName } from "./hero-name";
-import { HomeOverview } from "./home-overview";
+import { HomeOverview } from "./overview";
 
 type Props = {
   onViewProjects?: () => void;
