@@ -9,7 +9,7 @@
   <a href="https://openai.com" rel="nofollow"><img src="https://camo.githubusercontent.com/a5ad26375eda02884876be919bcc2074bcca1bdaca4928b8d6c0c3513a6ad0df/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4f70656e41492d636f6d70617469626c652d3431323939313f7374796c653d666f722d7468652d6261646765266c6f676f3d6f70656e6169266c6f676f436f6c6f723d7768697465" alt="OpenAI" data-canonical-src="https://img.shields.io/badge/OpenAI-compatible-412991?style=for-the-badge&amp;logo=openai&amp;logoColor=white" style="max-width: 100%;"></a>
   <a href="LICENSE"><img src="https://camo.githubusercontent.com/f77c46cfd34df0f2783a9d96cc43ac41093d5ede3f6ff47dac0b1cfc7bf3a2c7/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4c6963656e73652d4d49542d3232633535653f7374796c653d666f722d7468652d6261646765" alt="MIT License" data-canonical-src="https://img.shields.io/badge/License-MIT-22c55e?style=for-the-badge" style="max-width: 100%;"></a>
 </p>
-<p dir="auto">AI-powered git commit messages that actually make sense.<br>Analyzes your diffs, splits logical changes, and writes Conventional Commits — all hands-free.<br>Auto-stages if nothing is staged. Shows the plan, asks once, done.</p>
+<p dir="auto">High quality AI-powered git commit messages that actually make sense.<br>Analyzes your diffs, splits logical changes between both hunks and files, and writes Conventional Commits — all hands-free.<br>Auto-stages if nothing is staged. Shows the plan, asks once, done.</p>
 <br>
 </div>
 <hr>
@@ -77,11 +77,13 @@
 <h2 dir="auto">Quick Start</h2>
 <h3 dir="auto">1 · Install</h3>
 <div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">bun install
-bun run build</pre></div>
+bun run build
+bun link</pre></div>
 <h3 dir="auto">2 · Set your API key</h3>
 <div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate"><span class="pl-k">export</span> OPENAI_API_KEY=<span class="pl-s"><span class="pl-pds">"</span>sk-...<span class="pl-pds">"</span></span></pre></div>
 <p dir="auto">Or add it to <code class="notranslate">gitaicmt.config.json</code>:</p>
 <div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">gitaicmt init</pre></div>
+<p dir="auto">Token usage is estimated before AI calls. When the estimate crosses <code class="notranslate">analysis.tokenWarningThreshold</code> (default <code class="notranslate">10000</code>), gitaicmt warns and asks for confirmation by default. Set <code class="notranslate">analysis.promptOnTokenWarning</code> to <code class="notranslate">false</code> to disable the prompt, set <code class="notranslate">analysis.tokenWarningThreshold</code> to <code class="notranslate">0</code> to disable the warning entirely, or pass <code class="notranslate">--no-token-check</code> to bypass the prompt for one run.</p>
 <h3 dir="auto">3 · Commit</h3>
 <div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">gitaicmt</pre></div>
 <p dir="auto">That's it. Changes are auto-detected, analyzed, split into logical groups, and committed with AI-written messages.</p>
@@ -100,11 +102,6 @@ bun run build</pre></div>
 <td><code class="notranslate">gitaicmt</code></td>
 <td><code class="notranslate">c</code></td>
 <td>Auto-detect, split &amp; commit (shows plan, asks y/n)</td>
-</tr>
-<tr>
-<td><code class="notranslate">gitaicmt -y</code></td>
-<td></td>
-<td>Same as above, skip confirmation</td>
 </tr>
 <tr>
 <td><code class="notranslate">gitaicmt plan</code></td>
@@ -130,6 +127,25 @@ bun run build</pre></div>
 <td><code class="notranslate">gitaicmt help</code></td>
 <td><code class="notranslate">-h</code></td>
 <td>Show help</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto">Flags</h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Flag</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">-y</code>, <code class="notranslate">--yes</code></td>
+<td>Skip confirmation prompts</td>
+</tr>
+<tr>
+<td><code class="notranslate">--no-token-check</code></td>
+<td>Skip the high-token confirmation prompt for one run</td>
 </tr>
 </tbody>
 </table></markdown-accessiblity-table>
@@ -195,10 +211,11 @@ gitaicmt single</pre></div>
 <h2 dir="auto">Project Structure</h2>
 <pre class="notranslate"><code class="notranslate">gitaicmt/
 ├── src/
-│   ├── cli.ts      # CLI entry point &amp; command routing
-│   ├── ai.ts       # OpenAI integration &amp; prompt building
-│   ├── config.ts   # Config loading, merging &amp; defaults
-│   └── diff.ts     # Git diff parsing, chunking &amp; staging
+│   ├── application/               # Config, constants, schemas, and runtime errors
+│   ├── cli/                       # CLI entry point, staging, plan display, and terminal UI
+│   ├── commit-messages/           # Commit message formatting and subject parsing helpers
+│   ├── commit-planning/           # AI orchestration, prompts, grouping, caching, and planning logic
+│   └── git/                       # Git diff parsing and command execution
 ├── tests/
 │   ├── ai.test.ts
 │   ├── cli.test.ts
