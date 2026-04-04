@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/shared/lib/cn";
+import { cn } from "@/shared/cn";
 import { motion, useMotionTemplate, useSpring } from "framer-motion";
 import type { MouseEvent, PropsWithChildren } from "react";
 

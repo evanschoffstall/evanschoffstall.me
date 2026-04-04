@@ -1,9 +1,9 @@
 "use client";
 
 import { useIsIntersecting } from "@/presentation/hooks/use-is-intersecting";
-import { formatCompactNumber } from "@/shared/lib/format";
-import { markSkipHomeIntroOnce } from "@/shared/lib/home-intro";
-import { normalizeExternalHref, normalizeRepoHref } from "@/shared/lib/urls";
+import { formatCompactNumber } from "@/shared/format";
+import { markSkipHomeIntroOnce } from "@/shared/hero-intro";
+import { normalizeExternalHref, normalizeRepoHref } from "@/shared/urls";
 import { ArrowLeft, Eye, Github } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

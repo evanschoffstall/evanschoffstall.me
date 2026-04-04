@@ -1,10 +1,10 @@
-import { getProjectViews } from "@/application/services/pageviews";
+import { getProjectViews } from "@/application/pageviews";
 import {
   groupAndSortProjects,
   pickFeaturedProjects,
-} from "@/domain/projects/policies/project-selection";
-import { HomeSections } from "@/presentation/components/home/home-sections";
-import { ParticlesBackground } from "@/presentation/components/home/particles-background";
+} from "@/domain/projects/selection";
+import { HomeSections } from "@/presentation/home/sections";
+import { ParticlesBackground } from "@/presentation/home/particles-background";
 import { ANIMATION } from "@/shared/constants";
 import { allProjects } from "contentlayer/generated";
 
@@ -19,8 +19,8 @@ export default async function Home() {
   const grouped = featuredSelection
     ? groupAndSortProjects(allProjects, [
         featuredSelection.featured.slug,
-        featuredSelection.top2.slug,
-        featuredSelection.top3.slug,
+        featuredSelection.second.slug,
+        featuredSelection.third.slug,
       ])
     : null;
 
@@ -28,8 +28,8 @@ export default async function Home() {
     featuredSelection && grouped
       ? {
           featured: featuredSelection.featured,
-          top2: featuredSelection.top2,
-          top3: featuredSelection.top3,
+          second: featuredSelection.second,
+          third: featuredSelection.third,
           sorted: grouped.sorted,
           sortedContributions: grouped.sortedContributions,
           sortedLegacy: grouped.sortedLegacy,

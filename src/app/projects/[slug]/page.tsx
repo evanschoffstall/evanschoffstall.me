@@ -1,5 +1,5 @@
-import { getProjectView } from "@/application/services/pageviews";
-import { Mdx } from "@/presentation/components/common/mdx";
+import { getProjectView } from "@/application/pageviews";
+import { Mdx } from "@/presentation/common/mdx";
 import { allProjects } from "contentlayer/generated";
 import "github-markdown-css/github-markdown-light.css";
 import { notFound } from "next/navigation";
@@ -7,7 +7,7 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { Header } from "./header";
 import "./mdx.css";
-import { ReportView } from "./view";
+import { ReportView } from "./report-view";
 
 export const revalidate = 60;
 
@@ -35,7 +35,7 @@ async function getReadmeHtml(slug: string): Promise<string | null> {
   }
 }
 
-export default async function PostPage({ params }: Props) {
+export default async function ProjectPage({ params }: Props) {
   const { slug } = await params;
   const project = allProjects.find((project) => project.slug === slug);
 
