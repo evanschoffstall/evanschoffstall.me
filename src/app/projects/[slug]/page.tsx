@@ -1,13 +1,14 @@
-import { getProjectView } from "@/application/services/pageviews";
-import { Mdx } from "@/presentation/components/common/mdx";
+import { getProjectView } from "@/application/pageviews";
+import { Mdx } from "@/presentation/common/mdx";
+import { ScrollArea } from "@/presentation/common/scroll-area";
 import { allProjects } from "contentlayer/generated";
-import "github-markdown-css/github-markdown-light.css";
+import "github-markdown-css/github-markdown-dark.css";
 import { notFound } from "next/navigation";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { Header } from "./header";
 import "./mdx.css";
-import { ReportView } from "./view";
+import { ReportView } from "./report-view";
 
 export const revalidate = 60;
 
@@ -35,7 +36,7 @@ async function getReadmeHtml(slug: string): Promise<string | null> {
   }
 }
 
-export default async function PostPage({ params }: Props) {
+export default async function ProjectPage({ params }: Props) {
   const { slug } = await params;
   const project = allProjects.find((project) => project.slug === slug);
 
@@ -47,35 +48,43 @@ export default async function PostPage({ params }: Props) {
   const readmeHtml = await getReadmeHtml(project.slug);
 
   return (
-    <div className="bg-white min-h-screen">
-      <Header project={project} views={views} />
-      <ReportView slug={project.slug} />
-
-      <div className="px-4 py-12 mx-auto" style={{ maxWidth: "838.67px" }}>
-        {readmeHtml ? (
-          <section
-            className="markdown-body mt-8"
-            /**
-             * SECURITY NOTE: This renders pre-generated HTML from public/readmes/*.html
-             *
-             * These files are generated at build time by scripts/download-project-readmes.ts
-             * from GitHub README files. The HTML is sanitized by GitHub's markdown renderer.
-             *
-             * Risk: If the build script or source READMEs are compromised, XSS is possible.
-             * Mitigation: READMEs are from trusted repositories only. For untrusted content,
-             * use a sanitization library like DOMPurify or render as plain Markdown.
-             *
-             * TODO: Consider adding DOMPurify server-side sanitization for defense-in-depth.
-             */
-            // eslint-disable-next-line react/no-danger
-            dangerouslySetInnerHTML={{ __html: readmeHtml }}
+    <div className="h-screen overflow-hidden">
+      <ScrollArea className="h-full w-full">
+        <div className="min-h-screen max-w-[100vw] overflow-x-hidden">
+          <Header
+            project={project}
+            views={views}
+            hasReadme={readmeHtml !== null}
           />
-        ) : (
-          <section className="prose prose-zinc prose-quoteless max-w-none mt-8">
-            <Mdx code={project.body.code} />
-          </section>
-        )}
-      </div>
+          <ReportView slug={project.slug} />
+
+          <div className="px-4 py-12 mx-auto max-w-3xl">
+            {readmeHtml ? (
+              <section
+                className="markdown-body mt-8 overflow-x-auto"
+                /**
+                 * SECURITY NOTE: This renders pre-generated HTML from public/readmes/*.html
+                 *
+                 * These files are generated at build time by scripts/download-project-readmes.ts
+                 * from GitHub README files. The HTML is sanitized by GitHub's markdown renderer.
+                 *
+                 * Risk: If the build script or source READMEs are compromised, XSS is possible.
+                 * Mitigation: READMEs are from trusted repositories only. For untrusted content,
+                 * use a sanitization library like DOMPurify or render as plain Markdown.
+                 *
+                 * TODO: Consider adding DOMPurify server-side sanitization for defense-in-depth.
+                 */
+                // eslint-disable-next-line react/no-danger
+                dangerouslySetInnerHTML={{ __html: readmeHtml }}
+              />
+            ) : (
+              <section className="prose prose-zinc prose-invert prose-quoteless max-w-none mt-8">
+                <Mdx code={project.body.code} />
+              </section>
+            )}
+          </div>
+        </div>
+      </ScrollArea>
     </div>
   );
 }

@@ -10,12 +10,13 @@
   <a href="https://bun.sh" rel="nofollow"><img src="https://camo.githubusercontent.com/e32cceedfa148dcbb2fc4d8a6c09a7ed213add295b295690b393ba9b02e8c77d/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f42756e2d72756e74696d652d4639463145313f7374796c653d666f722d7468652d6261646765266c6f676f3d62756e266c6f676f436f6c6f723d626c61636b" alt="Bun" data-canonical-src="https://img.shields.io/badge/Bun-runtime-F9F1E1?style=for-the-badge&amp;logo=bun&amp;logoColor=black" style="max-width: 100%;"></a>
   <a href="LICENSE"><img src="https://camo.githubusercontent.com/f77c46cfd34df0f2783a9d96cc43ac41093d5ede3f6ff47dac0b1cfc7bf3a2c7/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4c6963656e73652d4d49542d3232633535653f7374796c653d666f722d7468652d6261646765" alt="MIT License" data-canonical-src="https://img.shields.io/badge/License-MIT-22c55e?style=for-the-badge" style="max-width: 100%;"></a>
 </p>
-<p dir="auto">Personal portfolio built with Next.js 16 — MDX-powered project pages, live view counts,<br>syntax-highlighted code, and smooth animations. Fast, minimal, and fully open source.</p>
+<p dir="auto">My personal portfolio — project write-ups, live view counts, and smooth page transitions, all in one place.</p>
 <br>
 </div>
 <hr>
-<h2 dir="auto">What is this?</h2>
-<p dir="auto">This is my personal portfolio site. It hosts write-ups for my projects, tracks page views with Upstash Redis, and renders MDX content via Contentlayer. The design prioritizes speed and clarity over flash.</p>
+<h2 dir="auto">Overview</h2>
+<p dir="auto">Personal portfolio and project showcase. Each project gets a dedicated page with a description, links, and optionally the full README pulled in from GitHub.</p>
+<p dir="auto">View counts are optional — the site works without any extra setup.</p>
 <hr>
 <h2 dir="auto">Features</h2>
 <markdown-accessiblity-table><table role="table">
@@ -29,47 +30,60 @@
 <tbody>
 <tr>
 <td>📝</td>
-<td><strong>MDX project pages</strong></td>
-<td>Write project content in Markdown with React components</td>
+<td><strong>Project pages from MDX</strong></td>
+<td>Write projects as Markdown files — pages are generated automatically</td>
+</tr>
+<tr>
+<td>📄</td>
+<td><strong>Mirrored GitHub READMEs</strong></td>
+<td>Optionally pull in a project's GitHub README and render it on the page</td>
 </tr>
 <tr>
 <td>👁️</td>
-<td><strong>Live view counts</strong></td>
-<td>Per-page view tracking powered by Upstash Redis</td>
+<td><strong>Optional live views</strong></td>
+<td>Track how many times each project page has been visited</td>
 </tr>
 <tr>
 <td>🎨</td>
-<td><strong>Syntax highlighting</strong></td>
-<td>Beautiful code blocks via Shiki</td>
+<td><strong>Syntax-highlighted code</strong></td>
+<td>Code blocks rendered with accurate, theme-aware syntax highlighting</td>
 </tr>
 <tr>
 <td>✨</td>
-<td><strong>Smooth animations</strong></td>
-<td>Page and element transitions with Framer Motion</td>
+<td><strong>Animated transitions</strong></td>
+<td>Smooth animations between the home page and project listings</td>
+</tr>
+<tr>
+<td>♻️</td>
+<td><strong>Fast page loads</strong></td>
+<td>Pages are prebuilt at deploy time and refreshed in the background</td>
 </tr>
 <tr>
 <td>📱</td>
-<td><strong>Responsive layout</strong></td>
-<td>Tailwind CSS — looks right on every screen</td>
-</tr>
-<tr>
-<td>🗂️</td>
-<td><strong>Contentlayer</strong></td>
-<td>Type-safe MDX processing with hot reload in dev</td>
+<td><strong>Responsive UI</strong></td>
+<td>Looks great on mobile, tablet, and desktop</td>
 </tr>
 </tbody>
 </table></markdown-accessiblity-table>
 <hr>
 <h2 dir="auto">Quick Start</h2>
-<h3 dir="auto">1 · Install dependencies</h3>
+<h3 dir="auto">1. Install dependencies</h3>
 <div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">bun install</pre></div>
-<h3 dir="auto">2 · Configure your environment</h3>
-<p dir="auto">Create <code class="notranslate">.env.local</code> at the project root:</p>
-<div class="highlight highlight-source-dotenv" dir="auto"><pre class="notranslate"><span class="pl-v">UPSTASH_REDIS_REST_URL</span><span class="pl-k">=</span><span class="pl-s">your_redis_url</span>
+<h3 dir="auto">2. Configure your environment</h3>
+<p dir="auto">Copy the example file and fill in the values you need:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">cp .env.example .env.local</pre></div>
+<div class="highlight highlight-source-dotenv" dir="auto"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> Optional: enables live pageview tracking</span>
+<span class="pl-v">UPSTASH_REDIS_REST_URL</span><span class="pl-k">=</span><span class="pl-s">your_redis_url</span>
 <span class="pl-v">UPSTASH_REDIS_REST_TOKEN</span><span class="pl-k">=</span><span class="pl-s">your_redis_token</span></pre></div>
-<h3 dir="auto">3 · Start the dev server</h3>
+<p dir="auto">Without these values the site still works — view counts just show zero.</p>
+<h3 dir="auto">3. Start the dev server</h3>
 <div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">bun dev</pre></div>
-<p dir="auto">Open <strong><a href="http://localhost:3000" rel="nofollow">http://localhost:3000</a></strong> and you're live.</p>
+<p dir="auto"><code class="notranslate">bun dev</code> processes content files and starts the dev server. To expose it on your local network:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">bun run dev:local</pre></div>
+<p dir="auto">Open <a href="http://localhost:3000" rel="nofollow">http://localhost:3000</a>.</p>
+<h3 dir="auto">4. Refresh mirrored READMEs (optional)</h3>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">bun run readmes:download</pre></div>
+<p dir="auto">Downloads the latest README from each configured GitHub repository and saves a rendered copy locally.</p>
 <hr>
 <h2 dir="auto">Stack</h2>
 <markdown-accessiblity-table><table role="table">
@@ -82,19 +96,19 @@
 <tbody>
 <tr>
 <td>⚡ Framework</td>
-<td>Next.js 16 · React 19 · TypeScript 5</td>
+<td>Next.js 16 App Router · React 19 · TypeScript 5</td>
 </tr>
 <tr>
 <td>🎨 UI</td>
-<td>Tailwind CSS · Framer Motion · Lucide Icons</td>
+<td>Tailwind CSS · Framer Motion · Lucide React</td>
 </tr>
 <tr>
 <td>📝 Content</td>
-<td>Contentlayer · MDX · Shiki</td>
+<td>Contentlayer · MDX · <code class="notranslate">rehype-pretty-code</code> · Shiki · remark-gfm</td>
 </tr>
 <tr>
 <td>📊 Analytics</td>
-<td>Upstash Redis</td>
+<td>Upstash Redis REST API</td>
 </tr>
 <tr>
 <td>🏎️ Runtime</td>
@@ -103,7 +117,7 @@
 </tbody>
 </table></markdown-accessiblity-table>
 <hr>
-<h2 dir="auto">Scripts</h2>
+<h2 dir="auto">Commands</h2>
 <markdown-accessiblity-table><table role="table">
 <thead>
 <tr>
@@ -114,23 +128,31 @@
 <tbody>
 <tr>
 <td><code class="notranslate">bun dev</code></td>
-<td>Start dev server with Contentlayer watch</td>
+<td>Contentlayer build, then start Next.js dev with Turbopack</td>
 </tr>
 <tr>
-<td><code class="notranslate">bun build</code></td>
-<td>Build for production</td>
+<td><code class="notranslate">bun run dev:local</code></td>
+<td>Same as <code class="notranslate">bun dev</code>, bound to <code class="notranslate">0.0.0.0:3000</code></td>
 </tr>
 <tr>
-<td><code class="notranslate">bun start</code></td>
-<td>Start production server</td>
+<td><code class="notranslate">bun run build</code></td>
+<td>Contentlayer build, then production Next.js build</td>
+</tr>
+<tr>
+<td><code class="notranslate">bun run start</code></td>
+<td>Start the production Next.js server</td>
 </tr>
 <tr>
 <td><code class="notranslate">bun run contentlayer:build</code></td>
-<td>One-shot Contentlayer build</td>
+<td>Run the one-shot Contentlayer build script</td>
+</tr>
+<tr>
+<td><code class="notranslate">bun run contentlayer:dev</code></td>
+<td>Start Contentlayer in watch mode</td>
 </tr>
 <tr>
 <td><code class="notranslate">bun run readmes:download</code></td>
-<td>Fetch latest READMEs from GitHub</td>
+<td>Download and render GitHub READMEs into <code class="notranslate">public/readmes/</code></td>
 </tr>
 <tr>
 <td><code class="notranslate">bun run clean</code></td>
@@ -138,60 +160,42 @@
 </tr>
 <tr>
 <td><code class="notranslate">bun run types</code></td>
-<td>TypeScript type check (no emit)</td>
-</tr>
-<tr>
-<td><code class="notranslate">bun run lint</code></td>
-<td>Run linter</td>
-</tr>
-<tr>
-<td><code class="notranslate">bun run check</code></td>
-<td>Run project checks</td>
-</tr>
-<tr>
-<td><code class="notranslate">bun test</code></td>
-<td>Run test suite</td>
+<td>Type-check the project with <code class="notranslate">tsc --noEmit</code></td>
 </tr>
 </tbody>
 </table></markdown-accessiblity-table>
+<p dir="auto">Tests live in <code class="notranslate">src/__tests__/</code> and use <code class="notranslate">bun:test</code>. Run them with:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">bun <span class="pl-c1">test</span></pre></div>
 <hr>
 <h2 dir="auto">Adding a Project</h2>
 <p dir="auto">Create a new MDX file in <code class="notranslate">content/projects/</code>:</p>
 <div class="highlight highlight-source-mdx" dir="auto"><pre class="notranslate"><span class="pl-s">---</span>
-<span class="pl-ent">title</span>: <span class="pl-s"><span class="pl-pds">"</span>Project Title<span class="pl-pds">"</span></span>
-<span class="pl-ent">description</span>: <span class="pl-s"><span class="pl-pds">"</span>Brief description<span class="pl-pds">"</span></span>
+<span class="pl-ent">title</span>: <span class="pl-s">Project Title</span>
+<span class="pl-ent">description</span>: <span class="pl-s">Brief description</span>
 <span class="pl-ent">date</span>: <span class="pl-s"><span class="pl-pds">"</span>2024-01-01<span class="pl-pds">"</span></span>
 <span class="pl-ent">published</span>: <span class="pl-c1">true</span>
 <span class="pl-ent">url</span>: <span class="pl-s"><span class="pl-pds">"</span>https://project-url.com<span class="pl-pds">"</span></span>
-<span class="pl-ent">repository</span>: <span class="pl-s"><span class="pl-pds">"</span>https://github.com/user/repo<span class="pl-pds">"</span></span>
+<span class="pl-ent">repository</span>: <span class="pl-s">owner/repo</span>
 <span class="pl-ent">contributor</span>: <span class="pl-s">false </span><span class="pl-c"><span class="pl-c">#</span> true if you contributed to but didn't create it</span>
-<span class="pl-ent">legacy</span>: <span class="pl-s">false </span><span class="pl-c"><span class="pl-c">#</span> true to mark as archived / old work</span>
+<span class="pl-ent">legacy</span>: <span class="pl-s">false </span><span class="pl-c"><span class="pl-c">#</span> true to mark as archived or old work</span>
 <span class="pl-s">---</span>
 
 Your content here...</pre></div>
-<p dir="auto">Contentlayer picks it up automatically — no registration needed.</p>
-<hr>
-<h2 dir="auto">Project Structure</h2>
-<pre class="notranslate"><code class="notranslate">evanschoffstall.me/
-├── src/
-│   ├── app/                  # Next.js App Router (pages &amp; API routes)
-│   ├── presentation/
-│   │   ├── components/       # UI components (nav, cards, MDX renderer)
-│   │   └── hooks/            # Shared React hooks
-│   ├── application/          # Use-case / service layer
-│   ├── domain/               # Domain logic and policies
-│   ├── infrastructure/       # Redis client and external adapters
-│   └── shared/               # Cross-cutting utilities (cn, format, motion)
-├── content/
-│   └── projects/             # MDX source files for each project
-├── public/                   # Static assets and downloaded READMEs
-└── scripts/                  # Dev utilities (contentlayer, readme download)
-</code></pre>
+<ul dir="auto">
+<li><code class="notranslate">repository</code> is the <code class="notranslate">owner/repo</code> GitHub path — used to sync the README.</li>
+<li><code class="notranslate">url</code>, <code class="notranslate">repository</code>, <code class="notranslate">contributor</code>, <code class="notranslate">legacy</code>, and <code class="notranslate">date</code> are all optional.</li>
+<li>Set <code class="notranslate">published: true</code> to make the project visible on the site.</li>
+<li>If a mirrored README exists for the project, it displays instead of the MDX body.</li>
+</ul>
 <hr>
 <h2 dir="auto">Deployment</h2>
-<p dir="auto">Optimized for <a href="https://vercel.com" rel="nofollow">Vercel</a>. Set <code class="notranslate">UPSTASH_REDIS_REST_URL</code> and <code class="notranslate">UPSTASH_REDIS_REST_TOKEN</code> in your project environment and deploy.</p>
+<p dir="auto">Optimized for <a href="https://vercel.com" rel="nofollow">Vercel</a>.</p>
+<ul dir="auto">
+<li>Add <code class="notranslate">UPSTASH_REDIS_REST_URL</code> and <code class="notranslate">UPSTASH_REDIS_REST_TOKEN</code> to enable live view counts.</li>
+<li>Add <code class="notranslate">GITHUB_TOKEN</code> if syncing READMEs in CI to avoid GitHub rate limits.</li>
+<li>Redis is fully optional — the site works without it.</li>
+</ul>
 <hr>
 <div align="center" dir="auto">
 <p dir="auto">Made with ❤️ by <a href="https://github.com/evanschoffstall">Evan Schoffstall</a></p>
-<p dir="auto">MIT License · Free forever · Open source</p>
 </div>

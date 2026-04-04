@@ -5,27 +5,42 @@
  * Use as a drop-in for any scrollable region that needs custom scroll styling.
  */
 
-import { cn } from "@/shared/lib/cn";
+import { cn } from "@/shared/cn";
 import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
 import * as React from "react";
 
 type ScrollAreaProps = React.ComponentPropsWithoutRef<
   typeof ScrollAreaPrimitive.Root
->;
+> & {
+  /**
+   * Optional ref forwarded to the inner Radix ScrollArea Viewport element.
+   * Use this when you need to programmatically read or set `scrollTop` on the
+   * scroll container (e.g. for save/restore of scroll position).
+   */
+  viewportRef?: React.Ref<HTMLDivElement>;
+};
 
 /**
  * Fixed-height scroll container with a permanently visible styled scrollbar.
  * Uses type="always" so the custom track is rendered whether or not the user
  * is actively hovering — avoids the OS native scrollbar appearing instead.
  */
-export function ScrollArea({ className, children, ...props }: ScrollAreaProps) {
+export function ScrollArea({
+  className,
+  children,
+  viewportRef,
+  ...props
+}: ScrollAreaProps) {
   return (
     <ScrollAreaPrimitive.Root
       {...props}
       type="always"
       className={cn("relative overflow-hidden", className)}
     >
-      <ScrollAreaPrimitive.Viewport className="h-full w-full rounded-[inherit]">
+      <ScrollAreaPrimitive.Viewport
+        ref={viewportRef}
+        className="h-full w-full rounded-[inherit]"
+      >
         {children}
       </ScrollAreaPrimitive.Viewport>
       <ScrollBar />

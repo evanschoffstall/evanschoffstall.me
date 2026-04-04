@@ -2,8 +2,8 @@ import type { Project } from "contentlayer/generated";
 
 export const FEATURED_PROJECT_SLUGS = {
   featured: "librerss",
-  top2: "example-traefik-multitenant-ssl",
-  top3: "gitaicmt",
+  second: "example-traefik-multitenant-ssl",
+  third: "gitaicmt",
 } as const;
 
 function dateToTime(date: string | null | undefined): number {
@@ -20,8 +20,8 @@ export function pickFeaturedProjects(projects: Project[]) {
 
   const preferredOrder = [
     FEATURED_PROJECT_SLUGS.featured,
-    FEATURED_PROJECT_SLUGS.top2,
-    FEATURED_PROJECT_SLUGS.top3,
+    FEATURED_PROJECT_SLUGS.second,
+    FEATURED_PROJECT_SLUGS.third,
   ];
 
   const preferred = preferredOrder
@@ -44,8 +44,8 @@ export function pickFeaturedProjects(projects: Project[]) {
     return null;
   }
 
-  const [featured, top2, top3] = selected;
-  return { featured, top2, top3 };
+  const [featured, second, third] = selected;
+  return { featured, second, third };
 }
 
 export function groupAndSortProjects(

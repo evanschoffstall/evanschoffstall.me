@@ -20,10 +20,7 @@ function waitForPageReady(): Promise<void> {
   });
 }
 
-export function HeroName({
-  onSettled,
-  skipInitialAnimation = false,
-}: HeroNameProps) {
+export function HeroName({ onSettled, skipInitialAnimation = false }: HeroNameProps) {
   const placeholderRef = useRef<HTMLDivElement>(null);
   const controls = useAnimationControls();
   const [settled, setSettled] = useState(skipInitialAnimation);
@@ -78,11 +75,7 @@ export function HeroName({
     "z-10 text-4xl text-transparent bg-white cursor-default text-edge-outline font-display sm:text-6xl md:text-7xl lg:text-9xl whitespace-nowrap bg-clip-text";
 
   if (settled) {
-    return (
-      <h1 className={titleClasses} style={{ letterSpacing: "-0.02em" }}>
-        Evan Schoffstall
-      </h1>
-    );
+    return <h1 className={titleClasses} style={{ letterSpacing: "-0.02em" }}>Evan Schoffstall</h1>;
   }
 
   return (

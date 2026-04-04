@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/shared/lib/cn";
+import { cn } from "@/shared/cn";
 import { motion, useMotionTemplate, useSpring } from "framer-motion";
 import type { MouseEvent, PropsWithChildren } from "react";
 
@@ -23,7 +23,7 @@ export function Card({ children, className }: CardProps) {
     <div
       onMouseMove={onMouseMove}
       className={cn(
-        "overflow-hidden relative duration-700 border rounded-xl hover:bg-zinc-800/10 group md:gap-8 hover:border-zinc-400/50 border-zinc-600 shadow-2xl shadow-zinc-900/50",
+        "overflow-hidden relative duration-700 border rounded-xl hover:bg-zinc-800/10 group md:gap-8 hover:border-zinc-700/50 border-zinc-800 shadow-2xl shadow-zinc-900/50",
         className,
       )}
     >

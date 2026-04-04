@@ -11,7 +11,7 @@ interface ParticlesProps {
   refresh?: boolean;
 }
 
-export default function Particles({
+export function Particles({
   className = "",
   quantity = 30,
   staticity = 50,

@@ -2,8 +2,8 @@ import {
   formatCompactNumber,
   formatDateTime,
   formatMediumDate,
-} from "@/shared/lib/format";
-import { saveProjectsScrollPosition } from "@/shared/lib/projects-scroll";
+} from "@/shared/format";
+import { saveProjectsScrollPosition } from "@/shared/projects-scroll";
 import type { Project } from "contentlayer/generated";
 import { ArrowRight, Eye, Star } from "lucide-react";
 import Link from "next/link";
@@ -30,7 +30,7 @@ export function ProjectHeroCard({
   return (
     <>
       <Glow />
-      <Wrapper>
+      <Wrapper className="h-full">
         <Link
           href={`/projects/${project.slug}`}
           onClick={saveProjectsScrollPosition}

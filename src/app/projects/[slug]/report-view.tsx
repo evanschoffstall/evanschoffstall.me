@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 export function ReportView({ slug }: { slug: string }) {
   useEffect(() => {
-    fetch("/api/incr", {
+    fetch("/api/views", {
       method: "POST",
       keepalive: true,
       headers: {

@@ -1,12 +1,49 @@
 "use client";
 
-import { useIsIntersecting } from "@/presentation/hooks/use-is-intersecting";
-import { formatCompactNumber } from "@/shared/lib/format";
-import { markSkipHomeIntroOnce } from "@/shared/lib/home-intro";
-import { normalizeExternalHref, normalizeRepoHref } from "@/shared/lib/urls";
-import { ArrowLeft, Eye, Github } from "lucide-react";
+import { formatCompactNumber } from "@/shared/format";
+import { markSkipHomeIntroOnce } from "@/shared/hero-intro";
+import {
+  isSafeExternalUrl,
+  normalizeExternalHref,
+  normalizeRepoHref,
+} from "@/shared/urls";
+import {
+  ArrowLeft,
+  Eye,
+  ExternalLink,
+  Github,
+  Linkedin,
+  Mail,
+  Twitter,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+
+type NavSocialLink = { href: string; icon: React.ReactNode; label: string };
+
+/** Social links mirrored in the slug nav — identical set to home and projects nav. */
+const SOCIAL_LINKS: NavSocialLink[] = [
+  {
+    href: "https://github.com/evanschoffstall",
+    icon: <Github className="h-3 w-3" />,
+    label: "GitHub",
+  },
+  {
+    href: "https://www.linkedin.com/in/evan-schoffstall-2a9531163/",
+    icon: <Linkedin className="h-3 w-3" />,
+    label: "LinkedIn",
+  },
+  {
+    href: "https://twitter.com/evnschoffstall",
+    icon: <Twitter className="h-3 w-3" />,
+    label: "Twitter",
+  },
+  {
+    href: "mailto:hello@evanschoffstall.me",
+    icon: <Mail className="h-3 w-3" />,
+    label: "Email",
+  },
+];
 
 type Props = {
   project: {
@@ -15,31 +52,25 @@ type Props = {
     description: string;
     repository?: string;
   };
-
   views: number;
+  /**
+   * When true the README takes over as the page title and description, so the
+   * hero collapses to just the link buttons — no duplicate title/description.
+   */
+  hasReadme: boolean;
 };
 
-export function Header({ project, views }: Props) {
-  const { ref, isIntersecting } = useIsIntersecting<HTMLElement>();
+export function Header({ project, views, hasReadme }: Props) {
   const router = useRouter();
 
-  const links: { label: string; href: string }[] = [];
-  const repoHref = project.repository
+  const rawRepoHref = project.repository
     ? normalizeRepoHref(project.repository)
     : "";
-  const websiteHref = project.url ? normalizeExternalHref(project.url) : "";
-  if (repoHref) {
-    links.push({
-      label: "GitHub",
-      href: repoHref,
-    });
-  }
-  if (websiteHref) {
-    links.push({
-      label: "Website",
-      href: websiteHref,
-    });
-  }
+  const rawWebsiteHref = project.url ? normalizeExternalHref(project.url) : "";
+
+  /** Validated safe links — only rendered if they pass the allowlist check. */
+  const repoHref = isSafeExternalUrl(rawRepoHref) ? rawRepoHref : "";
+  const websiteHref = isSafeExternalUrl(rawWebsiteHref) ? rawWebsiteHref : "";
 
   const handleBack = () => {
     if (window.history.length > 1) {
@@ -53,74 +84,82 @@ export function Header({ project, views }: Props) {
   };
 
   return (
-    <header
-      ref={ref}
-      className="relative isolate overflow-hidden bg-gradient-to-tl from-black via-zinc-900 to-black"
-    >
-      <div
-        className={`fixed inset-x-0 top-0 z-50 backdrop-blur duration-200 border-b ${
-          isIntersecting
-            ? "bg-zinc-900/0 border-transparent"
-            : "bg-zinc-900/50 border-zinc-800"
-        }`}
-      >
-        <div className="container flex flex-row items-center justify-between p-4 mx-auto">
+    <header className="relative isolate overflow-hidden">
+      {/* Fixed nav — consistent frosted style regardless of scroll position */}
+      <div className="fixed inset-x-0 top-0 z-50 backdrop-blur border-b bg-zinc-900/0 border-transparent">
+        <div className="flex flex-row items-center justify-between px-4 py-3 sm:px-6">
+          {/* Left: back arrow */}
           <button
             type="button"
             onClick={handleBack}
             aria-label="Go back"
-            className="duration-200 text-zinc-300 hover:text-zinc-100"
+            className="duration-200 text-zinc-400 hover:text-zinc-100"
           >
-            <ArrowLeft className="w-6 h-6 " />
+            <ArrowLeft className="w-6 h-6" />
           </button>
 
-          <div className="flex justify-between gap-8">
-            <span
-              title="View counter for this page"
-              className="duration-200 hover:font-medium flex items-center gap-1 text-zinc-300 hover:text-zinc-100"
-            >
-              <Eye className="w-5 h-5" /> {formatCompactNumber(views)}
+          {/* Right: view counter + social icons as one row */}
+          <div className="flex items-center gap-1">
+            <span className="flex items-center gap-1 mr-1 text-xs tabular-nums text-zinc-600">
+              <Eye className="h-3 w-3" /> {formatCompactNumber(views)}
             </span>
-            <Link
-              target="_blank"
-              rel="noopener noreferrer"
-              href={repoHref || "https://github.com/evanschoffstall"}
-              aria-label={
-                repoHref
-                  ? "View repository on GitHub"
-                  : "View profile on GitHub"
-              }
-            >
-              <Github className="w-6 h-6 duration-200 hover:font-medium text-zinc-300 hover:text-zinc-100" />
-            </Link>
+            {SOCIAL_LINKS.map((sl) => (
+              <Link
+                key={sl.label}
+                href={sl.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={sl.label}
+                className="flex h-6 w-6 items-center justify-center rounded-full border border-zinc-800 bg-zinc-900/40 text-zinc-500 transition-all duration-200 hover:border-zinc-600 hover:bg-zinc-800 hover:text-zinc-200 sm:h-7 sm:w-7"
+              >
+                {sl.icon}
+              </Link>
+            ))}
           </div>
         </div>
       </div>
-      <div className="container mx-auto relative isolate overflow-hidden py-16 sm:py-20">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8 text-center flex flex-col items-center">
-          <div className="mx-auto max-w-2xl lg:mx-0">
-            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl font-display">
-              {project.title}
-            </h1>
-            <p className="mt-6 text-lg leading-8 text-zinc-300">
-              {project.description}
-            </p>
-          </div>
 
-          <div className="mx-auto mt-5 max-w-2xl lg:mx-0 lg:max-w-none">
-            <div className="grid grid-cols-1 gap-y-6 gap-x-8 text-base font-semibold leading-7 text-white sm:grid-cols-2 md:flex lg:gap-x-10">
-              {links.map((link) => (
+      {/* Hero content — title + description are suppressed when a README takes over */}
+      <div
+        className={`container mx-auto relative isolate overflow-hidden ${hasReadme ? "pt-20 pb-6" : "py-16 sm:py-20"}`}
+      >
+        <div className="mx-auto max-w-2xl px-6 lg:px-8 text-center flex flex-col items-center gap-6">
+          {!hasReadme && (
+            <>
+              <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl font-display">
+                {project.title}
+              </h1>
+              <p className="text-lg leading-8 text-zinc-400">
+                {project.description}
+              </p>
+            </>
+          )}
+
+          {/* Action buttons — live site + repository pill links */}
+          {(repoHref || websiteHref) && (
+            <div className="flex flex-wrap justify-center items-center gap-2">
+              {websiteHref ? (
                 <Link
+                  href={websiteHref}
                   target="_blank"
                   rel="noopener noreferrer"
-                  key={link.label}
-                  href={link.href}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-700/50 bg-zinc-800/40 px-3 py-1.5 text-xs font-medium text-zinc-300 transition-all duration-200 hover:border-zinc-600 hover:bg-zinc-700/60 hover:text-white"
                 >
-                  {link.label} <span aria-hidden="true">&rarr;</span>
+                  Live site <ExternalLink className="h-3 w-3" />
                 </Link>
-              ))}
+              ) : null}
+              {repoHref ? (
+                <Link
+                  href={repoHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-700/50 bg-zinc-800/40 px-3 py-1.5 text-xs font-medium text-zinc-300 transition-all duration-200 hover:border-zinc-600 hover:bg-zinc-700/60 hover:text-white"
+                >
+                  Repository <Github className="h-3 w-3" />
+                </Link>
+              ) : null}
             </div>
-          </div>
+          )}
         </div>
       </div>
     </header>
