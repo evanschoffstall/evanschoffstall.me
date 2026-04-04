@@ -41,7 +41,10 @@ function AnimatedDivider() {
   );
 }
 
-function ProjectCardsList({ projects, views }: Pick<ProjectListSectionProps, "projects" | "views">) {
+function ProjectCardsList({
+  projects,
+  views,
+}: Pick<ProjectListSectionProps, "projects" | "views">) {
   return (
     <motion.div
       className="space-y-2 mt-8"
@@ -65,7 +68,11 @@ function ProjectCardsList({ projects, views }: Pick<ProjectListSectionProps, "pr
   );
 }
 
-function ProjectListSection({ projects, views, title }: ProjectListSectionProps) {
+function ProjectListSection({
+  projects,
+  views,
+  title,
+}: ProjectListSectionProps) {
   if (projects.length === 0) {
     return null;
   }
@@ -147,7 +154,11 @@ export function ProjectsContent({
         views={views}
         title="Contributions"
       />
-      <ProjectListSection projects={sortedLegacy} views={views} title="Legacy" />
+      <ProjectListSection
+        projects={sortedLegacy}
+        views={views}
+        title="Legacy"
+      />
     </div>
   );
 }

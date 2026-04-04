@@ -89,7 +89,7 @@ function GradientRule() {
  *   - Gradient rule
  *   - Context + Core Stack grid — technical depth as page anchor
  *
- * Status badge and social links live in the nav bar (home-content.tsx).
+ * Status badge and social links live in the nav bar (content.tsx).
  */
 export function HomeOverview({
   onViewProjects,
