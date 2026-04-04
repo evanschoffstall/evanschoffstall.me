@@ -68,7 +68,7 @@ export function HomeContent({
 
   return (
     <div className="relative h-screen overflow-hidden">
-      {/* Nav — status badge + socials on the left, replay on the right */}
+      {/* Nav — status badge left, replay + socials right (matches slug/projects margin via container) */}
       <motion.nav
         className="absolute left-0 right-0 top-0 z-20"
         initial="hidden"
@@ -80,46 +80,40 @@ export function HomeContent({
           className="absolute inset-0 bg-gradient-to-b from-black/40 to-transparent pointer-events-none"
           aria-hidden
         />
+        {/* Nav — status badge left, replay + socials right */}
         <div className="relative flex items-center justify-between px-4 py-3 sm:px-6">
-          {/* Left: availability badge + social icon buttons */}
-          <div className="flex items-center gap-2">
-            {/*
-             * Badge — collapses to dot-only on mobile (< sm) to prevent nav
-             * crowding since the badge text + 4 icons barely fit at 375px.
-             */}
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-zinc-800 bg-zinc-900/70 px-2.5 py-1.5 text-xs font-medium text-zinc-400 backdrop-blur-sm">
-              <span className="relative flex h-2 w-2 shrink-0">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
-              </span>
-              <span className="hidden sm:inline">Available for new work</span>
-            </div>
-            {/* Social icons — always shown, smaller on mobile */}
-            <div className="flex items-center gap-1">
-              {NAV_SOCIAL_LINKS.map((sl) => (
-                <Link
-                  key={sl.label}
-                  href={sl.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={sl.label}
-                  className="flex h-6 w-6 items-center justify-center rounded-full border border-zinc-800 bg-zinc-900/40 text-zinc-500 transition-all duration-200 hover:border-zinc-600 hover:bg-zinc-800 hover:text-zinc-200 sm:h-7 sm:w-7"
-                >
-                  {sl.icon}
-                </Link>
-              ))}
-            </div>
+          {/* Left: availability badge */}
+          <div className="inline-flex items-center gap-1.5 rounded-full border border-zinc-800 bg-zinc-900/70 px-2.5 py-1.5 text-xs font-medium text-zinc-400 backdrop-blur-sm">
+            <span className="relative flex h-2 w-2 shrink-0">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+            </span>
+            <span className="hidden sm:inline">Available for new work</span>
           </div>
 
-          {/* Right: replay intro */}
-          <button
-            type="button"
-            onClick={handleReplayHero}
-            aria-label="Replay intro"
-            className="relative text-zinc-600 transition-colors duration-200 hover:text-zinc-300"
-          >
-            <RefreshCw className="h-4 w-4" />
-          </button>
+          {/* Right: replay + social icons as one row */}
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={handleReplayHero}
+              aria-label="Replay intro"
+              className="flex h-6 w-6 items-center justify-center rounded-full border border-zinc-800 bg-zinc-900/40 text-zinc-500 transition-all duration-200 hover:border-zinc-600 hover:bg-zinc-800 hover:text-zinc-200 sm:h-7 sm:w-7"
+            >
+              <RefreshCw className="h-3 w-3" />
+            </button>
+            {NAV_SOCIAL_LINKS.map((sl) => (
+              <Link
+                key={sl.label}
+                href={sl.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={sl.label}
+                className="flex h-6 w-6 items-center justify-center rounded-full border border-zinc-800 bg-zinc-900/40 text-zinc-500 transition-all duration-200 hover:border-zinc-600 hover:bg-zinc-800 hover:text-zinc-200 sm:h-7 sm:w-7"
+              >
+                {sl.icon}
+              </Link>
+            ))}
+          </div>
         </div>
       </motion.nav>
 

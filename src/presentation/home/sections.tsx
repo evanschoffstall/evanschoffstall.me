@@ -144,7 +144,7 @@ export function HomeSections({ projectData }: Props) {
                * The inner fixed <div> overlays the viewport; the pt-20 wrapper
                * below clears the nav height for normal content flow.
                */}
-              <Navigation onBack={handleBack} />
+              <Navigation onBack={handleBack} label="Projects" />
               <div className="pt-20 md:pt-24">
                 {projectData ? (
                   <ProjectsContent
