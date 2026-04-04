@@ -1,22 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-label="logo">
   <title>logo</title>
 
-  <!-- black disk -->
-  <circle cx="12" cy="12" r="12" fill="#000"/>
+  <circle cx="12" cy="12" r="12" fill="#000" />
 
-  <!-- glyph -->
-  <g stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+  <path
+    d="M16.3 7.2 C14.2 5.2 10.4 5.1 7.9 7.7 C5.4 10.2 5.4 13.8 7.9 16.3 C10.4 18.9 14.2 18.8 16.3 16.8"
+    fill="none"
+    stroke="#fff"
+    stroke-width="2.4"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
 
-    <!-- vertical branch -->
-    <path d="M9 6.5 V14.5" />
-
-    <!-- smoother curved branch -->
-    <path d="M9.8 14.8 C11.5 13.2 12.5 12.6 14.2 11.6 C15.8 10.6 16.3 10 16.5 9.2" />
-
-  </g>
-
-  <!-- nodes -->
-  <circle cx="9" cy="16.5" r="1.8" fill="#000" stroke="#fff" stroke-width="2"/>
-  <circle cx="17" cy="9" r="1.8" fill="#000" stroke="#fff" stroke-width="2"/>
-
+  <circle cx="16.3" cy="7.2" r="1.3125" fill="#000" stroke="#fff" stroke-width="1.5" />
+  <circle cx="5.95" cy="12" r="1.3125" fill="#000" stroke="#fff" stroke-width="1.5" />
+  <circle cx="16.3" cy="16.8" r="1.3125" fill="#000" stroke="#fff" stroke-width="1.5" />
 </svg>

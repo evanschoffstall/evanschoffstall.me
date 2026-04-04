@@ -1,0 +1,361 @@
+<div align="center" dir="auto">
+<br>
+<h1 dir="auto">Windows Process Optimizer</h1>
+<p dir="auto"><em>Your CPU. Your rules. Zero background waste.</em></p>
+<p dir="auto">
+  <a href="https://www.autohotkey.com" rel="nofollow"><img src="https://camo.githubusercontent.com/cff9a60db4d62b2a385cb5c0fb2d16c0921416cb996af2dce4ff3f859531362d/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4175746f486f746b65792d76322e302d3333343435353f7374796c653d666f722d7468652d6261646765266c6f676f3d6175746f686f746b6579266c6f676f436f6c6f723d7768697465" alt="AutoHotkey v2.0" data-canonical-src="https://img.shields.io/badge/AutoHotkey-v2.0-334455?style=for-the-badge&amp;logo=autohotkey&amp;logoColor=white" style="max-width: 100%;"></a>
+  <a href="https://www.microsoft.com/windows" rel="nofollow"><img src="https://camo.githubusercontent.com/f1389511325866566ac48222b18f281134bcde109846bf3393f984cda447a47b/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f57696e646f77732d313025324631312d3030373844343f7374796c653d666f722d7468652d6261646765266c6f676f3d77696e646f7773266c6f676f436f6c6f723d7768697465" alt="Windows 10/11" data-canonical-src="https://img.shields.io/badge/Windows-10%2F11-0078D4?style=for-the-badge&amp;logo=windows&amp;logoColor=white" style="max-width: 100%;"></a>
+  <a href="LICENSE"><img src="https://camo.githubusercontent.com/f77c46cfd34df0f2783a9d96cc43ac41093d5ede3f6ff47dac0b1cfc7bf3a2c7/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4c6963656e73652d4d49542d3232633535653f7374796c653d666f722d7468652d6261646765" alt="MIT License" data-canonical-src="https://img.shields.io/badge/License-MIT-22c55e?style=for-the-badge" style="max-width: 100%;"></a>
+</p>
+<p dir="auto">An AutoHotkey v2 script that automatically throttles background processes<br>to free up CPU, memory, and I/O for whatever you're actually using right now.</p>
+<br>
+</div>
+<hr>
+<h2 dir="auto">What is Windows Process Optimizer?</h2>
+<p dir="auto">Windows Process Optimizer is a <strong>background automation script</strong> that continuously monitors your running processes and applies aggressive resource constraints to anything you're not actively using. The moment you switch to a new window, the old process gets throttled and your new foreground app gets its resources back — instantly.</p>
+<p dir="auto">It works in two modes: <strong>whitelist</strong> (throttle everything except trusted apps) or <strong>blacklist</strong> (only throttle specific targets). Every constraint is fully configurable per-process, and all changes are automatically reversed when you close the script.</p>
+<hr>
+<h2 dir="auto">Features</h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th></th>
+<th>Feature</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🎯</td>
+<td><strong>Whitelist &amp; blacklist modes</strong></td>
+<td>Throttle all-except or only-listed processes</td>
+</tr>
+<tr>
+<td>⚡</td>
+<td><strong>CPU priority reduction</strong></td>
+<td>Drop background processes to idle or below-normal priority</td>
+</tr>
+<tr>
+<td>🧠</td>
+<td><strong>Windows background mode</strong></td>
+<td>Enable OS-level background scheduling for better responsiveness</td>
+</tr>
+<tr>
+<td>🗜️</td>
+<td><strong>Memory trimming</strong></td>
+<td>Reclaim working set RAM with optional multi-pass aggressive mode</td>
+</tr>
+<tr>
+<td>🔢</td>
+<td><strong>CPU affinity control</strong></td>
+<td>Pin background processes to specific cores via bitmask</td>
+</tr>
+<tr>
+<td>📉</td>
+<td><strong>CPU rate limiting</strong></td>
+<td>Cap per-process CPU usage via Windows job objects</td>
+</tr>
+<tr>
+<td>💾</td>
+<td><strong>I/O priority lowering</strong></td>
+<td>Reduce disk and network priority for background processes</td>
+</tr>
+<tr>
+<td>🛑</td>
+<td><strong>Suspend cycles</strong></td>
+<td>Periodically suspend/resume for extreme throttling</td>
+</tr>
+<tr>
+<td>📋</td>
+<td><strong>Page &amp; working set limits</strong></td>
+<td>Lower memory page priority and cap maximum working set size</td>
+</tr>
+<tr>
+<td>🖥️</td>
+<td><strong>Foreground awareness</strong></td>
+<td>Always skips the active window and its entire process tree</td>
+</tr>
+<tr>
+<td>🔊</td>
+<td><strong>A/V output protection</strong></td>
+<td>Never throttles processes with active audio or video output</td>
+</tr>
+<tr>
+<td>🏪</td>
+<td><strong>UWP app awareness</strong></td>
+<td>Automatically skips Microsoft Store / UWP apps</td>
+</tr>
+<tr>
+<td>⚙️</td>
+<td><strong>Per-process overrides</strong></td>
+<td>Fine-tune every setting individually for any process name</td>
+</tr>
+<tr>
+<td>🔄</td>
+<td><strong>Live process watching</strong></td>
+<td>WMI subscription throttles newly spawned processes immediately</td>
+</tr>
+<tr>
+<td>🔁</td>
+<td><strong>Auto-restore on exit</strong></td>
+<td>All processes are returned to their original state when you quit</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
+<h2 dir="auto">Requirements</h2>
+<ul dir="auto">
+<li>Windows 10 or 11</li>
+<li><a href="https://www.autohotkey.com/download/" rel="nofollow">AutoHotkey v2.0</a> or later</li>
+<li>Administrator privileges (required for priority and affinity changes)</li>
+</ul>
+<hr>
+<h2 dir="auto">Quick Start</h2>
+<h3 dir="auto">1 · Install AutoHotkey</h3>
+<p dir="auto">Download and install <strong>AutoHotkey v2</strong> from <a href="https://www.autohotkey.com/download/" rel="nofollow">autohotkey.com</a>.</p>
+<h3 dir="auto">2 · Run the script</h3>
+<p dir="auto">Right-click <code class="notranslate">Windows Process Optimizer.ahk</code> and select <strong>Run as administrator</strong>.</p>
+<p dir="auto">A tray icon will appear. The script immediately begins scanning and throttling background processes on a 15-second interval.</p>
+<h3 dir="auto">3 · Configure to your needs</h3>
+<p dir="auto">Open the script in any text editor and edit the <code class="notranslate">CONFIG</code> object at the top of the file:</p>
+<div class="highlight highlight-source-ahk" dir="auto"><pre class="notranslate"><span class="pl-c1">global</span> CONFIG := {
+    mode: <span class="pl-s"><span class="pl-pds">"</span>whitelist<span class="pl-pds">"</span></span>,<span class="pl-c"><span class="pl-c">               ;</span> "whitelist" = throttle all except listed</span>
+<span class="pl-c"><span class="pl-c">                                     ;</span> "blacklist" = only throttle listed targets</span>
+    skipWindowsApps: <span class="pl-c1">true</span>,<span class="pl-c"><span class="pl-c">           ;</span> Skip UWP / Microsoft Store apps</span>
+    skipForegroundProcess: <span class="pl-c1">true</span>,<span class="pl-c"><span class="pl-c">     ;</span> Never throttle the active window's process</span>
+    skipForegroundProcessTree: <span class="pl-c1">true</span>,<span class="pl-c"><span class="pl-c"> ;</span> Never throttle the foreground process tree</span>
+    skipAvOutputProcesses: <span class="pl-c1">true</span>,<span class="pl-c"><span class="pl-c">     ;</span> Skip processes with active audio/video output</span>
+    ...
+}</pre></div>
+<h3 dir="auto">4 · Add exceptions (whitelist mode)</h3>
+<p dir="auto">List any processes that should never be throttled:</p>
+<div class="highlight highlight-source-ahk" dir="auto"><pre class="notranslate">exceptions: [
+    <span class="pl-s"><span class="pl-pds">"</span>explorer.exe<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>Flow.Launcher.exe<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>yasb.exe<span class="pl-pds">"</span></span>
+]</pre></div>
+<h3 dir="auto">5 · Add targets (blacklist mode)</h3>
+<p dir="auto">List specific processes to throttle, with optional per-process overrides:</p>
+<div class="highlight highlight-source-ahk" dir="auto"><pre class="notranslate">targets: [
+    <span class="pl-s"><span class="pl-pds">"</span>Taskmgr.exe<span class="pl-pds">"</span></span>,
+    {
+        names: [<span class="pl-s"><span class="pl-pds">"</span>svchost.exe<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>WmiPrvSE.exe<span class="pl-pds">"</span></span>],
+        useCpuRateLimit: <span class="pl-c1">true</span>,
+        cpuRateLimitPercent: <span class="pl-c1">1</span>,
+        useSuspendCycles: <span class="pl-c1">true</span>,
+        suspendDurationMs: <span class="pl-c1">2000</span>,
+        resumeDurationMs: <span class="pl-c1">20</span>
+    }
+]</pre></div>
+<hr>
+<h2 dir="auto">Configuration Reference</h2>
+<h3 dir="auto">Global Settings</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Setting</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">mode</code></td>
+<td><code class="notranslate">"whitelist"</code></td>
+<td>Operating mode: <code class="notranslate">"whitelist"</code> or <code class="notranslate">"blacklist"</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">skipWindowsApps</code></td>
+<td><code class="notranslate">true</code></td>
+<td>Skip UWP / Microsoft Store apps</td>
+</tr>
+<tr>
+<td><code class="notranslate">skipForegroundProcess</code></td>
+<td><code class="notranslate">true</code></td>
+<td>Skip the currently active window's process</td>
+</tr>
+<tr>
+<td><code class="notranslate">skipForegroundProcessTree</code></td>
+<td><code class="notranslate">true</code></td>
+<td>Skip parent/child processes of the foreground app</td>
+</tr>
+<tr>
+<td><code class="notranslate">skipExceptionProcessTree</code></td>
+<td><code class="notranslate">true</code></td>
+<td>Skip parent/child processes of excepted apps</td>
+</tr>
+<tr>
+<td><code class="notranslate">skipAvOutputProcesses</code></td>
+<td><code class="notranslate">true</code></td>
+<td>Skip processes with active audio or video output</td>
+</tr>
+<tr>
+<td><code class="notranslate">skipAvOutputProcessTree</code></td>
+<td><code class="notranslate">true</code></td>
+<td>Skip parent/child processes of active A/V apps</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3 dir="auto">Per-Process Settings (defaults &amp; overrides)</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Setting</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">enabled</code></td>
+<td><code class="notranslate">true</code></td>
+<td>Whether throttling applies to this process</td>
+</tr>
+<tr>
+<td><code class="notranslate">useIdlePriority</code></td>
+<td><code class="notranslate">true</code></td>
+<td>Use idle priority class instead of below-normal</td>
+</tr>
+<tr>
+<td><code class="notranslate">useBackgroundMode</code></td>
+<td><code class="notranslate">true</code></td>
+<td>Enable Windows background processing mode</td>
+</tr>
+<tr>
+<td><code class="notranslate">useMemoryTrimming</code></td>
+<td><code class="notranslate">true</code></td>
+<td>Trim working set memory</td>
+</tr>
+<tr>
+<td><code class="notranslate">memoryThresholdMB</code></td>
+<td><code class="notranslate">10</code></td>
+<td>Minimum process memory (MB) before trimming applies</td>
+</tr>
+<tr>
+<td><code class="notranslate">useAggressiveMemory</code></td>
+<td><code class="notranslate">true</code></td>
+<td>Run multiple trim passes for greater memory reduction</td>
+</tr>
+<tr>
+<td><code class="notranslate">memoryTrimPasses</code></td>
+<td><code class="notranslate">3</code></td>
+<td>Number of trim passes when aggressive mode is on</td>
+</tr>
+<tr>
+<td><code class="notranslate">useCpuAffinity</code></td>
+<td><code class="notranslate">true</code></td>
+<td>Restrict process to specific CPU cores</td>
+</tr>
+<tr>
+<td><code class="notranslate">cpuAffinityMask</code></td>
+<td><code class="notranslate">0x03</code></td>
+<td>Core bitmask (<code class="notranslate">0x03</code> = cores 0 and 1)</td>
+</tr>
+<tr>
+<td><code class="notranslate">useCpuRateLimit</code></td>
+<td><code class="notranslate">true</code></td>
+<td>Cap CPU usage via Windows job object</td>
+</tr>
+<tr>
+<td><code class="notranslate">cpuRateLimitPercent</code></td>
+<td><code class="notranslate">5</code></td>
+<td>Maximum CPU % allowed per process</td>
+</tr>
+<tr>
+<td><code class="notranslate">useIoPriority</code></td>
+<td><code class="notranslate">true</code></td>
+<td>Lower I/O priority for disk and network operations</td>
+</tr>
+<tr>
+<td><code class="notranslate">useSuspendCycles</code></td>
+<td><code class="notranslate">false</code></td>
+<td>Periodically suspend/resume <em>(extreme — use with caution)</em></td>
+</tr>
+<tr>
+<td><code class="notranslate">suspendDurationMs</code></td>
+<td><code class="notranslate">100</code></td>
+<td>Milliseconds to keep process suspended per cycle</td>
+</tr>
+<tr>
+<td><code class="notranslate">resumeDurationMs</code></td>
+<td><code class="notranslate">50</code></td>
+<td>Milliseconds to allow process to run between suspends</td>
+</tr>
+<tr>
+<td><code class="notranslate">usePagePriority</code></td>
+<td><code class="notranslate">false</code></td>
+<td>Lower memory page priority</td>
+</tr>
+<tr>
+<td><code class="notranslate">pagePriority</code></td>
+<td><code class="notranslate">1</code></td>
+<td>Page priority level (1 = very low, 5 = normal)</td>
+</tr>
+<tr>
+<td><code class="notranslate">useSingleCore</code></td>
+<td><code class="notranslate">false</code></td>
+<td>Force process onto a single CPU core</td>
+</tr>
+<tr>
+<td><code class="notranslate">singleCoreIndex</code></td>
+<td><code class="notranslate">0</code></td>
+<td>Which core to use when <code class="notranslate">useSingleCore</code> is true (0-based)</td>
+</tr>
+<tr>
+<td><code class="notranslate">useWorkingSetLimit</code></td>
+<td><code class="notranslate">false</code></td>
+<td>Hard-cap maximum working set size</td>
+</tr>
+<tr>
+<td><code class="notranslate">workingSetLimitMB</code></td>
+<td><code class="notranslate">10</code></td>
+<td>Maximum working set in MB</td>
+</tr>
+<tr>
+<td><code class="notranslate">useSchedulingClass</code></td>
+<td><code class="notranslate">false</code></td>
+<td>Set thread scheduling class to lowest</td>
+</tr>
+<tr>
+<td><code class="notranslate">schedulingClass</code></td>
+<td><code class="notranslate">0</code></td>
+<td>Scheduling class (0 = lowest, 9 = highest)</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
+<h2 dir="auto">Tray Icon</h2>
+<p dir="auto">The system tray icon provides live status and quick controls.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Tray Menu Item</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Suspend Throttling</strong></td>
+<td>Pause all throttling and restore every process</td>
+</tr>
+<tr>
+<td><strong>Exit</strong></td>
+<td>Restore all processes and quit</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">Hovering the tray icon shows current mode, foreground process, throttled count, and skipped count.</p>
+<hr>
+<h2 dir="auto">How It Works</h2>
+<ol dir="auto">
+<li><strong>On launch</strong> — scans all running processes and applies throttling to eligible ones.</li>
+<li><strong>Every 15 seconds</strong> — re-scans to catch any processes that changed state.</li>
+<li><strong>On foreground change</strong> — immediately restores the new active process tree and throttles the previous one.</li>
+<li><strong>On new process creation</strong> — a WMI subscription fires within ~1 second to throttle newly spawned processes.</li>
+<li><strong>On exit</strong> — every modified process is restored to its original priority, affinity, and mode.</li>
+</ol>
+<hr>
+<div align="center" dir="auto">
+<p dir="auto">Made with ❤️ by <a href="https://github.com/evanschoffstall">Evan Schoffstall</a></p>
+<p dir="auto">MIT License · Free forever · Use it as you see fit</p>
+</div>

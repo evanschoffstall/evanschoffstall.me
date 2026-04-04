@@ -3,7 +3,7 @@ import type { Project } from "contentlayer/generated";
 export const FEATURED_PROJECT_SLUGS = {
   featured: "librerss",
   top2: "example-traefik-multitenant-ssl",
-  top3: "evanschoffstall.me",
+  top3: "gitaicmt",
 } as const;
 
 function dateToTime(date: string | null | undefined): number {

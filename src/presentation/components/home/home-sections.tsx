@@ -62,6 +62,15 @@ export function HomeSections({ projectData }: Props) {
     };
   }, []);
 
+  // Lock body scroll on the home view so the custom ScrollArea handles scrolling.
+  // Release it when the projects view takes over (which uses native body scroll).
+  useEffect(() => {
+    document.body.style.overflow = showProjects ? "" : "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [showProjects]);
+
   useEffect(() => {
     if (!showProjects) {
       return;

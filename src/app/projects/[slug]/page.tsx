@@ -1,6 +1,5 @@
 import { getProjectView } from "@/application/services/pageviews";
 import { Mdx } from "@/presentation/components/common/mdx";
-import { REVALIDATE } from "@/shared/constants";
 import { allProjects } from "contentlayer/generated";
 import "github-markdown-css/github-markdown-light.css";
 import { notFound } from "next/navigation";
@@ -10,7 +9,7 @@ import { Header } from "./header";
 import "./mdx.css";
 import { ReportView } from "./view";
 
-export const revalidate = REVALIDATE.STANDARD;
+export const revalidate = 60;
 
 type Props = {
   params: Promise<{
