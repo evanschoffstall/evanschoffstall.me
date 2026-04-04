@@ -38,7 +38,7 @@ export default async function Home() {
       : null;
 
   return (
-    <div className="relative w-full min-h-screen pb-16">
+    <div className="relative w-full">
       <ParticlesBackground quantity={ANIMATION.DEFAULT_PARTICLE_QUANTITY} />
       <HomeSections projectData={projectData} />
     </div>
