@@ -1,16 +1,16 @@
 "use client";
 
-import { cn } from "@/shared/lib/cn";
+import { cn } from "@/shared/cn";
 import {
   formatCompactNumber,
   formatDateTime,
   formatMediumDate,
-} from "@/shared/lib/format";
+} from "@/shared/format";
 import {
   isSafeExternalUrl,
   normalizeExternalHref,
   normalizeRepoHref,
-} from "@/shared/lib/urls";
+} from "@/shared/urls";
 import type { Project } from "contentlayer/generated";
 import { ArrowRight, ExternalLink, Github, Layers, Star } from "lucide-react";
 import Link from "next/link";
