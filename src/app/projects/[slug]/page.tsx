@@ -2,7 +2,7 @@ import { getProjectView } from "@/application/pageviews";
 import { Mdx } from "@/presentation/common/mdx";
 import { ScrollArea } from "@/presentation/common/scroll-area";
 import { allProjects } from "contentlayer/generated";
-import "github-markdown-css/github-markdown-light.css";
+import "github-markdown-css/github-markdown-dark.css";
 import { notFound } from "next/navigation";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
@@ -50,14 +50,18 @@ export default async function ProjectPage({ params }: Props) {
   return (
     <div className="h-screen overflow-hidden">
       <ScrollArea className="h-full w-full">
-        <div className="bg-white min-h-screen">
-          <Header project={project} views={views} />
+        <div className="min-h-screen max-w-[100vw] overflow-x-hidden">
+          <Header
+            project={project}
+            views={views}
+            hasReadme={readmeHtml !== null}
+          />
           <ReportView slug={project.slug} />
 
-          <div className="px-4 py-12 mx-auto" style={{ maxWidth: "838.67px" }}>
+          <div className="px-4 py-12 mx-auto max-w-3xl">
             {readmeHtml ? (
               <section
-                className="markdown-body mt-8"
+                className="markdown-body mt-8 overflow-x-auto"
                 /**
                  * SECURITY NOTE: This renders pre-generated HTML from public/readmes/*.html
                  *
@@ -74,7 +78,7 @@ export default async function ProjectPage({ params }: Props) {
                 dangerouslySetInnerHTML={{ __html: readmeHtml }}
               />
             ) : (
-              <section className="prose prose-zinc prose-quoteless max-w-none mt-8">
+              <section className="prose prose-zinc prose-invert prose-quoteless max-w-none mt-8">
                 <Mdx code={project.body.code} />
               </section>
             )}

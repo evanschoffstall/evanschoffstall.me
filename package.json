@@ -16,6 +16,7 @@
   "dependencies": {
     "@radix-ui/react-scroll-area": "^1.2.10",
     "@upstash/redis": "^1.36.2",
+    "check-suite": "link:check-suite",
     "contentlayer": "^0.3.4",
     "framer-motion": "^12.34.0",
     "github-markdown-css": "^5.9.0",

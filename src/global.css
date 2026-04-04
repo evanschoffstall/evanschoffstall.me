@@ -3,10 +3,11 @@
 @tailwind utilities;
 
 @layer base {
-
   html,
   body {
     overflow-x: hidden;
+    /* Prevent native scrollbar flash during hydration — all scroll surfaces use custom ScrollArea */
+    overflow-y: hidden;
   }
 
   .text-edge-outline {
