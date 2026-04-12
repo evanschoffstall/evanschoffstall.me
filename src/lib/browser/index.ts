@@ -1,0 +1,1 @@
+export { hasSessionStorage } from "@/lib/browser/session-storage";
