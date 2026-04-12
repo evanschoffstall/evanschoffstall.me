@@ -1,0 +1,1 @@
+export { runHomeHeroSequence } from "@/features/home/motion/home-hero-sequence";

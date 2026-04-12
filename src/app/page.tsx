@@ -29,10 +29,10 @@ export default async function Home() {
       ? {
           featured: featuredSelection.featured,
           second: featuredSelection.second,
-          third: featuredSelection.third,
           sorted: grouped.sorted,
           sortedContributions: grouped.sortedContributions,
           sortedLegacy: grouped.sortedLegacy,
+          third: featuredSelection.third,
           views,
         }
       : null;
