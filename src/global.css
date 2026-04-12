@@ -34,17 +34,3 @@
     transform: translateY(0);
   }
 }
-
-.animate-fade-in-up {
-  animation-name: fadeIn, moveUp;
-  animation-fill-mode: both;
-  animation-duration: 1800ms, 1800ms;
-  animation-delay: 2500ms;
-}
-
-@media (max-width: 640px) {
-  .animate-fade-in-up {
-    animation-duration: 1800ms, 1800ms;
-    animation-delay: 2500ms;
-  }
-}

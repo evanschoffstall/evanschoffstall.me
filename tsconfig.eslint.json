@@ -1,0 +1,20 @@
+{
+  "extends": "./tsconfig.json",
+  "exclude": [],
+  "include": [
+    "check-suite.config.ts",
+    "contentlayer.config.js",
+    "next.config.mjs",
+    "playwright.config.ts",
+    "postcss.config.js",
+    "scripts/**/*.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "src/**/*.spec.ts",
+    "src/**/*.spec.tsx",
+    "tailwind.config.mjs",
+    "contentlayer.generated.d.ts"
+  ]
+}

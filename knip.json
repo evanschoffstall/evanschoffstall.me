@@ -1,0 +1,25 @@
+{
+  "$schema": "https://unpkg.com/knip@latest/schema.json",
+  "entry": [
+    "src/app/index.ts",
+    "src/app/projects/index.ts",
+    "src/features/home/index.ts",
+    "src/features/projects/index.ts",
+    "src/ui/index.ts",
+    "src/ui/hooks/index.ts",
+    "src/**/*.test.ts",
+    "scripts/cicd.ts",
+    "contentlayer.config.js",
+    "check-suite.config.ts",
+    "next-env.test-d.ts"
+  ],
+  "ignoreDependencies": [
+    "@secretlint/secretlint-rule-preset-recommend"
+  ],
+  "project": [
+    "src/**/*.{ts,tsx}",
+    "scripts/**/*.{ts,tsx,js,cjs,mjs}",
+    "*.{ts,tsx,js,cjs,mjs}"
+  ],
+  "includeEntryExports": false
+}

@@ -1,39 +1,41 @@
-# Dependencies
-/node_modules
+# Package Managers And Dependencies
 /.pnp
+/node_modules
 .pnp.js
 *.lock
-pnpm-lock.yaml
 package-lock.json
+pnpm-lock.yaml
 
-# Testing
-/coverage
-
-# Build Outputs
-/.next/
-/out/
-/build
-.contentlayer
-
-# TypeScript
-*.tsbuildinfo
-next-env.d.ts
-
-# Environment Variables
+# Environment And Secrets
 .env
 .env*.local
+*.pem
 
-# Debug Logs
+# Build, Generated, And Cache Artifacts
+/.cache/
+/.contentlayer/
+/.next/
+/.next-playwright*/
+/build
+/out/
+*.tsbuildinfo
+next-env.d.ts
+tsconfig.playwright*
+
+# Test And Coverage Output
+/coverage
+/playwright-report
+/test-results
+
+# Logs
+.pnpm-debug.log*
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
 
-# IDE & OS Files
-.vscode/
-.vscode/settings.json
+# Editor And OS Files
 .DS_Store
-*.pem
+.vscode/
 
 # Deployment
-.vercel
+/.vercel/

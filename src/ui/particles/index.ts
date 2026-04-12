@@ -1,0 +1,1 @@
+export { useParticleCanvas } from "@/ui/particles/useParticleCanvas";

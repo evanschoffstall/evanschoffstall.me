@@ -1,12 +1,13 @@
-import { getProjectViews } from "@/application/pageviews";
+import { allProjects } from "contentlayer/generated";
+
+import { HomeSections } from "@/features/home";
 import {
+  getProjectViews,
   groupAndSortProjects,
   pickFeaturedProjects,
-} from "@/domain/projects/selection";
-import { HomeSections } from "@/presentation/home/sections";
-import { ParticlesBackground } from "@/presentation/home/particles-background";
-import { ANIMATION } from "@/shared/constants";
-import { allProjects } from "contentlayer/generated";
+} from "@/features/projects";
+import { ANIMATION } from "@/lib";
+import { ParticlesBackground } from "@/ui";
 
 export const revalidate = 60;
 
@@ -29,10 +30,10 @@ export default async function Home() {
       ? {
           featured: featuredSelection.featured,
           second: featuredSelection.second,
-          third: featuredSelection.third,
           sorted: grouped.sorted,
           sortedContributions: grouped.sortedContributions,
           sortedLegacy: grouped.sortedLegacy,
+          third: featuredSelection.third,
           views,
         }
       : null;
