@@ -1,0 +1,1 @@
+export { useIsIntersecting } from "./useIsIntersecting";
