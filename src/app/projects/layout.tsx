@@ -1,5 +1,5 @@
-import { ParticlesBackground } from "@/presentation/home/particles-background";
-import { ANIMATION } from "@/shared/constants";
+import { ANIMATION } from "@/lib";
+import { ParticlesBackground } from "@/ui";
 
 export default function ProjectsLayout({
   children,
@@ -8,7 +8,10 @@ export default function ProjectsLayout({
 }) {
   return (
     <div className="relative">
-      <ParticlesBackground quantity={ANIMATION.DEFAULT_PARTICLE_QUANTITY} />
+      <ParticlesBackground
+        interactive={false}
+        quantity={Math.round(ANIMATION.DEFAULT_PARTICLE_QUANTITY * 0.48)}
+      />
       {children}
     </div>
   );

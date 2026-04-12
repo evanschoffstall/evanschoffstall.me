@@ -1,24 +1,34 @@
-import { getProjectView } from "@/application/pageviews";
-import { Mdx } from "@/presentation/common/mdx";
-import { ScrollArea } from "@/presentation/common/scroll-area";
 import { allProjects } from "contentlayer/generated";
-import "github-markdown-css/github-markdown-dark.css";
 import { notFound } from "next/navigation";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import { Header } from "./header";
+import { cache } from "react";
+import "github-markdown-css/github-markdown-dark.css";
+
+import {
+  getProjectView,
+  ProjectHeader,
+  ProjectViewReporter,
+} from "@/features/projects";
+import { Mdx, VirtualScrollArea } from "@/ui";
+
 import "./mdx.css";
-import { ReportView } from "./report-view";
 
 export const revalidate = 60;
 
-type Props = {
+const publishedProjectsBySlug = new Map(
+  allProjects
+    .filter((project) => project.published)
+    .map((project) => [project.slug, project] as const),
+);
+
+interface Props {
   params: Promise<{
     slug: string;
   }>;
-};
+}
 
-export async function generateStaticParams(): Promise<{ slug: string }[]> {
+export function generateStaticParams(): { slug: string }[] {
   return allProjects
     .filter((p) => p.published)
     .map((p) => ({
@@ -26,7 +36,73 @@ export async function generateStaticParams(): Promise<{ slug: string }[]> {
     }));
 }
 
-async function getReadmeHtml(slug: string): Promise<string | null> {
+export default async function ProjectPage({ params }: Props) {
+  const { slug } = await params;
+  const project = publishedProjectsBySlug.get(slug);
+
+  if (!project) {
+    notFound();
+  }
+
+  const [views, readmeHtml] = await Promise.all([
+    getProjectView(slug),
+    getReadmeHtml(project.slug),
+  ]);
+  const scrollItems = [
+    {
+      estimateSize: readmeHtml ? 180 : 320,
+      key: "project-header",
+      node: (
+        <ProjectHeader
+          hasReadme={readmeHtml !== null}
+          project={project}
+          views={views}
+        />
+      ),
+    },
+    {
+      estimateSize: 1800,
+      key: "project-body",
+      node: (
+        <div className="mx-auto max-w-3xl px-4 py-12">
+          {readmeHtml ? (
+            <section
+              className="markdown-body mt-8 overflow-x-auto"
+              /**
+               * SECURITY NOTE: This renders pre-generated HTML from public/readmes/*.html
+               *
+               * These files are generated at build time by scripts/download-project-readmes.ts
+               * from GitHub README files. The HTML is sanitized by GitHub's markdown renderer.
+               *
+               * Risk: If the build script or source READMEs are compromised, XSS is possible.
+               * Mitigation: READMEs are from trusted repositories only. For untrusted content,
+               * use a sanitization library like DOMPurify or render as plain Markdown.
+               *
+               * TODO: Consider adding DOMPurify server-side sanitization for defense-in-depth.
+               */
+              dangerouslySetInnerHTML={{ __html: readmeHtml }}
+            />
+          ) : (
+            <section className="
+              prose prose-zinc prose-invert prose-quoteless mt-8 max-w-none
+            ">
+              <Mdx code={project.body.code} />
+            </section>
+          )}
+        </div>
+      ),
+    },
+  ];
+
+  return (
+    <div className="h-screen overflow-hidden">
+      <VirtualScrollArea className="size-full" items={scrollItems} overscan={2} />
+      <ProjectViewReporter slug={project.slug} />
+    </div>
+  );
+}
+
+const getReadmeHtml = cache(async (slug: string): Promise<null | string> => {
   const filePath = join(process.cwd(), "public", "readmes", `${slug}.html`);
 
   try {
@@ -34,57 +110,4 @@ async function getReadmeHtml(slug: string): Promise<string | null> {
   } catch {
     return null;
   }
-}
-
-export default async function ProjectPage({ params }: Props) {
-  const { slug } = await params;
-  const project = allProjects.find((project) => project.slug === slug);
-
-  if (!project || !project.published) {
-    notFound();
-  }
-
-  const views = await getProjectView(slug);
-  const readmeHtml = await getReadmeHtml(project.slug);
-
-  return (
-    <div className="h-screen overflow-hidden">
-      <ScrollArea className="h-full w-full">
-        <div className="min-h-screen max-w-[100vw] overflow-x-hidden">
-          <Header
-            project={project}
-            views={views}
-            hasReadme={readmeHtml !== null}
-          />
-          <ReportView slug={project.slug} />
-
-          <div className="px-4 py-12 mx-auto max-w-3xl">
-            {readmeHtml ? (
-              <section
-                className="markdown-body mt-8 overflow-x-auto"
-                /**
-                 * SECURITY NOTE: This renders pre-generated HTML from public/readmes/*.html
-                 *
-                 * These files are generated at build time by scripts/download-project-readmes.ts
-                 * from GitHub README files. The HTML is sanitized by GitHub's markdown renderer.
-                 *
-                 * Risk: If the build script or source READMEs are compromised, XSS is possible.
-                 * Mitigation: READMEs are from trusted repositories only. For untrusted content,
-                 * use a sanitization library like DOMPurify or render as plain Markdown.
-                 *
-                 * TODO: Consider adding DOMPurify server-side sanitization for defense-in-depth.
-                 */
-                // eslint-disable-next-line react/no-danger
-                dangerouslySetInnerHTML={{ __html: readmeHtml }}
-              />
-            ) : (
-              <section className="prose prose-zinc prose-invert prose-quoteless max-w-none mt-8">
-                <Mdx code={project.body.code} />
-              </section>
-            )}
-          </div>
-        </div>
-      </ScrollArea>
-    </div>
-  );
-}
+});

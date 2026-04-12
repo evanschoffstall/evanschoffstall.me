@@ -1,9 +1,10 @@
+import { describe, expect, test } from "bun:test";
+
 import {
   extractSlugFromBody,
   isValidProjectSlug,
   validateProjectSlug,
-} from "@/domain/projects/validation";
-import { describe, expect, test } from "bun:test";
+} from "./slug";
 
 describe("validateProjectSlug", () => {
   test("accepts valid slug", () => {
