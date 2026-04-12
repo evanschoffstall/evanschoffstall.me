@@ -1,7 +1,11 @@
-import { getProjectViews, incrementProjectView } from "@/application/pageviews";
-import { extractSlugFromBody } from "@/domain/projects/validation";
 import { allProjects } from "contentlayer/generated";
 import { NextRequest, NextResponse } from "next/server";
+
+import {
+  extractSlugFromBody,
+  getProjectViews,
+  incrementProjectView,
+} from "@/features/projects";
 
 export const runtime = "edge";
 
@@ -39,7 +43,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   const forwardedFor = req.headers.get("x-forwarded-for");
   const ip =
-    forwardedFor?.split(",")[0]?.trim() || req.headers.get("x-real-ip") || null;
+    forwardedFor?.split(",")[0]?.trim() ?? req.headers.get("x-real-ip") ?? null;
 
   try {
     await incrementProjectView(slug, ip);
