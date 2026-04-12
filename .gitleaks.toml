@@ -1,0 +1,17 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "False positives in generated and dependency content"
+paths = [
+  '''^\.contentlayer/''',
+  '''^coverage/''',
+  '''^node_modules/''',
+  '''^public/readmes/'''
+]
+
+[[allowlists]]
+description = "Placeholder environment example values"
+regexes = [
+  '''your_redis_(url|token)'''
+]

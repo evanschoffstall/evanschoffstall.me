@@ -116,14 +116,22 @@ Downloads the latest README from each configured GitHub repository and saves a r
 | `bun run start`              | Start the production Next.js server                       |
 | `bun run contentlayer:build` | Run the one-shot Contentlayer build script                |
 | `bun run contentlayer:dev`   | Start Contentlayer in watch mode                          |
+| `bun run test:e2e`           | Run Playwright browser tests against an isolated app      |
 | `bun run readmes:download`   | Download and render GitHub READMEs into `public/readmes/` |
 | `bun run clean`              | Remove `.next`, `.cache`, and `.contentlayer`             |
 | `bun run types`              | Type-check the project with `tsc --noEmit`                |
 
-Tests live in `src/__tests__/` and use `bun:test`. Run them with:
+Unit tests use `bun:test`. Run them with:
 
 ```bash
 bun test
+```
+
+Browser tests use Playwright and start a dedicated app on port `3100` with its
+own `.next-playwright` output so your regular `.next` build stays untouched:
+
+```bash
+bun run test:e2e
 ```
 
 ---
