@@ -92,6 +92,8 @@ test.describe("project page actions", () => {
 
     await page.getByRole("button", { name: "Go back" }).click();
 
+    // Must land on /#projects exactly — not /#projects#projects.
+    await expect(page).toHaveURL(/\/#projects$/);
     await expect(
       page.getByRole("button", { name: /back to projects/i }),
     ).toBeVisible();
@@ -118,5 +120,49 @@ test.describe("project page actions", () => {
     await expect(replayButton).toBeVisible({ timeout: 250 });
     await expect(seeAllProjectsButton).toBeVisible({ timeout: 250 });
     await expect(bioCopy).toBeVisible({ timeout: 250 });
+  });
+
+  // Regression: back navigation from a project slug previously routed through
+  // /projects, which server-redirects to /#projects. The Next.js router would
+  // produce the double-hash URL /#projects#projects instead of /#projects.
+  test("back navigation from project slug never produces double-hash URL", async ({ page }) => {
+    await page.goto("/#projects");
+
+    await page.getByRole("heading", { name: "SpringGate E-Commerce" }).click();
+    await expect(page).toHaveURL(/\/projects\/springgate-ecommerce$/);
+
+    await page.getByRole("button", { name: "Go back" }).click();
+
+    const url = page.url();
+    expect(url).not.toContain("#projects#projects");
+    await expect(page).toHaveURL(/\/#projects$/);
+    await expect(
+      page.getByRole("button", { name: /back to projects/i }),
+    ).toBeVisible();
+  });
+
+  test("back navigation from project slug reached via featured-card link never produces double-hash URL", async ({ page }) => {
+    await page.goto("/");
+
+    await page.getByRole("link", { name: /read notes/i }).first().click();
+    await expect(page).toHaveURL(/\/projects\/librerss$/);
+
+    await page.getByRole("button", { name: "Go back" }).click();
+
+    const url = page.url();
+    expect(url).not.toContain("#projects#projects");
+    await expect(page).toHaveURL(/\/#projects$/);
+  });
+
+  test("back navigation from directly-loaded project slug never produces double-hash URL", async ({ page }) => {
+    // Direct load simulates an external link or page refresh — no session-storage
+    // internal-navigation flag is set, so the deterministic path is used.
+    await page.goto("/projects/librerss");
+
+    await page.getByRole("button", { name: "Go back" }).click();
+
+    const url = page.url();
+    expect(url).not.toContain("#projects#projects");
+    await expect(page).toHaveURL(/\/#projects$/);
   });
 });

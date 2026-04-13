@@ -92,7 +92,10 @@ function resolveDeterministicBackTarget(pathname: string): string {
   const normalizedPathname = normalizePathname(pathname);
 
   if (normalizedPathname.startsWith("/projects/")) {
-    return "/projects";
+    // Navigate directly to the home page projects section instead of going
+    // through /projects, which server-redirects to /#projects and can produce
+    // the double-hash URL /#projects#projects in the browser.
+    return "/#projects";
   }
 
   if (normalizedPathname === "/projects") {
