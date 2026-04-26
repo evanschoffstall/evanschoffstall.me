@@ -1,13 +1,24 @@
 "use client";
 
+import type { Project } from "contentlayer/generated";
+
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
 
-import type { HomeProjectData } from "@/features/home/model";
-
 import { Navigation, VirtualScrollArea } from "@/components";
 import { ANIMATION } from "@/shared";
+
+/** Aggregated project collections needed by the home projects panel. */
+interface HomeProjectData {
+  featured: Project;
+  second: Project;
+  sorted: Project[];
+  sortedContributions: Project[];
+  sortedLegacy: Project[];
+  third: Project;
+  views: Record<string, number>;
+}
 
 /**
  * Lazily resolves the projects content bundle used by the home overlay.

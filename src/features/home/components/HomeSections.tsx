@@ -1,15 +1,26 @@
 "use client";
 
+import type { Project } from "contentlayer/generated";
+
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect } from "react";
-
-import type { HomeProjectData } from "@/features/home/model";
 
 import { useProjectsSectionState } from "@/features/home/hooks";
 import { ANIMATION } from "@/shared";
 
 import { HomeContent } from "./HomeContent";
 import { HomeProjectsPanel, preloadProjectsContent } from "./HomeProjectsPanel";
+
+/** Aggregated project collections needed by the home sections coordinator. */
+interface HomeProjectData {
+  featured: Project;
+  second: Project;
+  sorted: Project[];
+  sortedContributions: Project[];
+  sortedLegacy: Project[];
+  third: Project;
+  views: Record<string, number>;
+}
 
 /**
  * Inputs required to render the hero-and-overview home state before the projects overlay opens.
