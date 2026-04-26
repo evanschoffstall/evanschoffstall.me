@@ -5,19 +5,19 @@ import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
 
 /** @type {import('contentlayer/source-files').ComputedFields} */
-const computedFields = {
+const projectComputedFields = {
   path: {
-    resolve: (doc) => `/${doc._raw.flattenedPath}`,
+    resolve: (doc) => `/projects/${doc._raw.sourceFileDir.split("/").at(-1)}`,
     type: "string",
   },
   slug: {
-    resolve: (doc) => doc._raw.flattenedPath.split("/").slice(1).join("/"),
+    resolve: (doc) => doc._raw.sourceFileDir.split("/").at(-1),
     type: "string",
   },
 };
 
 export const Project = defineDocumentType(() => ({
-  computedFields,
+  computedFields: projectComputedFields,
   contentType: "mdx",
   fields: {
     contributor: {
@@ -47,30 +47,13 @@ export const Project = defineDocumentType(() => ({
       type: "string",
     },
   },
-
-  filePathPattern: "./projects/**/*.mdx",
+  filePathPattern: "**/content.mdx",
   name: "Project",
 }));
 
-export const Page = defineDocumentType(() => ({
-  computedFields,
-  contentType: "mdx",
-  fields: {
-    description: {
-      type: "string",
-    },
-    title: {
-      required: true,
-      type: "string",
-    },
-  },
-  filePathPattern: "pages/**/*.mdx",
-  name: "Page",
-}));
-
 export default makeSource({
-  contentDirPath: "./content",
-  documentTypes: [Page, Project],
+  contentDirPath: "./public/projects",
+  documentTypes: [Project],
   mdx: {
     esbuildOptions: (options) => {
       // Ensure the generated MDX code is safe to execute during Next.js prerender/build.

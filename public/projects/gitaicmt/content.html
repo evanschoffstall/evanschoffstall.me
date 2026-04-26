@@ -1,0 +1,812 @@
+<p dir="auto"><a name="user-content-top"></a></p>
+<div align="center" dir="auto">
+  <br />
+  <h1 dir="auto">gitaicmt</h1>
+  <a
+    target="_blank"
+    rel="noopener noreferrer"
+    href="/projects/gitaicmt/logo.svg"
+    ><img
+      src="/projects/gitaicmt/logo.svg"
+      width="112"
+      height="112"
+      alt="gitaicmt logo"
+      style="max-width: 100%; height: auto; max-height: 112px"
+  /></a>
+  <p dir="auto"><em>High quality AI-Powered conventional commits</em></p>
+  <p dir="auto">
+    <a href="https://www.typescriptlang.org" rel="nofollow"
+      ><img
+        src="https://camo.githubusercontent.com/b7fbd1ac133b18867505a43ca849fbf3fcf2042622067586e39e680fb585e564/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f547970655363726970742d352d3331373843363f7374796c653d666f722d7468652d6261646765266c6f676f3d74797065736372697074266c6f676f436f6c6f723d7768697465"
+        alt="TypeScript 5"
+        data-canonical-src="https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&amp;logo=typescript&amp;logoColor=white"
+        style="max-width: 100%"
+    /></a>
+    <a href="https://bun.sh" rel="nofollow"
+      ><img
+        src="https://camo.githubusercontent.com/e32cceedfa148dcbb2fc4d8a6c09a7ed213add295b295690b393ba9b02e8c77d/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f42756e2d72756e74696d652d4639463145313f7374796c653d666f722d7468652d6261646765266c6f676f3d62756e266c6f676f436f6c6f723d626c61636b"
+        alt="Bun"
+        data-canonical-src="https://img.shields.io/badge/Bun-runtime-F9F1E1?style=for-the-badge&amp;logo=bun&amp;logoColor=black"
+        style="max-width: 100%"
+    /></a>
+    <a href="https://platform.openai.com/docs/overview" rel="nofollow"
+      ><img
+        src="https://camo.githubusercontent.com/5baacd675719bd04866e99350f2e7e91bf29ab184446e5ac632a5a8b25a4e255/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4f70656e41492d4150492d3431323939313f7374796c653d666f722d7468652d6261646765266c6f676f3d6f70656e6169266c6f676f436f6c6f723d7768697465"
+        alt="OpenAI API"
+        data-canonical-src="https://img.shields.io/badge/OpenAI-API-412991?style=for-the-badge&amp;logo=openai&amp;logoColor=white"
+        style="max-width: 100%"
+    /></a>
+    <a href="LICENSE"
+      ><img
+        src="https://camo.githubusercontent.com/f77c46cfd34df0f2783a9d96cc43ac41093d5ede3f6ff47dac0b1cfc7bf3a2c7/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4c6963656e73652d4d49542d3232633535653f7374796c653d666f722d7468652d6261646765"
+        alt="MIT License"
+        data-canonical-src="https://img.shields.io/badge/License-MIT-22c55e?style=for-the-badge"
+        style="max-width: 100%"
+    /></a>
+  </p>
+  <p dir="auto">
+    A tool that reads your git diff and turns it into impressive conventional
+    commits across files and hunks alike.<br />
+  </p>
+  <p dir="auto">
+    <a href="#quick-start"><strong>Quick Start</strong></a> ·
+    <a href="#commands"><strong>Commands</strong></a> ·
+    <a href="#configuration"><strong>Configuration</strong></a> ·
+    <a href="#development"><strong>Development</strong></a>
+  </p>
+  <br />
+</div>
+<div class="markdown-alert markdown-alert-important" dir="auto">
+  <p class="markdown-alert-title" dir="auto">
+    <svg
+      class="octicon octicon-report mr-2"
+      viewBox="0 0 16 16"
+      version="1.1"
+      width="16"
+      height="16"
+      aria-hidden="true"
+    >
+      <path
+        d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"
+      ></path></svg
+    >Important
+  </p>
+  <p dir="auto">
+    <code class="notranslate">gitaicmt</code> can stage and commit changes. If
+    you want a no-side-effects preview first, run
+    <code class="notranslate">gitaicmt plan</code>.
+  </p>
+</div>
+<hr />
+<h2 dir="auto">What is gitaicmt?</h2>
+<p dir="auto">
+  <strong>gitaicmt</strong> is a Bun-based CLI that inspects your git diff, asks
+  an OpenAI text model to group related changes, and generates commit messages
+  that are actually useful.
+</p>
+<p dir="auto">
+  It is built for the real workflow problem, not just the message-writing
+  problem:
+</p>
+<ul dir="auto">
+  <li>large staged batches</li>
+  <li>unrelated hunks in the same file</li>
+  <li>preview-before-commit safety</li>
+  <li>automatic commit execution after confirmation</li>
+</ul>
+<p dir="auto">
+  If you want to inspect the plan before anything is committed, run
+  <code class="notranslate">gitaicmt plan</code>.
+</p>
+<div class="markdown-alert markdown-alert-tip" dir="auto">
+  <p class="markdown-alert-title" dir="auto">
+    <svg
+      class="octicon octicon-light-bulb mr-2"
+      viewBox="0 0 16 16"
+      version="1.1"
+      width="16"
+      height="16"
+      aria-hidden="true"
+    >
+      <path
+        d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"
+      ></path></svg
+    >Tip
+  </p>
+  <p dir="auto">
+    The tool is strongest when you already have a meaningful staged diff. If you
+    prefer tighter control, stage intentionally first and use
+    <code class="notranslate">gitaicmt plan</code> before
+    <code class="notranslate">gitaicmt</code>.
+  </p>
+</div>
+<hr />
+<h2 dir="auto">Why use it?</h2>
+<markdown-accessiblity-table
+  ><table role="table">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Feature</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>🧠</td>
+        <td><strong>AI-generated messages</strong></td>
+        <td>Produces commit subjects and bodies from the actual diff</td>
+      </tr>
+      <tr>
+        <td>🔀</td>
+        <td><strong>Auto-split commits</strong></td>
+        <td>Separates unrelated work into multiple logical commits</td>
+      </tr>
+      <tr>
+        <td>🧪</td>
+        <td><strong>Hunk-level splitting</strong></td>
+        <td>
+          Can split changes inside the same file when the hunks represent
+          different intents
+        </td>
+      </tr>
+      <tr>
+        <td>📋</td>
+        <td><strong>Plan-first workflow</strong></td>
+        <td>Shows the planned commits before it starts committing</td>
+      </tr>
+      <tr>
+        <td>🚀</td>
+        <td><strong>Automatic staging fallback</strong></td>
+        <td>If nothing is staged, it stages tracked changes automatically</td>
+      </tr>
+      <tr>
+        <td>📝</td>
+        <td><strong>Conventional Commits</strong></td>
+        <td>
+          Uses <code class="notranslate">type(scope): description</code> by
+          default
+        </td>
+      </tr>
+      <tr>
+        <td>⚡</td>
+        <td><strong>Parallel analysis</strong></td>
+        <td>Chunks large diffs and processes them concurrently</td>
+      </tr>
+      <tr>
+        <td>🔧</td>
+        <td><strong>Configurable output</strong></td>
+        <td>
+          Control model, temperature, token warnings, language, body inclusion,
+          and more
+        </td>
+      </tr>
+      <tr>
+        <td>🏗️</td>
+        <td><strong>Pipe-friendly mode</strong></td>
+        <td>
+          <code class="notranslate">gitaicmt gen</code> prints a single message
+          to stdout for scripting
+        </td>
+      </tr>
+    </tbody>
+  </table></markdown-accessiblity-table
+>
+<h3 dir="auto">At a glance</h3>
+<markdown-accessiblity-table
+  ><table role="table">
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Default behavior</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Diff source</td>
+        <td>Uses staged changes when present</td>
+      </tr>
+      <tr>
+        <td>Empty staging area</td>
+        <td>Auto-stages tracked changes</td>
+      </tr>
+      <tr>
+        <td>Normal run</td>
+        <td>Shows the plan, asks once, then commits</td>
+      </tr>
+      <tr>
+        <td>Preview run</td>
+        <td>
+          <code class="notranslate">gitaicmt plan</code> shows the split and
+          exits
+        </td>
+      </tr>
+      <tr>
+        <td>Pipe run</td>
+        <td>
+          <code class="notranslate">gitaicmt gen</code> prints one message to
+          stdout
+        </td>
+      </tr>
+      <tr>
+        <td>Default model</td>
+        <td><code class="notranslate">gpt-5.3-codex</code></td>
+      </tr>
+    </tbody>
+  </table></markdown-accessiblity-table
+>
+<hr />
+<h2 dir="auto">Safety and Behavior</h2>
+<p dir="auto">
+  Before using it on a real repository, the important behavior is this:
+</p>
+<ol dir="auto">
+  <li>
+    <code class="notranslate">gitaicmt</code> reads the diff that will be
+    committed.
+  </li>
+  <li>If you already have staged changes, it uses those.</li>
+  <li>If nothing is staged, it stages tracked changes automatically.</li>
+  <li>In default mode, it shows the plan and asks once before committing.</li>
+  <li>
+    <code class="notranslate">gitaicmt plan</code> previews the split without
+    committing.
+  </li>
+  <li>
+    <code class="notranslate">gitaicmt gen</code> generates a single message and
+    prints it to stdout.
+  </li>
+</ol>
+<div class="markdown-alert markdown-alert-note" dir="auto">
+  <p class="markdown-alert-title" dir="auto">
+    <svg
+      class="octicon octicon-info mr-2"
+      viewBox="0 0 16 16"
+      version="1.1"
+      width="16"
+      height="16"
+      aria-hidden="true"
+    >
+      <path
+        d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"
+      ></path></svg
+    >Note
+  </p>
+  <p dir="auto">
+    The README calls out side effects early because this tool writes to git
+    state, not just stdout.
+  </p>
+</div>
+<h3 dir="auto">What gets sent to the model?</h3>
+<p dir="auto">
+  The tool sends diff content and commit-format instructions so the model can:
+</p>
+<ul dir="auto">
+  <li>group related changes</li>
+  <li>generate commit subjects and optional bodies</li>
+  <li>follow your configured language and formatting rules</li>
+</ul>
+<h3 dir="auto">What does not exist today?</h3>
+<p dir="auto">
+  The current configuration supports OpenAI API credentials and model selection.
+  It does <strong>not</strong> expose a custom provider or base URL setting in
+  the documented config surface.
+</p>
+<div class="markdown-alert markdown-alert-warning" dir="auto">
+  <p class="markdown-alert-title" dir="auto">
+    <svg
+      class="octicon octicon-alert mr-2"
+      viewBox="0 0 16 16"
+      version="1.1"
+      width="16"
+      height="16"
+      aria-hidden="true"
+    >
+      <path
+        d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"
+      ></path></svg
+    >Warning
+  </p>
+  <p dir="auto">
+    If you need provider switching or custom API endpoints, that is not a
+    documented feature of the current release.
+  </p>
+</div>
+<hr />
+<h2 dir="auto">Quick Start</h2>
+<h3 dir="auto">1. Install from source</h3>
+<div class="highlight highlight-source-shell" dir="auto">
+  <pre class="notranslate">
+bun install
+bun run build
+bun link</pre
+  >
+</div>
+<h3 dir="auto">2. Set your API key</h3>
+<div class="highlight highlight-source-shell" dir="auto">
+  <pre
+    class="notranslate"
+  ><span class="pl-k">export</span> OPENAI_API_KEY=<span class="pl-s"><span class="pl-pds">"</span>sk-...<span class="pl-pds">"</span></span></pre>
+</div>
+<p dir="auto">Or create a project config file:</p>
+<div class="highlight highlight-source-shell" dir="auto">
+  <pre class="notranslate">gitaicmt init</pre>
+</div>
+<h3 dir="auto">3. Preview the plan</h3>
+<div class="highlight highlight-source-shell" dir="auto">
+  <pre class="notranslate">gitaicmt plan</pre>
+</div>
+<h3 dir="auto">4. Commit</h3>
+<div class="highlight highlight-source-shell" dir="auto">
+  <pre class="notranslate">gitaicmt</pre>
+</div>
+<div class="markdown-alert markdown-alert-tip" dir="auto">
+  <p class="markdown-alert-title" dir="auto">
+    <svg
+      class="octicon octicon-light-bulb mr-2"
+      viewBox="0 0 16 16"
+      version="1.1"
+      width="16"
+      height="16"
+      aria-hidden="true"
+    >
+      <path
+        d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"
+      ></path></svg
+    >Tip
+  </p>
+  <p dir="auto">
+    If the staged diff is large, keep token warnings enabled the first time you
+    use the tool.
+  </p>
+</div>
+<hr />
+<h2 dir="auto">Example</h2>
+<p dir="auto">Input:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">Staged changes:
+- refactor commit planner batching
+- fix terminal line wrapping regression
+- add planner notice tests
+</code></pre>
+<p dir="auto">Possible plan:</p>
+<pre
+  lang="text"
+  class="notranslate"
+><code class="notranslate">1. ref(commit-planning): tighten batching for grouped diff analysis
+2. fix(cli): preserve wrapped terminal output alignment
+3. test(cli): cover planner fallback notices
+</code></pre>
+<p dir="auto">Pipe mode:</p>
+<div class="highlight highlight-source-shell" dir="auto">
+  <pre
+    class="notranslate"
+  >gitaicmt gen <span class="pl-k">|</span> git commit -F -</pre>
+</div>
+<details>
+  <summary><strong>What this example is demonstrating</strong></summary>
+  <p dir="auto">
+    The planner is trying to separate different intents into separate commits
+    instead of collapsing everything into a single generic message. That is the
+    core value of the tool.
+  </p>
+</details>
+<hr />
+<h2 dir="auto">Commands</h2>
+<markdown-accessiblity-table
+  ><table role="table">
+    <thead>
+      <tr>
+        <th>Command</th>
+        <th>Alias</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code class="notranslate">gitaicmt</code></td>
+        <td><code class="notranslate">c</code></td>
+        <td>Detect changes, show the plan, confirm once, then commit</td>
+      </tr>
+      <tr>
+        <td><code class="notranslate">gitaicmt plan</code></td>
+        <td><code class="notranslate">p</code></td>
+        <td>Preview planned commit groups without committing</td>
+      </tr>
+      <tr>
+        <td><code class="notranslate">gitaicmt single</code></td>
+        <td><code class="notranslate">s</code></td>
+        <td>Generate one commit for all changes</td>
+      </tr>
+      <tr>
+        <td><code class="notranslate">gitaicmt gen</code></td>
+        <td><code class="notranslate">g</code></td>
+        <td>Generate one message to stdout</td>
+      </tr>
+      <tr>
+        <td><code class="notranslate">gitaicmt init</code></td>
+        <td></td>
+        <td>
+          Create <code class="notranslate">gitaicmt.config.json</code> in the
+          current directory
+        </td>
+      </tr>
+      <tr>
+        <td><code class="notranslate">gitaicmt version</code></td>
+        <td></td>
+        <td>Show version information</td>
+      </tr>
+      <tr>
+        <td><code class="notranslate">gitaicmt help</code></td>
+        <td><code class="notranslate">-h</code></td>
+        <td>Show help</td>
+      </tr>
+    </tbody>
+  </table></markdown-accessiblity-table
+>
+<h2 dir="auto">Flags</h2>
+<markdown-accessiblity-table
+  ><table role="table">
+    <thead>
+      <tr>
+        <th>Flag</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <code class="notranslate">-y</code>,
+          <code class="notranslate">--yes</code>
+        </td>
+        <td>Skip confirmation prompts</td>
+      </tr>
+      <tr>
+        <td><code class="notranslate">--no-token-check</code></td>
+        <td>Skip the high-token confirmation prompt for one run</td>
+      </tr>
+      <tr>
+        <td>
+          <code class="notranslate">-v</code>,
+          <code class="notranslate">--verbose</code>
+        </td>
+        <td>Show concise diagnostics and stage summaries</td>
+      </tr>
+      <tr>
+        <td><code class="notranslate">--trace</code></td>
+        <td>Show raw intermediate AI payloads</td>
+      </tr>
+      <tr>
+        <td><code class="notranslate">--version</code></td>
+        <td>Show version information</td>
+      </tr>
+      <tr>
+        <td>
+          <code class="notranslate">-h</code>,
+          <code class="notranslate">--help</code>
+        </td>
+        <td>Show help</td>
+      </tr>
+    </tbody>
+  </table></markdown-accessiblity-table
+>
+<div class="markdown-alert markdown-alert-note" dir="auto">
+  <p class="markdown-alert-title" dir="auto">
+    <svg
+      class="octicon octicon-info mr-2"
+      viewBox="0 0 16 16"
+      version="1.1"
+      width="16"
+      height="16"
+      aria-hidden="true"
+    >
+      <path
+        d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"
+      ></path></svg
+    >Note
+  </p>
+  <p dir="auto">
+    <code class="notranslate">gitaicmt</code>,
+    <code class="notranslate">gitaicmt single</code>, and
+    <code class="notranslate">gitaicmt gen</code> solve different problems:
+    split-and-commit, one-commit-for-all, and message-only output.
+  </p>
+</div>
+<hr />
+<h2 dir="auto">Common Usage</h2>
+<div class="highlight highlight-source-shell" dir="auto">
+  <pre
+    class="notranslate"
+  ><span class="pl-c"><span class="pl-c">#</span> Preview the split before any commit runs</span>
+gitaicmt plan
+
+<span class="pl-c"><span class="pl-c">#</span> Auto-split into logical commits and ask once</span>
+gitaicmt
+
+<span class="pl-c"><span class="pl-c">#</span> Same as above, but skip confirmation</span>
+gitaicmt -y
+
+<span class="pl-c"><span class="pl-c">#</span> Show extra planning diagnostics</span>
+gitaicmt -v plan
+
+<span class="pl-c"><span class="pl-c">#</span> Show raw intermediate AI payloads during planning</span>
+gitaicmt --trace plan
+
+<span class="pl-c"><span class="pl-c">#</span> Generate one message for all changes</span>
+gitaicmt single
+
+<span class="pl-c"><span class="pl-c">#</span> Pipe a generated message into git</span>
+gitaicmt gen <span class="pl-k">|</span> git commit -F -</pre>
+</div>
+<details>
+  <summary><strong>Choosing the right mode</strong></summary>
+  <markdown-accessiblity-table
+    ><table role="table">
+      <thead>
+        <tr>
+          <th>Use case</th>
+          <th>Command</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Preview logical commit grouping</td>
+          <td><code class="notranslate">gitaicmt plan</code></td>
+        </tr>
+        <tr>
+          <td>Let the tool split and commit</td>
+          <td><code class="notranslate">gitaicmt</code></td>
+        </tr>
+        <tr>
+          <td>Force a single commit</td>
+          <td><code class="notranslate">gitaicmt single</code></td>
+        </tr>
+        <tr>
+          <td>Generate a message for your own scripting flow</td>
+          <td><code class="notranslate">gitaicmt gen</code></td>
+        </tr>
+      </tbody>
+    </table></markdown-accessiblity-table
+  >
+</details>
+<hr />
+<h2 dir="auto">Configuration</h2>
+<p dir="auto">
+  Configuration is loaded and deep-merged in this order, with later entries
+  winning:
+</p>
+<ol dir="auto">
+  <li><code class="notranslate">/etc/gitaicmt/config.json</code></li>
+  <li>
+    <code class="notranslate">~/.config/gitaicmt/config.json</code> or
+    <code class="notranslate">$XDG_CONFIG_HOME/gitaicmt/config.json</code>
+  </li>
+  <li>
+    <code class="notranslate">./gitaicmt.config.json</code> or
+    <code class="notranslate">./.gitaicmt.json</code>
+  </li>
+  <li><code class="notranslate">OPENAI_API_KEY</code> environment variable</li>
+</ol>
+<p dir="auto">Create a local config file:</p>
+<div class="highlight highlight-source-shell" dir="auto">
+  <pre class="notranslate">gitaicmt init</pre>
+</div>
+<details>
+  <summary><strong>Default config</strong></summary>
+  <div class="highlight highlight-source-json" dir="auto">
+    <pre class="notranslate">{
+  <span class="pl-ent">"analysis"</span>: {
+    <span class="pl-ent">"chunkSize"</span>: <span class="pl-c1">800</span>,
+    <span class="pl-ent">"groupByFile"</span>: <span class="pl-c1">true</span>,
+    <span class="pl-ent">"groupByHunk"</span>: <span class="pl-c1">true</span>,
+    <span class="pl-ent">"maxDiffLines"</span>: <span class="pl-c1">2000</span>,
+    <span class="pl-ent">"promptOnTokenWarning"</span>: <span class="pl-c1">true</span>,
+    <span class="pl-ent">"tokenWarningThreshold"</span>: <span class="pl-c1">10000</span>
+  },
+  <span class="pl-ent">"commit"</span>: {
+    <span class="pl-ent">"conventional"</span>: <span class="pl-c1">true</span>,
+    <span class="pl-ent">"includeBody"</span>: <span class="pl-c1">true</span>,
+    <span class="pl-ent">"includeScope"</span>: <span class="pl-c1">true</span>,
+    <span class="pl-ent">"language"</span>: <span class="pl-s"><span class="pl-pds">"</span>en<span class="pl-pds">"</span></span>,
+    <span class="pl-ent">"maxBodyLineLength"</span>: <span class="pl-c1">80</span>,
+    <span class="pl-ent">"maxSubjectLength"</span>: <span class="pl-c1">72</span>
+  },
+  <span class="pl-ent">"openai"</span>: {
+    <span class="pl-ent">"apiKey"</span>: <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>,
+    <span class="pl-ent">"maxTokens"</span>: <span class="pl-c1">512</span>,
+    <span class="pl-ent">"model"</span>: <span class="pl-s"><span class="pl-pds">"</span>gpt-5.3-codex<span class="pl-pds">"</span></span>,
+    <span class="pl-ent">"temperature"</span>: <span class="pl-c1">0.3</span>
+  },
+  <span class="pl-ent">"performance"</span>: {
+    <span class="pl-ent">"cacheEnabled"</span>: <span class="pl-c1">true</span>,
+    <span class="pl-ent">"cacheTTLSeconds"</span>: <span class="pl-c1">300</span>,
+    <span class="pl-ent">"parallel"</span>: <span class="pl-c1">true</span>,
+    <span class="pl-ent">"timeoutMs"</span>: <span class="pl-c1">15000</span>
+  }
+}</pre>
+  </div>
+</details>
+<h3 dir="auto">Token warning behavior</h3>
+<p dir="auto">
+  Token usage is estimated before model calls. When the estimate reaches
+  <code class="notranslate">analysis.tokenWarningThreshold</code>, gitaicmt
+  warns and asks for confirmation by default.
+</p>
+<ul dir="auto">
+  <li>
+    Set <code class="notranslate">analysis.promptOnTokenWarning</code> to
+    <code class="notranslate">false</code> to disable the prompt.
+  </li>
+  <li>
+    Set <code class="notranslate">analysis.tokenWarningThreshold</code> to
+    <code class="notranslate">0</code> to disable token warnings entirely.
+  </li>
+  <li>
+    Pass <code class="notranslate">--no-token-check</code> to bypass the prompt
+    for one run.
+  </li>
+</ul>
+<div class="markdown-alert markdown-alert-caution" dir="auto">
+  <p class="markdown-alert-title" dir="auto">
+    <svg
+      class="octicon octicon-stop mr-2"
+      viewBox="0 0 16 16"
+      version="1.1"
+      width="16"
+      height="16"
+      aria-hidden="true"
+    >
+      <path
+        d="M4.47.22A.749.749 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.749.749 0 0 1-.22.53l-4.25 4.25A.749.749 0 0 1 11 16H5a.749.749 0 0 1-.53-.22L.22 11.53A.749.749 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"
+      ></path></svg
+    >Caution
+  </p>
+  <p dir="auto">
+    Disabling token warnings removes the last confirmation step for unusually
+    large model requests.
+  </p>
+</div>
+<hr />
+<h2 dir="auto">Recommended Models</h2>
+<p dir="auto">
+  The default model is <code class="notranslate">gpt-5.3-codex</code>.
+</p>
+<p dir="auto">
+  The codebase currently documents these as sensible text-generation choices for
+  commit generation:
+</p>
+<ul dir="auto">
+  <li><code class="notranslate">gpt-5.3-codex</code></li>
+  <li><code class="notranslate">gpt-4o</code></li>
+  <li><code class="notranslate">gpt-4.1-mini</code></li>
+  <li><code class="notranslate">gpt-4.1</code></li>
+  <li><code class="notranslate">gpt-5-mini</code></li>
+  <li><code class="notranslate">gpt-5</code></li>
+  <li><code class="notranslate">gpt-5.3-chat-latest</code></li>
+  <li><code class="notranslate">gpt-5.3-codex</code></li>
+  <li><code class="notranslate">o3</code></li>
+  <li><code class="notranslate">o4-mini</code></li>
+</ul>
+<details>
+  <summary><strong>How to think about model choice</strong></summary>
+  <p dir="auto">
+    <code class="notranslate">gpt-5.3-codex</code> is the default because it is
+    a pragmatic latency and cost baseline. Move up only when your diffs are
+    large or your project structure is complex enough to justify the extra
+    reasoning budget.
+  </p>
+</details>
+<hr />
+<h2 dir="auto">Development</h2>
+<p dir="auto">This repository uses Bun end to end.</p>
+<h3 dir="auto">Local development</h3>
+<div class="highlight highlight-source-shell" dir="auto">
+  <pre class="notranslate">
+bun install
+bun run build</pre
+  >
+</div>
+<div class="markdown-alert markdown-alert-note" dir="auto">
+  <p class="markdown-alert-title" dir="auto">
+    <svg
+      class="octicon octicon-info mr-2"
+      viewBox="0 0 16 16"
+      version="1.1"
+      width="16"
+      height="16"
+      aria-hidden="true"
+    >
+      <path
+        d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"
+      ></path></svg
+    >Note
+  </p>
+  <p dir="auto">
+    This repository's canonical validation entrypoint is
+    <code class="notranslate">bun check summary</code>.
+  </p>
+</div>
+<h3 dir="auto">Validation</h3>
+<div class="highlight highlight-source-shell" dir="auto">
+  <pre class="notranslate">bun check summary</pre>
+</div>
+<h3 dir="auto">Build</h3>
+<div class="highlight highlight-source-shell" dir="auto">
+  <pre class="notranslate">bun run build</pre>
+</div>
+<hr />
+<h2 dir="auto">Project Structure</h2>
+<pre lang="text" class="notranslate"><code class="notranslate">gitaicmt/
+├── src/
+│   ├── application/               # Config, constants, schemas, and runtime errors
+│   ├── cli/                       # CLI entry point, staging, plan display, and terminal UI
+│   ├── commit-messages/           # Commit message formatting and subject parsing helpers
+│   ├── commit-planning/           # AI orchestration, prompts, grouping, caching, and planning logic
+│   └── git/                       # Git diff parsing and command execution
+├── tests/
+├── scripts/
+├── package.json
+└── tsconfig.json
+</code></pre>
+<hr />
+<h2 dir="auto">Stack</h2>
+<markdown-accessiblity-table
+  ><table role="table">
+    <thead>
+      <tr>
+        <th>Layer</th>
+        <th>Technology</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Runtime</td>
+        <td>Bun</td>
+      </tr>
+      <tr>
+        <td>Language</td>
+        <td>TypeScript 5</td>
+      </tr>
+      <tr>
+        <td>AI</td>
+        <td>OpenAI API</td>
+      </tr>
+      <tr>
+        <td>Validation</td>
+        <td><code class="notranslate">bun check summary</code></td>
+      </tr>
+    </tbody>
+  </table></markdown-accessiblity-table
+>
+<hr />
+<h2 dir="auto">FAQ</h2>
+<details>
+  <summary><strong>Will this commit immediately?</strong></summary>
+  <p dir="auto">
+    In the default mode, it shows the plan and asks once before committing. If
+    you only want the preview, use
+    <code class="notranslate">gitaicmt plan</code>.
+  </p>
+</details>
+<details>
+  <summary><strong>Does it require staged changes?</strong></summary>
+  <p dir="auto">
+    No. If nothing is staged, it stages tracked changes automatically before
+    continuing.
+  </p>
+</details>
+<details>
+  <summary><strong>Can I use it in scripts?</strong></summary>
+  <p dir="auto">
+    Yes. Use <code class="notranslate">gitaicmt gen</code> to print a single
+    generated message to stdout.
+  </p>
+</details>
+<hr />
+<div align="center" dir="auto">
+  <p dir="auto">
+    Made with ❤️ by
+    <a href="https://github.com/evanschoffstall">Evan Schoffstall</a>
+  </p>
+  <br />
+  <p dir="auto"><a href="#top">Back to top</a></p>
+</div>

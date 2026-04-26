@@ -1,6 +1,6 @@
 <div align="center" dir="auto">
 <br>
-<a target="_blank" rel="noopener noreferrer" href="/projects/evanschoffstall.me/public/favicon.png"><img src="/projects/evanschoffstall.me/public/favicon.png" width="112" height="112" alt="evanschoffstall.me logo" style="max-width: 100%; height: auto; max-height: 112px;"></a>
+<a target="_blank" rel="noopener noreferrer" href="/projects/evanschoffstall.me/favicon.png"><img src="/projects/evanschoffstall.me/favicon.png" width="112" height="112" alt="evanschoffstall.me logo" style="max-width: 100%; height: auto; max-height: 112px;"></a>
 <h1 dir="auto">evanschoffstall.me</h1>
 <p dir="auto"><em>Portfolio. Projects. Built in the open.</em></p>
 <p dir="auto">
@@ -156,7 +156,7 @@
 </tr>
 <tr>
 <td><code class="notranslate">bun run readmes:download</code></td>
-<td>Download and render GitHub READMEs into <code class="notranslate">public/readmes/</code></td>
+<td>Download and render GitHub READMEs into <code class="notranslate">public/projects/[slug]/content.html</code></td>
 </tr>
 <tr>
 <td><code class="notranslate">bun run clean</code></td>
@@ -175,7 +175,7 @@ own <code class="notranslate">.next-playwright</code> output so your regular <co
 <div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">bun run test:e2e</pre></div>
 <hr>
 <h2 dir="auto">Adding a Project</h2>
-<p dir="auto">Create a new MDX file in <code class="notranslate">content/projects/</code>:</p>
+<p dir="auto">Create a new MDX file at <code class="notranslate">public/projects/[slug]/content.mdx</code>:</p>
 <div class="highlight highlight-source-mdx" dir="auto"><pre class="notranslate"><span class="pl-s">---</span>
 <span class="pl-ent">title</span>: <span class="pl-s">Project Title</span>
 <span class="pl-ent">description</span>: <span class="pl-s">Brief description</span>

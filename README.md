@@ -117,7 +117,7 @@ Downloads the latest README from each configured GitHub repository and saves a r
 | `bun run contentlayer:build` | Run the one-shot Contentlayer build script                |
 | `bun run contentlayer:dev`   | Start Contentlayer in watch mode                          |
 | `bun run test:e2e`           | Run Playwright browser tests against an isolated app      |
-| `bun run readmes:download`   | Download and render GitHub READMEs into `public/readmes/` |
+| `bun run readmes:download`   | Download and render GitHub READMEs into `public/projects/[slug]/content.html` |
 | `bun run clean`              | Remove `.next`, `.cache`, and `.contentlayer`             |
 | `bun run types`              | Type-check the project with `tsc --noEmit`                |
 
@@ -138,7 +138,7 @@ bun run test:e2e
 
 ## Adding a Project
 
-Create a new MDX file in `content/projects/`:
+Create a new MDX file at `public/projects/[slug]/content.mdx`:
 
 ```mdx
 ---
