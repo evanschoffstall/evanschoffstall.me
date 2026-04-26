@@ -1,1 +1,0 @@
-export { HomeSections } from "@/features/home/components";
