@@ -6,16 +6,16 @@ import { expect, test } from "./playwright";
  * and a README-backed project page loads its mirrored content.
  */
 test.describe("content loads", () => {
-  test("redirects the projects route into the hash-based projects view", async ({ page }) => {
+  test("redirects the projects route into the hash-based projects view", async ({
+    page,
+  }) => {
     await page.goto("/projects");
 
     await expect(page).toHaveURL(/\/#projects$/);
     await expect(
       page.getByRole("button", { name: /back to projects/i }),
     ).toBeVisible();
-    await expect(
-      page.getByRole("heading", { name: "Librerss" }),
-    ).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Librerss" })).toBeVisible();
   });
 
   test("renders home page content and the projects panel", async ({ page }) => {
@@ -42,9 +42,7 @@ test.describe("content loads", () => {
         "Some of the projects are from work and some are on my own time.",
       ),
     ).toBeVisible();
-    await expect(
-      page.getByRole("heading", { name: "Gitaicmt" }),
-    ).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Gitaicmt" })).toBeVisible();
 
     await page.getByRole("button", { name: /back to projects/i }).click();
     await expect(page).toHaveURL(/\/$/);
@@ -68,7 +66,16 @@ test.describe("content loads", () => {
     ).toBeVisible();
   });
 
-  test("renders published project MDX content when no mirrored README exists", async ({ page }) => {
+  test("renders published project MDX content when no mirrored README exists", async ({
+    page,
+  }) => {
+    await page.goto("/projects/librerss");
+    const readmeBody = page.locator(".markdown-body").first();
+    await expect(readmeBody).toBeVisible();
+    const readmeContentTop = await readmeBody.evaluate((markdownBody) =>
+      Math.round(markdownBody.getBoundingClientRect().top),
+    );
+
     await page.goto("/projects/springgate-ecommerce");
 
     await expect(
@@ -80,6 +87,34 @@ test.describe("content loads", () => {
     await expect(
       page.getByText(/responsive design for optimal viewing experience/i),
     ).toBeVisible();
+
+    const pureMdxLayout = await page.evaluate(() => {
+      const title = document.querySelector("header h1");
+      const description = document.querySelector("header p");
+      const body = document.querySelector(".prose");
+
+      if (
+        !(title instanceof HTMLElement) ||
+        !(description instanceof HTMLElement) ||
+        !(body instanceof HTMLElement)
+      ) {
+        throw new TypeError("Pure MDX project layout elements were not found.");
+      }
+
+      const titleBox = title.getBoundingClientRect();
+      const descriptionBox = description.getBoundingClientRect();
+      const bodyBox = body.getBoundingClientRect();
+
+      return {
+        bodyGapAfterHero: Math.round(bodyBox.top - descriptionBox.bottom),
+        titleTop: Math.round(titleBox.top),
+      };
+    });
+
+    expect(
+      Math.abs(pureMdxLayout.titleTop - readmeContentTop),
+    ).toBeLessThanOrEqual(12);
+    expect(pureMdxLayout.bodyGapAfterHero).toBeLessThanOrEqual(56);
   });
 
   test("opens the projects view from a direct hash route", async ({ page }) => {
@@ -99,9 +134,7 @@ test.describe("content loads", () => {
   test("renders the 404 status page and returns home", async ({ page }) => {
     await page.goto("/definitely-not-a-real-route");
 
-    await expect(
-      page.getByRole("heading", { name: "404" }),
-    ).toBeVisible();
+    await expect(page.getByRole("heading", { name: "404" })).toBeVisible();
     await expect(page.getByText("Page not found")).toBeVisible();
 
     await page.getByRole("link", { name: "Go home" }).click();

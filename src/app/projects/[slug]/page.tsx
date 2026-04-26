@@ -62,23 +62,22 @@ export default async function ProjectPage(props: Props) {
     getProjectView(slug),
     getReadmeHtml(project.slug),
   ]);
+  const hasReadme = readmeHtml !== null;
   const scrollItems = [
     {
-      estimateSize: readmeHtml ? 180 : 320,
+      estimateSize: hasReadme ? 180 : 360,
       key: "project-header",
       node: (
-        <ProjectHeader
-          hasReadme={readmeHtml !== null}
-          project={project}
-          views={views}
-        />
+        <ProjectHeader hasReadme={hasReadme} project={project} views={views} />
       ),
     },
     {
       estimateSize: 1800,
       key: "project-body",
       node: (
-        <div className="mx-auto max-w-3xl px-4 py-12">
+        <div
+          className={`mx-auto max-w-3xl px-4 ${hasReadme ? "py-12" : "py-4"}`}
+        >
           {readmeHtml ? (
             <section
               className="markdown-body mt-8 overflow-x-auto"
@@ -99,7 +98,7 @@ export default async function ProjectPage(props: Props) {
           ) : (
             <section
               className="
-              prose prose-zinc prose-invert prose-quoteless mt-8 max-w-none
+              prose prose-zinc prose-invert prose-quoteless max-w-none
             "
             >
               <Mdx code={project.body.code} />

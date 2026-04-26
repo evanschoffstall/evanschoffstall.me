@@ -172,7 +172,7 @@ function ProjectHeaderContent(props: ProjectHeaderContentProps) {
   }
 
   return (
-    <div className="container relative isolate mx-auto overflow-hidden py-16 sm:py-20">
+    <div className="container relative isolate mx-auto overflow-hidden pb-4 pt-24">
       <div
         className="
         mx-auto flex max-w-2xl flex-col items-center gap-6 px-6 text-center
