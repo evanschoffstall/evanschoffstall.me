@@ -3,6 +3,7 @@
  *
  * Returns false during SSR (no window) and when the browser has denied
  * storage access, so callers can skip storage operations gracefully.
+ * @returns `true` when `sessionStorage` can be safely used in the current environment.
  */
 export function hasSessionStorage(): boolean {
   if (typeof window === "undefined") {

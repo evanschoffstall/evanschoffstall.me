@@ -1,13 +1,13 @@
 /**
- * URL normalization and validation utilities
+ * URL normalization and validation utilities.
  */
 
 /**
  * Validates that a URL is safe for external use.
  * Prevents javascript:, data:, and other potentially dangerous protocols.
  *
- * @param url - The URL to validate
- * @returns True if the URL is safe
+ * @param url - The URL to validate.
+ * @returns True if the URL is safe.
  */
 export function isSafeExternalUrl(url: string): boolean {
   const trimmed = url.trim().toLowerCase();
@@ -25,8 +25,8 @@ export function isSafeExternalUrl(url: string): boolean {
 /**
  * Normalizes an external URL by ensuring it has a protocol.
  *
- * @param url - The URL to normalize
- * @returns Normalized HTTPS URL or empty string if invalid
+ * @param url - The URL to normalize.
+ * @returns Normalized HTTPS URL or empty string if invalid.
  */
 export function normalizeExternalHref(url: string): string {
   const trimmed = url.trim();
@@ -41,10 +41,10 @@ export function normalizeExternalHref(url: string): string {
  * Handles:
  * - Full URLs: https://github.com/user/repo
  * - Domain-prefixed: github.com/user/repo
- * - Short format: user/repo
+ * - Short format: user/repo.
  *
- * @param repository - The repository reference
- * @returns Normalized HTTPS URL or empty string if invalid
+ * @param repository - The repository reference.
+ * @returns Normalized HTTPS URL or empty string if invalid.
  */
 export function normalizeRepoHref(repository: string): string {
   const trimmed = repository.trim().replace(/\/+$/g, "");

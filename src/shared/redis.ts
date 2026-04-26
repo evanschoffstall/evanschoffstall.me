@@ -2,7 +2,10 @@ import { Redis } from "@upstash/redis";
 
 let cachedRedis: null | Redis | undefined;
 
-/** Lazily creates the Redis client so module import stays side-effect free. */
+/**
+ * Lazily creates the Redis client so module import stays side-effect free.
+ * @returns The configured Redis client, or `null` when Redis is unavailable.
+ */
 export function getRedisClient(): null | Redis {
   if (cachedRedis !== undefined) {
     return cachedRedis;
@@ -26,6 +29,10 @@ export function getRedisClient(): null | Redis {
   }
 }
 
+/**
+ * Checks whether the required Upstash Redis environment variables are present.
+ * @returns `true` when the environment contains the Redis connection variables.
+ */
 function hasRedisConfiguration(): boolean {
   return Boolean(
     process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN,
