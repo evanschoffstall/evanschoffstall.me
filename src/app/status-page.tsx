@@ -3,14 +3,18 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 
-import { fadeIn, fadeInUp } from "@/lib";
-import { ParticlesBackground } from "@/ui";
+import { ParticlesBackground } from "@/components";
+import { fadeIn, fadeInUp } from "@/shared";
 
 interface StatusPageAction {
   href?: string;
   label: string;
   onClick?: () => void;
   tone: "primary" | "secondary";
+}
+
+interface StatusPageActionButtonProps {
+  action: StatusPageAction;
 }
 
 interface StatusPageProps {
@@ -20,12 +24,18 @@ interface StatusPageProps {
   headline: string;
 }
 
-/** Shared status surface used by the app-level 404 and 500 boundaries. */
+/**
+ * Shared status surface used by the app-level 404 and 500 boundaries.
+ * @param props - Status copy and action descriptors for the rendered state page.
+ * @returns The shared status page surface.
+ */
 export function StatusPage(props: StatusPageProps) {
   return (
-    <div className="
+    <div
+      className="
       relative flex min-h-screen items-center justify-center overflow-hidden
-    ">
+    "
+    >
       <ParticlesBackground interactive={false} quantity={80} />
       <StatusPageTopBar />
       <StatusPageContent {...props} />
@@ -33,7 +43,14 @@ export function StatusPage(props: StatusPageProps) {
   );
 }
 
-function StatusPageActionButton({ action }: { action: StatusPageAction }) {
+/**
+ * Renders one action button or link inside the status page CTA row.
+ * @param props - The action descriptor that controls tone and navigation behavior.
+ * @returns The action link or button for the status page.
+ */
+function StatusPageActionButton(props: StatusPageActionButtonProps) {
+  const { action } = props;
+
   const className =
     action.tone === "primary"
       ? `
@@ -62,12 +79,14 @@ function StatusPageActionButton({ action }: { action: StatusPageAction }) {
   );
 }
 
-function StatusPageContent({
-  actions,
-  code,
-  description,
-  headline,
-}: StatusPageProps) {
+/**
+ * Renders the main centered content of the status page.
+ * @param props - The status code, copy, and action descriptors for the current state.
+ * @returns The animated status page content block.
+ */
+function StatusPageContent(props: StatusPageProps) {
+  const { actions, code, description, headline } = props;
+
   return (
     <motion.div
       animate="visible"
@@ -87,10 +106,12 @@ function StatusPageContent({
         {code}
       </h1>
 
-      <div className="
+      <div
+        className="
         mt-3 h-px w-40 bg-gradient-to-r from-transparent via-zinc-600
         to-transparent
-      " />
+      "
+      />
 
       <p className="mt-6 text-base font-medium text-zinc-300">{headline}</p>
       <p className="mt-3 max-w-sm text-sm text-zinc-500">{description}</p>
@@ -104,6 +125,10 @@ function StatusPageContent({
   );
 }
 
+/**
+ * Renders the blurred glow behind the status code.
+ * @returns The background glow element for the status page.
+ */
 function StatusPageGlow() {
   return (
     <div
@@ -118,6 +143,10 @@ function StatusPageGlow() {
   );
 }
 
+/**
+ * Renders the top navigation bar shown on status pages.
+ * @returns The animated top bar for the shared status page shell.
+ */
 function StatusPageTopBar() {
   return (
     <motion.div
@@ -133,10 +162,12 @@ function StatusPageTopBar() {
           to-transparent
         "
       />
-      <div className="
+      <div
+        className="
         relative flex items-center px-4 py-3
         sm:px-6
-      ">
+      "
+      >
         <Link
           className="
             font-mono text-xs text-zinc-600 transition-colors
