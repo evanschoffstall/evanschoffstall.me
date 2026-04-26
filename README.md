@@ -138,7 +138,10 @@ bun run test:e2e
 
 ## Adding a Project
 
-Create a new MDX file at `public/projects/[slug]/content.mdx`:
+Create a new MDX file using whichever layout fits:
+
+- **Flat** (no other project assets): `public/projects/[slug].mdx`
+- **Folder** (alongside images, HTML, or other assets): `public/projects/[slug]/content.mdx`
 
 ```mdx
 ---

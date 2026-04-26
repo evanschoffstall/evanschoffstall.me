@@ -4,14 +4,30 @@ import rehypePrettyCode from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
 
+/**
+ * Resolves the project slug from either a flat `[slug].mdx` file or a
+ * folder-based `[slug]/content.mdx` layout.
+ * @param {import('contentlayer/source-files').RawDocumentData} raw
+ * @returns {string}
+ */
+function resolveSlug(raw) {
+  const dir = raw.sourceFileDir;
+  if (dir === "." || dir === "") {
+    // Flat layout: springgate.mdx → "springgate"
+    return raw.sourceFileName.replace(/\.mdx$/, "");
+  }
+  // Folder layout: springgate/content.mdx → "springgate"
+  return dir.split("/").at(-1);
+}
+
 /** @type {import('contentlayer/source-files').ComputedFields} */
 const projectComputedFields = {
   path: {
-    resolve: (doc) => `/projects/${doc._raw.sourceFileDir.split("/").at(-1)}`,
+    resolve: (doc) => `/projects/${resolveSlug(doc._raw)}`,
     type: "string",
   },
   slug: {
-    resolve: (doc) => doc._raw.sourceFileDir.split("/").at(-1),
+    resolve: (doc) => resolveSlug(doc._raw),
     type: "string",
   },
 };
@@ -47,7 +63,7 @@ export const Project = defineDocumentType(() => ({
       type: "string",
     },
   },
-  filePathPattern: "**/content.mdx",
+  filePathPattern: "{*/content.mdx,*.mdx}",
   name: "Project",
 }));
 
