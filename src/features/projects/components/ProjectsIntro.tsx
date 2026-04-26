@@ -2,9 +2,12 @@
 
 import { motion } from "framer-motion";
 
-import { fadeInUp } from "@/lib";
+import { fadeInUp } from "@/shared";
 
-/** Intro copy shown above the projects grid. */
+/**
+ * Intro copy shown above the projects grid.
+ * @returns The projects intro copy block.
+ */
 export function ProjectsIntro() {
   return (
     <motion.div
@@ -13,9 +16,11 @@ export function ProjectsIntro() {
       initial="hidden"
       variants={fadeInUp}
     >
-      <p className="
+      <p
+        className="
         text-[10px] font-semibold uppercase tracking-[0.3em] text-zinc-600
-      ">
+      "
+      >
         Projects
       </p>
       <p className="text-sm leading-7 text-zinc-500">

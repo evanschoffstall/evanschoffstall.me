@@ -4,7 +4,7 @@ import type { Project } from "contentlayer/generated";
 
 import { motion } from "framer-motion";
 
-import { EASE_IN_OUT, fadeInUp } from "@/lib";
+import { EASE_IN_OUT, fadeInUp } from "@/shared";
 
 import { ProjectHeroCard } from "./ProjectHeroCard";
 
@@ -15,13 +15,14 @@ interface ProjectsHeroGridProps {
   views: Record<string, number>;
 }
 
-/** Featured grid at the top of the projects surface. */
-export function ProjectsHeroGrid({
-  featured,
-  second,
-  third,
-  views,
-}: ProjectsHeroGridProps) {
+/**
+ * Featured grid at the top of the projects surface.
+ * @param props - The featured project trio and the current public view counts.
+ * @returns The animated featured projects grid.
+ */
+export function ProjectsHeroGrid(props: ProjectsHeroGridProps) {
+  const { featured, second, third, views } = props;
+
   return (
     <motion.div
       animate="visible"
@@ -43,10 +44,12 @@ export function ProjectsHeroGrid({
           views={views[featured.slug] ?? 0}
         />
       </motion.div>
-      <div className="
+      <div
+        className="
         grid grid-cols-1 gap-4
         sm:grid-cols-2
-      ">
+      "
+      >
         {[second, third].map((project, index) => (
           <motion.div
             animate={{ opacity: 1, y: 0 }}
@@ -59,7 +62,10 @@ export function ProjectsHeroGrid({
               ease: EASE_IN_OUT,
             }}
           >
-            <ProjectHeroCard project={project} views={views[project.slug] ?? 0} />
+            <ProjectHeroCard
+              project={project}
+              views={views[project.slug] ?? 0}
+            />
           </motion.div>
         ))}
       </div>

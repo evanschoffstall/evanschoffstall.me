@@ -2,7 +2,7 @@ import {
   isSafeExternalUrl,
   normalizeExternalHref,
   normalizeRepoHref,
-} from "@/lib";
+} from "@/shared";
 
 /** Safe, normalized external links derived from project content fields. */
 export interface ProjectExternalLinks {
@@ -19,6 +19,8 @@ interface ProjectLinkSource {
 /**
  * Normalizes project URLs and drops any value that fails the external URL
  * safety guard so consuming surfaces can render links without repeating checks.
+ * @param project - The project fields that may contain live and repository links.
+ * @returns Safe, normalized link targets for the project surface.
  */
 export function resolveProjectExternalLinks(
   project: ProjectLinkSource,
@@ -32,12 +34,20 @@ export function resolveProjectExternalLinks(
   };
 }
 
-/** Rejects blocked schemes before normalization so invalid content stays inert. */
+/**
+ * Rejects blocked schemes before normalization so invalid content stays inert.
+ * @param value - The raw link candidate to inspect.
+ * @returns `true` when the candidate uses a blocked URL scheme.
+ */
 function hasBlockedScheme(value: string): boolean {
   return /^(?:javascript|data|vbscript|file):/i.test(value.trim());
 }
 
-/** Normalizes a project live URL only when the raw input is allowed. */
+/**
+ * Normalizes a project live URL only when the raw input is allowed.
+ * @param url - The raw project live URL from content.
+ * @returns A normalized safe live URL, or an empty string when invalid.
+ */
 function toSafeExternalHref(url?: string): string {
   if (!url || hasBlockedScheme(url)) {
     return "";
@@ -47,7 +57,11 @@ function toSafeExternalHref(url?: string): string {
   return isSafeExternalUrl(normalizedUrl) ? normalizedUrl : "";
 }
 
-/** Normalizes a repository reference only when the raw input is allowed. */
+/**
+ * Normalizes a repository reference only when the raw input is allowed.
+ * @param repository - The raw repository reference from content.
+ * @returns A normalized safe repository URL, or an empty string when invalid.
+ */
 function toSafeRepositoryHref(repository?: string): string {
   if (!repository || hasBlockedScheme(repository)) {
     return "";

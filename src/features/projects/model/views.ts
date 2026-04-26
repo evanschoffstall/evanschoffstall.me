@@ -1,5 +1,10 @@
-import { getRedisClient, RATE_LIMITING } from "@/lib";
+import { getRedisClient, RATE_LIMITING } from "@/shared";
 
+/**
+ * Reads the current public view count for a single project.
+ * @param slug - The validated project slug to look up.
+ * @returns The project's public view count, or `0` when unavailable.
+ */
 export async function getProjectView(slug: string): Promise<number> {
   const redis = getRedisClient();
   if (!redis) return 0;
@@ -11,6 +16,11 @@ export async function getProjectView(slug: string): Promise<number> {
   }
 }
 
+/**
+ * Reads the current public view counts for multiple projects in one request.
+ * @param slugs - The validated project slugs to look up.
+ * @returns A map of project slugs to their public view counts.
+ */
 export async function getProjectViews(
   slugs: string[],
 ): Promise<Record<string, number>> {
@@ -38,8 +48,8 @@ export async function getProjectViews(
  * No-ops silently when Redis is unavailable.
  * Throws on unexpected Redis errors so the caller can surface a 500.
  *
- * @param slug - Validated project slug
- * @param ip   - Caller IP (null skips deduplication and always increments)
+ * @param slug - Validated project slug.
+ * @param ip   - Caller IP (null skips deduplication and always increments).
  */
 export async function incrementProjectView(
   slug: string,
@@ -67,10 +77,20 @@ export async function incrementProjectView(
   await redis.incr(projectPageviewsKey(slug));
 }
 
+/**
+ * Builds the Redis key used for a project's pageview counter.
+ * @param slug - The validated project slug.
+ * @returns The Redis key for the project's pageview counter.
+ */
 function projectPageviewsKey(slug: string): string {
   return ["pageviews", "projects", slug].join(":");
 }
 
+/**
+ * Normalizes Redis view-count values into a safe non-negative integer.
+ * @param value - The raw value returned by Redis.
+ * @returns A safe non-negative view count.
+ */
 function toSafeViewCount(value: unknown): number {
   if (typeof value === "number") {
     return Number.isFinite(value) && value >= 0 ? value : 0;

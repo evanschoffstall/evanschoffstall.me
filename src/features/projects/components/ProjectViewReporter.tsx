@@ -7,11 +7,25 @@ const JSON_CONTENT_TYPE = "application/json";
 const REQUEST_IDLE_TIMEOUT_MS = 1000;
 const REQUEST_IDLE_FALLBACK_MS = 250;
 
-export function ProjectViewReporter({ slug }: { slug: string }) {
+interface ProjectViewReporterProps {
+  slug: string;
+}
+
+/**
+ * Reports a project page view after the current page has become idle.
+ * @param props - The project slug to send to the views API.
+ * @returns `null` because the reporter performs side effects only.
+ */
+export function ProjectViewReporter(props: ProjectViewReporterProps) {
+  const { slug } = props;
+
   useEffect(() => {
     let isCanceled = false;
     const requestBody = JSON.stringify({ slug });
 
+    /**
+     * Sends the view-report request once the browser is idle enough to avoid user-visible impact.
+     */
     const reportView = () => {
       if (isCanceled) {
         return;
@@ -58,6 +72,10 @@ export function ProjectViewReporter({ slug }: { slug: string }) {
   return null;
 }
 
+/**
+ * Checks whether the browser exposes `requestIdleCallback`.
+ * @returns `true` when idle callbacks are available in the current browser.
+ */
 function hasRequestIdleCallback(): boolean {
   return typeof window.requestIdleCallback === "function";
 }

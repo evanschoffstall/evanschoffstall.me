@@ -1,13 +1,22 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 
 import {
   consumeProjectsScrollPosition,
   registerProjectsViewport,
 } from "@/features/projects/browser";
 
-/** Hash-driven state machine for switching between the home and projects views. */
+/**
+ * Hash-driven state machine for switching between the home and projects views.
+ * @returns View state, callbacks, and refs that coordinate the home/projects transition.
+ */
 export function useProjectsSectionState() {
   const [hasResolvedInitialHash, setHasResolvedInitialHash] = useState(false);
   const [showProjects, setShowProjects] = useState(false);
@@ -38,6 +47,9 @@ export function useProjectsSectionState() {
   }, []);
 
   useEffect(() => {
+    /**
+     * Synchronizes local view state with the browser hash after navigation changes.
+     */
     const syncFromHash = () => {
       const hasProjectsHash = isProjectsHash();
       setSkipHomeIntro((previous) => previous || hasProjectsHash);
@@ -85,6 +97,10 @@ export function useProjectsSectionState() {
   };
 }
 
+/**
+ * Determines whether the current browser location points at the projects hash.
+ * @returns `true` when the current URL fragment is `#projects`.
+ */
 function isProjectsHash(): boolean {
   return typeof window !== "undefined" && window.location.hash === "#projects";
 }

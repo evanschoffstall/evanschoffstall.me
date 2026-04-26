@@ -4,11 +4,16 @@ import type { Project } from "contentlayer/generated";
 
 import { motion } from "framer-motion";
 
-import { fadeInUp } from "@/lib";
-import { Card, Glow } from "@/ui";
+import { Card, Glow } from "@/components";
+import { fadeInUp } from "@/shared";
 
 import { ProjectListItem } from "./ProjectListItem";
 import { ProjectsDivider } from "./ProjectsDivider";
+
+type ProjectsCardsListProps = Pick<
+  ProjectsListSectionProps,
+  "projects" | "views"
+>;
 
 interface ProjectsListSectionProps {
   projects: Project[];
@@ -16,12 +21,14 @@ interface ProjectsListSectionProps {
   views: Record<string, number>;
 }
 
-/** Reusable titled list section for standard, contribution, and legacy projects. */
-export function ProjectsListSection({
-  projects,
-  title,
-  views,
-}: ProjectsListSectionProps) {
+/**
+ * Reusable titled list section for standard, contribution, and legacy projects.
+ * @param props - The project list, optional title, and public view counts.
+ * @returns The animated project list section, or `null` when empty.
+ */
+export function ProjectsListSection(props: ProjectsListSectionProps) {
+  const { projects, title, views } = props;
+
   if (projects.length === 0) {
     return null;
   }
@@ -30,10 +37,12 @@ export function ProjectsListSection({
     <motion.div animate="visible" initial="hidden" variants={fadeInUp}>
       {title ? (
         <div className="flex items-center gap-4 pt-4">
-          <p className="
+          <p
+            className="
             shrink-0 text-[10px] font-semibold uppercase tracking-[0.3em]
             text-zinc-600
-          ">
+          "
+          >
             {title}
           </p>
           <ProjectsDivider />
@@ -46,11 +55,14 @@ export function ProjectsListSection({
   );
 }
 
-/** Animated list of standard project cards. */
-function ProjectsCardsList({
-  projects,
-  views,
-}: Pick<ProjectsListSectionProps, "projects" | "views">) {
+/**
+ * Animated list of standard project cards.
+ * @param props - The projects to render and their corresponding public view counts.
+ * @returns The animated card list for a projects section.
+ */
+function ProjectsCardsList(props: ProjectsCardsListProps) {
+  const { projects, views } = props;
+
   return (
     <motion.div
       className="mt-8 space-y-2"
@@ -72,7 +84,10 @@ function ProjectsCardsList({
         >
           <Glow />
           <Card>
-            <ProjectListItem project={project} views={views[project.slug] ?? 0} />
+            <ProjectListItem
+              project={project}
+              views={views[project.slug] ?? 0}
+            />
           </Card>
         </motion.div>
       ))}

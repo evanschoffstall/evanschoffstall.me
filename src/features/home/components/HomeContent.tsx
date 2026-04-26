@@ -5,13 +5,26 @@ import type { Project } from "contentlayer/generated";
 import { motion } from "framer-motion";
 import { useMemo } from "react";
 
+import { VirtualScrollArea } from "@/components";
 import { useHomeHeroState } from "@/features/home/hooks";
-import { fadeInUp } from "@/lib";
-import { VirtualScrollArea } from "@/ui";
+import { fadeInUp } from "@/shared";
 
 import { HeroName } from "./HeroName";
 import { HomeNavigation } from "./HomeNavigation";
 import { HomeOverview } from "./HomeOverview";
+
+interface CreateHeroScrollItemOptions {
+  handleSettled: () => void;
+  heroRunId: number;
+  skipInitialAnimations: boolean;
+}
+
+interface CreateOverviewScrollItemOptions {
+  featuredProject?: Project;
+  featuredViews: number;
+  onViewProjects?: () => void;
+  skipInitialAnimations: boolean;
+}
 
 interface Props {
   featuredProject?: Project;
@@ -24,19 +37,19 @@ interface Props {
  * Home page shell: manages the hero animation state, renders the nav (with
  * status badge + social links), and wraps all scrollable content in a custom
  * ScrollArea so the native browser scrollbar is replaced.
+ * @param props - Featured project data and callbacks needed by the home view.
+ * @returns The virtualized home content surface with hero and overview sections.
  */
-export function HomeContent({
-  featuredProject,
-  featuredViews = 0,
-  onViewProjects,
-  skipInitialAnimations = false,
-}: Props) {
+export function HomeContent(props: Props) {
   const {
-    handleReplayHero,
-    handleSettled,
-    heroRunId,
-    nameSettled,
-  } = useHomeHeroState(skipInitialAnimations);
+    featuredProject,
+    featuredViews = 0,
+    onViewProjects,
+    skipInitialAnimations = false,
+  } = props;
+
+  const { handleReplayHero, handleSettled, heroRunId, nameSettled } =
+    useHomeHeroState(skipInitialAnimations);
   const scrollItems = useMemo(() => {
     const heroItem = createHeroScrollItem({
       handleSettled,
@@ -76,29 +89,35 @@ export function HomeContent({
           skipInitialAnimation={skipInitialAnimations}
         />
       ) : null}
-      <VirtualScrollArea className="size-full" items={scrollItems} overscan={2} />
+      <VirtualScrollArea
+        className="size-full"
+        items={scrollItems}
+        overscan={2}
+      />
     </div>
   );
 }
 
-/** Builds the hero item used by the virtualized home scroll surface. */
-function createHeroScrollItem(options: {
-  handleSettled: () => void;
-  heroRunId: number;
-  skipInitialAnimations: boolean;
-}) {
+/**
+ * Builds the hero item used by the virtualized home scroll surface.
+ * @param options - The hero animation state used to build the first virtual item.
+ * @returns The hero row configuration for the virtual scroll surface.
+ */
+function createHeroScrollItem(options: CreateHeroScrollItemOptions) {
   const { handleSettled, heroRunId, skipInitialAnimations } = options;
 
   return {
     estimateSize: 220,
     key: "hero",
     node: (
-      <div className="
+      <div
+        className="
         flex flex-col items-center px-4 pt-16
         sm:px-6 sm:pt-20
         md:pt-24
         lg:pt-28
-      ">
+      "
+      >
         <HeroName
           key={heroRunId}
           onSettled={handleSettled}
@@ -109,13 +128,12 @@ function createHeroScrollItem(options: {
   };
 }
 
-/** Builds the overview item once the hero has finished settling into place. */
-function createOverviewScrollItem(options: {
-  featuredProject?: Project;
-  featuredViews: number;
-  onViewProjects?: () => void;
-  skipInitialAnimations: boolean;
-}) {
+/**
+ * Builds the overview item once the hero has finished settling into place.
+ * @param options - The overview content needed once the hero animation has settled.
+ * @returns The overview row configuration for the virtual scroll surface.
+ */
+function createOverviewScrollItem(options: CreateOverviewScrollItemOptions) {
   const {
     featuredProject,
     featuredViews,

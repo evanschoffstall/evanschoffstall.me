@@ -2,14 +2,20 @@ import Link from "next/link";
 
 import type { ProjectExternalLinks } from "@/features/projects/model";
 
-import { RepositoryIcon } from "@/ui";
+import { RepositoryIcon } from "@/components";
 
 interface ProjectActionLinksProps {
   links: ProjectExternalLinks;
 }
 
-/** Shared external project action row used by both home and detail surfaces. */
-export function ProjectActionLinks({ links }: ProjectActionLinksProps) {
+/**
+ * Shared external project action row used by both home and detail surfaces.
+ * @param props - The normalized external links available for the current project.
+ * @returns The external action row, or `null` when the project has no safe links.
+ */
+export function ProjectActionLinks(props: ProjectActionLinksProps) {
+  const { links } = props;
+
   if (!links.repositoryHref && !links.liveHref) {
     return null;
   }
@@ -50,6 +56,10 @@ export function ProjectActionLinks({ links }: ProjectActionLinksProps) {
   );
 }
 
+/**
+ * Icon used for the live-site action button.
+ * @returns The inline SVG external-link icon.
+ */
 function ExternalLinkIcon() {
   return (
     <svg

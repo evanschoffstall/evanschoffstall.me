@@ -2,14 +2,17 @@
 
 import { motion } from "framer-motion";
 
-import { EASE_IN_OUT } from "@/lib";
+import { EASE_IN_OUT } from "@/shared";
 
 const dividerTransition = {
   duration: 0.8,
   ease: EASE_IN_OUT,
 } as const;
 
-/** Animated horizontal divider used between projects sections. */
+/**
+ * Animated horizontal divider used between projects sections.
+ * @returns The animated projects section divider.
+ */
 export function ProjectsDivider() {
   return (
     <motion.div

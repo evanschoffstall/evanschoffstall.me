@@ -4,7 +4,7 @@ import type { Project } from "contentlayer/generated";
 
 import { motion } from "framer-motion";
 
-import { fadeInUp } from "@/lib";
+import { fadeInUp } from "@/shared";
 
 import { ProjectsDivider } from "./ProjectsDivider";
 import { ProjectsHeroGrid } from "./ProjectsHeroGrid";
@@ -21,20 +21,29 @@ interface Props {
   views: Record<string, number>;
 }
 
-export function ProjectsContent({
-  featured,
-  second,
-  sorted,
-  sortedContributions,
-  sortedLegacy,
-  third,
-  views,
-}: Props) {
+/**
+ * Composes the full projects index content, including hero cards and grouped lists.
+ * @param props - Featured cards, grouped project lists, and public view counts.
+ * @returns The complete projects page content.
+ */
+export function ProjectsContent(props: Props) {
+  const {
+    featured,
+    second,
+    sorted,
+    sortedContributions,
+    sortedLegacy,
+    third,
+    views,
+  } = props;
+
   return (
-    <div className="
+    <div
+      className="
       mx-auto max-w-5xl space-y-8 px-4 pb-16
       sm:px-6
-    ">
+    "
+    >
       <ProjectsIntro />
 
       <motion.div animate="visible" initial="hidden" variants={fadeInUp}>

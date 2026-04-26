@@ -22,24 +22,28 @@ interface HomeOverviewProps {
  *   - Bio (left) + Featured project (right) — two columns on lg+
  *   - "See all projects" slim row below both columns
  *   - Gradient rule
- *   - Context + Core Stack grid — technical depth as page anchor
+ *   - Context + Core Stack grid — technical depth as page anchor.
  *
  * Status badge and social links live in the nav bar (content.tsx).
+ * @param props - Featured project data and navigation callbacks for the overview.
+ * @returns The lower home-page overview content beneath the animated hero.
  */
-export function HomeOverview({
-  featuredProject,
-  featuredViews = 0,
-  onViewProjects,
-}: HomeOverviewProps) {
+export function HomeOverview(props: HomeOverviewProps) {
+  const { featuredProject, featuredViews = 0, onViewProjects } = props;
+
   return (
-    <div className="
+    <div
+      className="
       w-full space-y-6 pb-16
       sm:space-y-7 sm:pb-20
-    ">
-      <div className="
+    "
+    >
+      <div
+        className="
         grid grid-cols-1 gap-0
         lg:grid-cols-2 lg:items-start lg:gap-8
-      ">
+      "
+      >
         <HomeBioPanel />
         {featuredProject ? (
           <HomeFeaturedProjectPanel
@@ -53,15 +57,19 @@ export function HomeOverview({
 
       <HomeGradientRule />
 
-      <div className="
+      <div
+        className="
         grid grid-cols-1 gap-8
         sm:grid-cols-2 sm:gap-9
-      ">
+      "
+      >
         <HomeContextSection />
-        <div className="
+        <div
+          className="
           block
           sm:hidden
-        ">
+        "
+        >
           <HomeGradientRule />
         </div>
         <HomeStackSection />

@@ -2,15 +2,20 @@ import {
   homeStackItems,
   homeStackTierClassNames,
 } from "@/features/home/content";
-import { cn } from "@/lib";
+import { cn } from "@/shared";
 
-/** Core stack badge grid rendered in the lower home overview grid. */
+/**
+ * Core stack badge grid rendered in the lower home overview grid.
+ * @returns The badge list for the technologies highlighted on the home page.
+ */
 export function HomeStackSection() {
   return (
     <div className="space-y-4">
-      <p className="
+      <p
+        className="
         text-[10px] font-semibold uppercase tracking-[0.3em] text-zinc-600
-      ">
+      "
+      >
         Core Stack
       </p>
       <div className="flex flex-wrap gap-1.5">

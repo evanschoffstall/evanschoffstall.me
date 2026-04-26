@@ -1,4 +1,4 @@
-import { hasSessionStorage } from "@/lib/browser";
+import { hasSessionStorage } from "@/shared/browser";
 
 const PROJECTS_SCROLL_Y_KEY = "projects:scrollY";
 const PROJECTS_RESTORE_FLAG_KEY = "projects:restore";
@@ -9,7 +9,10 @@ const PROJECTS_RESTORE_FLAG_KEY = "projects:restore";
  */
 let registeredProjectsViewport: HTMLElement | null = null;
 
-/** Reads the saved projects-panel scroll position when a restore was requested. */
+/**
+ * Reads the saved projects-panel scroll position when a restore was requested.
+ * @returns The saved scroll position, or `null` when no valid restore state exists.
+ */
 export function consumeProjectsScrollPosition(): null | number {
   if (!hasSessionStorage()) {
     return null;
@@ -42,7 +45,10 @@ export function consumeProjectsScrollPosition(): null | number {
   }
 }
 
-/** Registers or clears the projects ScrollArea viewport element. */
+/**
+ * Registers or clears the projects ScrollArea viewport element.
+ * @param viewport - The current projects viewport element, or `null` to clear it.
+ */
 export function registerProjectsViewport(viewport: HTMLElement | null): void {
   registeredProjectsViewport = viewport;
 }

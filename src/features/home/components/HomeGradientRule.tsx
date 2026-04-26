@@ -1,4 +1,7 @@
-/** Thin horizontal gradient rule used as a section separator. */
+/**
+ * Thin horizontal gradient rule used as a section separator.
+ * @returns A decorative horizontal divider for home sections.
+ */
 export function HomeGradientRule() {
   return (
     <div

@@ -3,11 +3,8 @@
 import { motion } from "framer-motion";
 import { RefreshCw } from "lucide-react";
 
-import { fadeIn } from "@/lib";
-import {
-  iconButtonClassName,
-  SocialIconLinks,
-} from "@/ui";
+import { iconButtonClassName, SocialIconLinks } from "@/components";
+import { fadeIn } from "@/shared";
 
 interface HomeNavigationProps {
   nameSettled: boolean;
@@ -15,12 +12,15 @@ interface HomeNavigationProps {
   skipInitialAnimation?: boolean;
 }
 
-/** Top navigation overlay for the home screen while the hero is visible. */
-export function HomeNavigation({
-  nameSettled,
-  onReplayHero,
-  skipInitialAnimation = false,
-}: HomeNavigationProps) {
+/**
+ * Top navigation overlay for the home screen while the hero is visible.
+ * @param props - Data and handlers that control the home navigation state, including
+ * the settled flag, replay callback, and optional animation override.
+ * @returns The fixed navigation overlay rendered above the home hero.
+ */
+export function HomeNavigation(props: HomeNavigationProps) {
+  const { nameSettled, onReplayHero, skipInitialAnimation = false } = props;
+
   return (
     <motion.nav
       animate={nameSettled ? "visible" : "hidden"}
@@ -31,10 +31,12 @@ export function HomeNavigation({
       initial={skipInitialAnimation ? false : "hidden"}
       variants={fadeIn}
     >
-      <div className="
+      <div
+        className="
         relative flex items-center justify-between px-4 py-3
         sm:px-6
-      ">
+      "
+      >
         <HomeAvailabilityBadge />
 
         <div className="flex items-center gap-1">
@@ -53,27 +55,40 @@ export function HomeNavigation({
   );
 }
 
-/** Availability badge shown in the home navigation. */
+/**
+ * Availability badge shown in the home navigation.
+ * @returns The availability pill used beside the navigation actions.
+ */
 function HomeAvailabilityBadge() {
   return (
-    <div className="
+    <div
+      className="
       inline-flex items-center gap-1.5 rounded-full border border-zinc-800
       bg-zinc-900/70 px-2.5 py-1.5 text-xs font-medium text-zinc-400
       backdrop-blur-sm
-    ">
+    "
+    >
       <span className="relative flex size-2 shrink-0">
-        <span className="
+        <span
+          className="
           absolute inline-flex size-full animate-ping rounded-full
           bg-emerald-400 opacity-60
-        " />
-        <span className="
+        "
+        />
+        <span
+          className="
           relative inline-flex size-2 rounded-full bg-emerald-500
-        " />
+        "
+        />
       </span>
-      <span className="
+      <span
+        className="
         hidden
         sm:inline
-      ">Available for new work</span>
+      "
+      >
+        Available for new work
+      </span>
     </div>
   );
 }

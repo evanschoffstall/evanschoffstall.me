@@ -6,9 +6,13 @@ import { useMemo } from "react";
 
 import type { HomeProjectData } from "@/features/home/model";
 
-import { ANIMATION } from "@/lib";
-import { Navigation, VirtualScrollArea } from "@/ui";
+import { Navigation, VirtualScrollArea } from "@/components";
+import { ANIMATION } from "@/shared";
 
+/**
+ * Lazily resolves the projects content bundle used by the home overlay.
+ * @returns The projects content component once the chunk has loaded.
+ */
 const loadProjectsContent = async () => {
   const module = await import("@/features/projects/components");
 
@@ -16,10 +20,18 @@ const loadProjectsContent = async () => {
 };
 
 const ProjectsContent = dynamic(loadProjectsContent, {
-  loading: () => <div className="
+  /**
+   * Renders the lightweight loading shell while the projects bundle streams in.
+   * @returns The placeholder shell for the projects overlay.
+   */
+  loading: () => (
+    <div
+      className="
     mx-auto max-w-5xl px-4 pb-16
     sm:px-6
-  " />,
+  "
+    />
+  ),
 });
 
 interface HomeProjectsPanelProps {
@@ -29,23 +41,28 @@ interface HomeProjectsPanelProps {
   skipInitialProjectsEnter: boolean;
 }
 
-/** Projects overlay shown when the home screen switches into projects mode. */
-export function HomeProjectsPanel({
-  onBack,
-  projectData,
-  projectsViewportRef,
-  skipInitialProjectsEnter,
-}: HomeProjectsPanelProps) {
+/**
+ * Projects overlay shown when the home screen switches into projects mode.
+ * @param props - The navigation callback, prepared project data, and viewport state
+ * required to render the projects overlay.
+ * @returns The full-screen projects overlay mounted over the home page.
+ */
+export function HomeProjectsPanel(props: HomeProjectsPanelProps) {
+  const { onBack, projectData, projectsViewportRef, skipInitialProjectsEnter } =
+    props;
+
   const scrollItems = useMemo(() => {
     return [
       {
         estimateSize: projectData ? 1600 : 260,
         key: "projects-content",
         node: (
-          <div className="
+          <div
+            className="
             pt-20
             md:pt-24
-          ">
+          "
+          >
             {projectData ? (
               <ProjectsContent
                 featured={projectData.featured}
@@ -57,11 +74,13 @@ export function HomeProjectsPanel({
                 views={projectData.views}
               />
             ) : (
-              <div className="
+              <div
+                className="
                 mx-auto max-w-7xl px-6 py-16
                 md:py-24
                 lg:px-8
-              ">
+              "
+              >
                 <p className="text-zinc-400">
                   Some featured projects are not available.
                 </p>
@@ -96,7 +115,9 @@ export function HomeProjectsPanel({
   );
 }
 
-/** Warm the projects bundle so the overlay opens without a network-bound stall. */
+/**
+ * Warm the projects bundle so the overlay opens without a network-bound stall.
+ */
 export function preloadProjectsContent(): void {
   void loadProjectsContent();
 }

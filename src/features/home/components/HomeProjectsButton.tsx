@@ -4,10 +4,14 @@ interface HomeProjectsButtonProps {
   onViewProjects?: () => void;
 }
 
-/** Entry point from the home overview into the projects panel. */
-export function HomeProjectsButton({
-  onViewProjects,
-}: HomeProjectsButtonProps) {
+/**
+ * Entry point from the home overview into the projects panel.
+ * @param props - The button callback used to open the projects panel.
+ * @returns The projects CTA button rendered beneath the overview cards.
+ */
+export function HomeProjectsButton(props: HomeProjectsButtonProps) {
+  const { onViewProjects } = props;
+
   return (
     <button
       className="
@@ -19,18 +23,22 @@ export function HomeProjectsButton({
       onClick={onViewProjects}
       type="button"
     >
-      <span className="
+      <span
+        className="
         flex items-center gap-2 text-xs text-zinc-500 transition-colors
         duration-200
         group-hover:text-zinc-300
-      ">
+      "
+      >
         <Layers className="size-3.5 shrink-0" />
         See all projects
       </span>
-      <ArrowRight className="
+      <ArrowRight
+        className="
         size-3.5 shrink-0 text-zinc-700 transition-all duration-200
         group-hover:translate-x-0.5 group-hover:text-zinc-400
-      " />
+      "
+      />
     </button>
   );
 }

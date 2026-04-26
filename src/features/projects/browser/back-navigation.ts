@@ -1,13 +1,16 @@
-import { hasSessionStorage } from "@/lib/browser";
+import { hasSessionStorage } from "@/shared/browser";
 
 const INTERNAL_PROJECT_NAVIGATION_KEY = "projects:internal-navigation";
 const LIBRERSS_HOSTNAME_PATTERN = /(^|\.)librerss\.com$/i;
 
 type ProjectBackNavigation =
-  | { href: string; kind: "push"; }
-  | { kind: "history-back"; };
+  | { href: string; kind: "push" }
+  | { kind: "history-back" };
 
-/** Reads and clears the one-time flag for internal project-page navigation. */
+/**
+ * Reads and clears the one-time flag for internal project-page navigation.
+ * @returns `true` when the current project visit was initiated from an internal link.
+ */
 export function consumeInternalProjectNavigation(): boolean {
   if (!hasSessionStorage()) {
     return false;
@@ -40,16 +43,20 @@ export function markInternalProjectNavigation(): void {
   }
 }
 
-/** Resolves the project-header back target from the current route and referrer. */
+/**
+ * Resolves the project-header back target from the current route and referrer.
+ * @param pathname - The current route pathname for the project surface.
+ * @param referrer - The browser referrer recorded for the current page visit.
+ * @param hasInternalProjectNavigation - Indicates whether the current visit came from
+ * an internal project link instead of an external entry point.
+ * @returns The navigation action that should run when the user presses Back.
+ */
 export function resolveProjectBackNavigation(
   pathname: string,
   referrer: string,
   hasInternalProjectNavigation: boolean,
 ): ProjectBackNavigation {
-  if (
-    !hasInternalProjectNavigation
-    && isLibrerssReferrer(referrer)
-  ) {
+  if (!hasInternalProjectNavigation && isLibrerssReferrer(referrer)) {
     return { kind: "history-back" };
   }
 
@@ -59,7 +66,11 @@ export function resolveProjectBackNavigation(
   };
 }
 
-/** Returns true when the browser referrer belongs to the Librerss origin family. */
+/**
+ * Returns true when the browser referrer belongs to the Librerss origin family.
+ * @param referrer - The browser referrer string to inspect.
+ * @returns `true` when the referrer belongs to a Librerss hostname.
+ */
 function isLibrerssReferrer(referrer: string): boolean {
   if (!referrer) {
     return false;
@@ -74,7 +85,11 @@ function isLibrerssReferrer(referrer: string): boolean {
   }
 }
 
-/** Normalizes pathname variants so the routing rules only handle canonical forms. */
+/**
+ * Normalizes pathname variants so the routing rules only handle canonical forms.
+ * @param pathname - The pathname to normalize before applying routing rules.
+ * @returns A canonical pathname with empty or trailing-slash variants collapsed.
+ */
 function normalizePathname(pathname: string): string {
   if (!pathname) {
     return "/";
@@ -87,7 +102,11 @@ function normalizePathname(pathname: string): string {
   return pathname;
 }
 
-/** Maps in-app routes to the deterministic fallback target expected by the UI. */
+/**
+ * Maps in-app routes to the deterministic fallback target expected by the UI.
+ * @param pathname - The current pathname for the project or projects surface.
+ * @returns The deterministic back-navigation href expected by the UI.
+ */
 function resolveDeterministicBackTarget(pathname: string): string {
   const normalizedPathname = normalizePathname(pathname);
 

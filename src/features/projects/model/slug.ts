@@ -1,18 +1,18 @@
-import { VALIDATION } from "@/lib";
+import { VALIDATION } from "@/shared";
 
 /**
- * Result of slug validation
+ * Result of slug validation.
  */
 type SlugValidationResult =
-  | { error: string; valid: false; }
-  | { slug: string; valid: true; };
+  | { error: string; valid: false }
+  | { slug: string; valid: true };
 
 /**
  * Extracts slug from request body with validation.
  * Returns null if validation fails.
  *
- * @param body - Request body (unknown type)
- * @returns Validated slug or null
+ * @param body - Request body (unknown type).
+ * @returns Validated slug or null.
  */
 export function extractSlugFromBody(body: unknown): null | string {
   if (!body || typeof body !== "object") {
@@ -30,8 +30,8 @@ export function extractSlugFromBody(body: unknown): null | string {
 /**
  * Type guard to check if a value is a valid project slug string.
  *
- * @param input - Value to check
- * @returns True if input is a valid slug string
+ * @param input - Value to check.
+ * @returns True if input is a valid slug string.
  */
 export function isValidProjectSlug(input: unknown): input is string {
   const result = validateProjectSlug(input);
@@ -44,10 +44,10 @@ export function isValidProjectSlug(input: unknown): input is string {
  * Rules:
  * - Must not be empty
  * - Must not exceed maximum length
- * - Must match allowed character pattern (alphanumeric, dots, hyphens, underscores)
+ * - Must match allowed character pattern (alphanumeric, dots, hyphens, underscores).
  *
- * @param input - Raw slug input to validate
- * @returns Validation result with normalized slug or error message
+ * @param input - Raw slug input to validate.
+ * @returns Validation result with normalized slug or error message.
  */
 export function validateProjectSlug(input: unknown): SlugValidationResult {
   // Type guard

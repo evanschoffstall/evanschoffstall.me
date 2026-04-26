@@ -1,4 +1,4 @@
-import { useAnimationControls } from "framer-motion";
+import type { useAnimationControls } from "framer-motion";
 
 interface RunHomeHeroSequenceOptions {
   controls: ReturnType<typeof useAnimationControls>;
@@ -7,7 +7,12 @@ interface RunHomeHeroSequenceOptions {
   setSettled: (value: boolean) => void;
 }
 
-/** Executes the intro hero animation from centered title to settled page title. */
+/**
+ * Executes the intro hero animation from centered title to settled page title.
+ * @param options - Animation controls, measurement anchor, and completion callbacks
+ * for the home hero sequence.
+ * @returns A promise that resolves after the title has settled into place.
+ */
 export async function runHomeHeroSequence(
   options: RunHomeHeroSequenceOptions,
 ): Promise<void> {
@@ -43,16 +48,26 @@ export async function runHomeHeroSequence(
   onSettled?.();
 }
 
-/** Small delay between hero animation phases to preserve pacing. */
+/**
+ * Small delay between hero animation phases to preserve pacing.
+ * @param milliseconds - The amount of time to wait before continuing the sequence.
+ * @returns A promise that resolves after the requested delay.
+ */
 function delay(milliseconds: number): Promise<void> {
   return new Promise((resolve) => {
     setTimeout(resolve, milliseconds);
   });
 }
 
-/** Resolves once the browser has loaded the document and fonts for the hero. */
+/**
+ * Resolves once the browser has loaded the document and fonts for the hero.
+ * @returns A promise that resolves after document and font readiness are both satisfied.
+ */
 function waitForPageReady(): Promise<void> {
   return new Promise((resolve) => {
+    /**
+     * Continues once the browser reports both document and font readiness.
+     */
     const proceed = () => {
       void document.fonts.ready.then(() => {
         resolve();

@@ -3,38 +3,48 @@ import type { Project } from "contentlayer/generated";
 import { ArrowRight } from "lucide-react";
 
 import { ProjectCardLink } from "./ProjectCardLink";
-import {
-  ProjectDateBadge,
-  ProjectViewsBadge,
-} from "./ProjectMeta";
+import { ProjectDateBadge, ProjectViewsBadge } from "./ProjectMeta";
 
 interface Props {
   project: Project;
   views: number;
 }
 
-export function ProjectListItem({ project, views }: Props) {
+/**
+ * Renders a standard list-row card for a project in the projects index.
+ * @param props - The project content and current public view count.
+ * @returns The clickable list row for a project.
+ */
+export function ProjectListItem(props: Props) {
+  const { project, views } = props;
+
   return (
     <ProjectCardLink project={project}>
-      <article className="
+      <article
+        className="
         flex h-full items-center justify-between gap-4 p-4
         md:px-6 md:py-5
-      ">
+      "
+      >
         <div className="min-w-0 flex-1 space-y-1">
           <div className="flex items-center gap-3">
-            <h2 className="
+            <h2
+              className="
               truncate font-display text-base font-semibold tracking-tight
               text-zinc-100 transition-colors duration-300
               group-hover:text-white
-            ">
+            "
+            >
               {project.title}
             </h2>
             <ProjectDateBadge project={project} />
           </div>
-          <p className="
+          <p
+            className="
             line-clamp-1 text-sm text-zinc-400 transition-colors duration-300
             group-hover:text-zinc-300
-          ">
+          "
+          >
             {project.description}
           </p>
         </div>
@@ -49,10 +59,12 @@ export function ProjectListItem({ project, views }: Props) {
             "
             views={views}
           />
-          <ArrowRight className="
+          <ArrowRight
+            className="
             size-4 translate-x-0 transition-all duration-300
             group-hover:translate-x-1 group-hover:text-zinc-300
-          " />
+          "
+          />
         </div>
       </article>
     </ProjectCardLink>
