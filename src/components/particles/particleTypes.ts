@@ -5,10 +5,14 @@ export interface CanvasSize {
 
 export interface Circle {
   alpha: number;
+  /** Random phase offset (radians) so each particle twinkles out of sync. */
+  alphaPhase: number;
   dx: number;
   dy: number;
   magnetism: number;
   size: number;
+  /** Oscillation rate (rad/s) controlling the twinkling speed. */
+  sway: number;
   targetAlpha: number;
   translateX: number;
   translateY: number;
@@ -22,18 +26,15 @@ export interface MouseVector {
 }
 
 export interface ParticleState {
-  animationFrameIdRef: React.RefObject<null | number>;
   canvasContainerRef: React.RefObject<HTMLDivElement | null>;
   canvasRef: React.RefObject<HTMLCanvasElement | null>;
   canvasSize: React.RefObject<CanvasSize>;
   circles: React.RefObject<Circle[]>;
   context: React.RefObject<CanvasRenderingContext2D | null>;
   dprRef: React.RefObject<number>;
+  /** Cleared on component unmount to guard the animation callback. */
   isMounted: React.RefObject<boolean>;
-  isPageVisibleRef: React.RefObject<boolean>;
   mouse: React.RefObject<MouseVector>;
-  prefersReducedMotionRef: React.RefObject<boolean>;
-  resizeObserverRef: React.RefObject<null | ResizeObserver>;
 }
 
 export interface UseParticleCanvasOptions {
