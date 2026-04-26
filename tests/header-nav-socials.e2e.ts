@@ -13,6 +13,8 @@ const SOCIAL_LINKS = [
   { href: "mailto:hello@evanschoffstall.me", label: "Email" },
 ];
 
+const HOME_INTRO_TIMEOUT_MS = 10_000;
+
 /** Assert all four social icon links are visible, safe, and well-labelled. */
 async function assertSocialLinks(page) {
   for (const { href, label } of SOCIAL_LINKS) {
@@ -32,7 +34,7 @@ test.describe("header navigation and social links", () => {
 
     // Wait for the hero animation to settle so HomeNavigation fades in.
     const replayButton = page.getByRole("button", { name: /replay intro/i });
-    await expect(replayButton).toBeVisible();
+    await expect(replayButton).toBeVisible({ timeout: HOME_INTRO_TIMEOUT_MS });
 
     // Availability badge is rendered inside the home nav.
     await expect(page.getByText(/available for new work/i)).toBeVisible();

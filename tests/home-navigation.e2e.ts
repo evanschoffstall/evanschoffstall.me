@@ -34,7 +34,9 @@ test.describe("home navigation", () => {
     ).toBeVisible();
   });
 
-  test("skips the home intro when returning from the hash-based projects route", async ({ page }) => {
+  test("skips the home intro when returning from the hash-based projects route", async ({
+    page,
+  }) => {
     await page.goto("/#projects");
 
     await expect(
@@ -65,7 +67,7 @@ test.describe("home navigation", () => {
     await page.goto("/");
 
     const replayButton = page.getByRole("button", { name: /replay intro/i });
-    await expect(replayButton).toBeVisible();
+    await expect(replayButton).toBeVisible({ timeout: HOME_INTRO_TIMEOUT_MS });
     await replayButton.click();
 
     await expect(

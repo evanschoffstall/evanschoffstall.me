@@ -101,10 +101,15 @@ test.describe("project page actions", () => {
     await expect(liveSiteLink).toHaveAttribute("rel", /noopener/);
     await expect(repositoryLink).toHaveAttribute("rel", /noopener/);
     await expect(liveSiteLink).toHaveAttribute("href", /^https?:\/\//);
-    await expect(repositoryLink).toHaveAttribute("href", /^https:\/\/github\.com\//);
+    await expect(repositoryLink).toHaveAttribute(
+      "href",
+      /^https:\/\/github\.com\//,
+    );
   });
 
-  test("reports project views through fetch when sendBeacon is unavailable", async ({ page }) => {
+  test("reports project views through fetch when sendBeacon is unavailable", async ({
+    page,
+  }) => {
     await page.addInitScript(() => {
       Object.defineProperty(window.navigator, "sendBeacon", {
         configurable: true,
@@ -122,8 +127,8 @@ test.describe("project page actions", () => {
 
     const viewReportResponse = page.waitForResponse(
       (response) =>
-        response.url().endsWith("/api/views")
-        && response.request().method() === "POST",
+        response.url().endsWith("/api/views") &&
+        response.request().method() === "POST",
     );
 
     await page.goto("/projects/springgate-ecommerce");

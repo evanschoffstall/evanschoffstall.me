@@ -1,7 +1,9 @@
 import { expect, test } from "./playwright";
 
 test.describe("responsive ui", () => {
-  test("keeps primary home actions visible on a mobile viewport", async ({ page }) => {
+  test("keeps primary home actions visible on a mobile viewport", async ({
+    page,
+  }) => {
     await page.setViewportSize({ height: 844, width: 390 });
     await page.goto("/");
 
