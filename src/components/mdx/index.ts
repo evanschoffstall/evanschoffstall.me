@@ -1,1 +1,1 @@
-export { mdxComponents } from "./renderers";
+export { Mdx, mdxComponents } from "./renderers";
