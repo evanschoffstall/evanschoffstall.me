@@ -3,6 +3,9 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import LocalFont from "next/font/local";
 
+import { ParticlesBackground } from "@/components";
+import { ANIMATION } from "@/shared";
+
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -92,6 +95,7 @@ export default function RootLayout(props: RootLayoutProps) {
           .filter(Boolean)
           .join(" ")}
       >
+        <ParticlesBackground quantity={ANIMATION.DEFAULT_PARTICLE_QUANTITY} />
         <div
           className="
           pointer-events-none fixed inset-0 bg-gradient-to-tr from-zinc-900/20

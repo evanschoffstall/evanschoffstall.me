@@ -1,7 +1,53 @@
 import { expect, test } from "./playwright";
 
 test.describe("project page actions", () => {
-  test("restores the projects panel scroll position after opening a project card", async ({ page }) => {
+  test("preserves the particle background when opening a project from the projects panel", async ({
+    page,
+  }) => {
+    await page.goto("/#projects");
+
+    await page.evaluate(() => {
+      const canvas = document.querySelector("div[aria-hidden='true'] canvas");
+
+      if (!(canvas instanceof HTMLCanvasElement)) {
+        throw new TypeError("Particle canvas was not found.");
+      }
+
+      const trackedCanvas = canvas as HTMLCanvasElement & {
+        persistentBackground?: boolean;
+      };
+
+      trackedCanvas.persistentBackground = true;
+    });
+
+    await page.getByRole("heading", { name: "SpringGate E-Commerce" }).click();
+    await expect(page).toHaveURL(/\/projects\/springgate-ecommerce$/);
+
+    await expect
+      .poll(
+        async () =>
+          await page.evaluate(() => {
+            const canvas = document.querySelector(
+              "div[aria-hidden='true'] canvas",
+            );
+
+            if (!(canvas instanceof HTMLCanvasElement)) {
+              return false;
+            }
+
+            const trackedCanvas = canvas as HTMLCanvasElement & {
+              persistentBackground?: boolean;
+            };
+
+            return trackedCanvas.persistentBackground === true;
+          }),
+      )
+      .toBe(true);
+  });
+
+  test("restores the projects panel scroll position after opening a project card", async ({
+    page,
+  }) => {
     await page.setViewportSize({ height: 720, width: 390 });
     await page.goto("/#projects");
 

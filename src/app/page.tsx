@@ -1,13 +1,11 @@
 import { allProjects } from "contentlayer/generated";
 
-import { ParticlesBackground } from "@/components";
 import { HomeSections } from "@/features/home";
 import {
   getProjectViews,
   groupAndSortProjects,
   pickFeaturedProjects,
 } from "@/features/projects";
-import { ANIMATION } from "@/shared";
 
 export const revalidate = 60;
 
@@ -44,7 +42,6 @@ export default async function Home() {
 
   return (
     <div className="relative w-full">
-      <ParticlesBackground quantity={ANIMATION.DEFAULT_PARTICLE_QUANTITY} />
       <HomeSections projectData={projectData} />
     </div>
   );
