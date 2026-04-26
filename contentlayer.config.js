@@ -69,7 +69,7 @@ export const Page = defineDocumentType(() => ({
 }));
 
 export default makeSource({
-  contentDirPath: "./src/content",
+  contentDirPath: "./content",
   documentTypes: [Page, Project],
   mdx: {
     esbuildOptions: (options) => {
