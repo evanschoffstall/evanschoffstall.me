@@ -82,7 +82,7 @@ export default async function ProjectPage(props: Props) {
             <section
               className="markdown-body mt-8 overflow-x-auto"
               /**
-               * SECURITY NOTE: This renders pre-generated HTML from public/readmes/*.html.
+               * SECURITY NOTE: This renders pre-generated HTML from public/projects/[slug]/content.html.
                *
                * These files are generated at build time by scripts/download-project-readmes.ts
                * from GitHub README files. The HTML is sanitized by GitHub's markdown renderer.
@@ -122,7 +122,13 @@ export default async function ProjectPage(props: Props) {
 }
 
 const getReadmeHtml = cache(async (slug: string): Promise<null | string> => {
-  const filePath = join(process.cwd(), "public", "readmes", `${slug}.html`);
+  const filePath = join(
+    process.cwd(),
+    "public",
+    "projects",
+    slug,
+    "content.html",
+  );
 
   try {
     return await readFile(filePath, "utf-8");

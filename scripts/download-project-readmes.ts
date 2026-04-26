@@ -1,5 +1,5 @@
-import { mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
-import { basename, join } from "node:path";
+import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
+import { basename, dirname, join } from "node:path";
 
 /**
  * Minimal project frontmatter needed to find the matching repository and write
@@ -10,8 +10,7 @@ interface ProjectMeta {
   slug: string;
 }
 
-const PROJECTS_DIR = join(process.cwd(), "content", "projects");
-const README_DIR = join(process.cwd(), "public", "readmes");
+const PROJECTS_DIR = join(process.cwd(), "public", "projects");
 const PUBLIC_DIR = join(process.cwd(), "public");
 
 /**
@@ -123,9 +122,11 @@ async function fetchRawReadme(repository: string): Promise<null | string> {
  * @returns The project slugs and optional repository names declared in content.
  */
 async function getProjects(): Promise<ProjectMeta[]> {
-  const fileNames = await readdir(PROJECTS_DIR);
-  const projectFiles = fileNames.filter((fileName) =>
-    fileName.endsWith(".mdx"),
+  const fileNames = await readdir(PROJECTS_DIR, { recursive: true });
+  const projectFiles = fileNames.filter(
+    (fileName) =>
+      typeof fileName === "string" &&
+      (fileName === "content.mdx" || fileName.endsWith("/content.mdx")),
   );
 
   const projects = await Promise.all(
@@ -165,7 +166,7 @@ function getRepositoryFromFrontmatter(source: string): string | undefined {
  * @returns The slug derived from the file name.
  */
 function getSlugFromPath(filePath: string): string {
-  return basename(filePath, ".mdx");
+  return basename(dirname(filePath));
 }
 
 /**
@@ -174,9 +175,6 @@ function getSlugFromPath(filePath: string): string {
  */
 async function main() {
   const projects = await getProjects();
-
-  await rm(README_DIR, { force: true, recursive: true });
-  await mkdir(README_DIR, { recursive: true });
 
   let downloadedCount = 0;
 
@@ -206,8 +204,10 @@ async function main() {
         continue;
       }
 
-      await saveAssetForSlug(project.slug, assetPath, asset);
-      console.log(`Saved projects/${project.slug}/${assetPath}`);
+      const outputAssetPath = assetPath.replace(/^public\//, "");
+
+      await saveAssetForSlug(project.slug, outputAssetPath, asset);
+      console.log(`Saved projects/${project.slug}/${outputAssetPath}`);
     }
 
     const rewrittenHtml = rewriteRepoRootAssetUrls(
@@ -216,10 +216,11 @@ async function main() {
       repoRootAssets,
     );
 
-    const outputPath = join(README_DIR, `${project.slug}.html`);
+    const outputPath = join(PUBLIC_DIR, "projects", project.slug, "content.html");
+    await mkdir(join(outputPath, ".."), { recursive: true });
     await writeFile(outputPath, rewrittenHtml, "utf-8");
     downloadedCount += 1;
-    console.log(`Saved ${project.slug}.html`);
+    console.log(`Saved projects/${project.slug}/content.html`);
   }
 
   console.log(`Downloaded and rendered ${downloadedCount} README file(s).`);
@@ -274,7 +275,7 @@ function rewriteRepoPublicAssetUrls(
 ): string {
   return renderedHtml.replace(
     /((?:src|href)=")public\/([^"]+)"/g,
-    `$1/projects/${slug}/public/$2"`,
+    `$1/projects/${slug}/$2"`,
   );
 }
 
