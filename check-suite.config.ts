@@ -1067,7 +1067,30 @@ const architecture = defineStep({
       })(),
     },
     policy: {
-      dependencyPolicies: [],
+      dependencyPolicies: [
+        {
+          mayDependOn: [
+            "browser",
+            "features",
+            "hooks",
+            "mdx",
+            "model",
+            "particles",
+            "shared",
+          ],
+          name: "components",
+          pathPrefixes: [
+            "src/components",
+            "src/features/home/components",
+            "src/features/projects/components",
+          ],
+        },
+        {
+          mayDependOn: ["shared"],
+          name: "features",
+          pathPrefixes: ["src/features"],
+        },
+      ],
       infer: true,
     },
     rules: {

@@ -1,3 +1,5 @@
+import type { Page } from "@playwright/test";
+
 import { expect, test } from "./playwright";
 
 /**
@@ -16,7 +18,7 @@ const SOCIAL_LINKS = [
 const HOME_INTRO_TIMEOUT_MS = 10_000;
 
 /** Assert all four social icon links are visible, safe, and well-labelled. */
-async function assertSocialLinks(page) {
+async function assertSocialLinks(page: Page) {
   for (const { href, label } of SOCIAL_LINKS) {
     const link = page.getByRole("link", { name: label });
     await expect(link).toBeVisible();

@@ -30,6 +30,7 @@
     "@types/react-dom": "^19.2.3",
     "@typescript-eslint/eslint-plugin": "8.58.0",
     "autoprefixer": "^10.5.0",
+    "bun-types": "^1.3.13",
     "check-suite": "github:evanschoffstall/check-suite#dev",
     "eslint": "^10.2.1",
     "eslint-config-prettier": "^10.1.8",
