@@ -2,8 +2,10 @@
 import { afterEach, describe, expect, test } from "bun:test";
 
 import {
+  consumeHomeIntroSkip,
   consumeInternalProjectNavigation,
   markInternalProjectNavigation,
+  requestHomeIntroSkip,
   resolveProjectBackNavigation,
 } from "@/features/projects/browser/back-navigation";
 import {
@@ -98,19 +100,48 @@ describe("projects scroll session state", () => {
 });
 
 describe("project back navigation", () => {
-  test("marks and consumes the internal project-navigation flag", () => {
+  test("marks and consumes the default projects navigation source", () => {
     const { store } = installSessionStorageTestWindow();
 
     markInternalProjectNavigation();
 
-    expect(store.get("projects:internal-navigation")).toBe("1");
-    expect(consumeInternalProjectNavigation()).toBe(true);
+    expect(store.get("projects:internal-navigation")).toBe("projects");
+    expect(consumeInternalProjectNavigation()).toBe("projects");
     expect(store.has("projects:internal-navigation")).toBe(false);
+  });
+
+  test("marks and consumes the featured-card navigation source", () => {
+    const { store } = installSessionStorageTestWindow();
+
+    markInternalProjectNavigation("featured");
+
+    expect(store.get("projects:internal-navigation")).toBe("featured");
+    expect(consumeInternalProjectNavigation()).toBe("featured");
+    expect(store.has("projects:internal-navigation")).toBe(false);
+  });
+
+  test("consumes legacy boolean project-navigation flags as projects source", () => {
+    const { store } = installSessionStorageTestWindow();
+    store.set("projects:internal-navigation", "1");
+
+    expect(consumeInternalProjectNavigation()).toBe("projects");
+    expect(store.has("projects:internal-navigation")).toBe(false);
+  });
+
+  test("marks and consumes the one-time home intro skip flag", () => {
+    const { store } = installSessionStorageTestWindow();
+
+    requestHomeIntroSkip();
+
+    expect(store.get("home:skip-intro")).toBe("1");
+    expect(consumeHomeIntroSkip()).toBe(true);
+    expect(store.has("home:skip-intro")).toBe(false);
+    expect(consumeHomeIntroSkip()).toBe(false);
   });
 
   test("routes project detail pages directly to the home projects section", () => {
     expect(
-      resolveProjectBackNavigation("/projects/librerss", "", false),
+      resolveProjectBackNavigation("/projects/librerss", "", null),
     ).toEqual({
       href: "/#projects",
       kind: "push",
@@ -119,7 +150,7 @@ describe("project back navigation", () => {
 
   test("routes project detail pages with trailing slash directly to the home projects section", () => {
     expect(
-      resolveProjectBackNavigation("/projects/librerss/", "", false),
+      resolveProjectBackNavigation("/projects/librerss/", "", null),
     ).toEqual({
       href: "/#projects",
       kind: "push",
@@ -127,14 +158,14 @@ describe("project back navigation", () => {
   });
 
   test("routes the projects route back to home", () => {
-    expect(resolveProjectBackNavigation("/projects", "", false)).toEqual({
+    expect(resolveProjectBackNavigation("/projects", "", null)).toEqual({
       href: "/",
       kind: "push",
     });
   });
 
   test("falls back to home for unknown routes", () => {
-    expect(resolveProjectBackNavigation("/unknown", "", false)).toEqual({
+    expect(resolveProjectBackNavigation("/unknown", "", null)).toEqual({
       href: "/",
       kind: "push",
     });
@@ -145,7 +176,7 @@ describe("project back navigation", () => {
       resolveProjectBackNavigation(
         "/projects/librerss",
         "https://app.librerss.com/feeds",
-        false,
+        null,
       ),
     ).toEqual({ kind: "history-back" });
   });
@@ -155,11 +186,21 @@ describe("project back navigation", () => {
       resolveProjectBackNavigation(
         "/projects/librerss",
         "https://app.librerss.com/feeds",
-        true,
+        "projects",
       ),
     ).toEqual({
       href: "/#projects",
       kind: "push",
+    });
+  });
+
+  test("routes featured-card project visits back to settled home", () => {
+    expect(
+      resolveProjectBackNavigation("/projects/librerss", "", "featured"),
+    ).toEqual({
+      href: "/",
+      kind: "push",
+      skipHomeIntro: true,
     });
   });
 
@@ -173,7 +214,7 @@ describe("project back navigation", () => {
     ];
 
     for (const pathname of slugs) {
-      const result = resolveProjectBackNavigation(pathname, "", false);
+      const result = resolveProjectBackNavigation(pathname, "", null);
       expect(result.kind).toBe("push");
 
       if (result.kind === "push") {
@@ -185,11 +226,7 @@ describe("project back navigation", () => {
   });
 
   test("back navigation href never routes through /projects server redirect", () => {
-    const result = resolveProjectBackNavigation(
-      "/projects/any-slug",
-      "",
-      false,
-    );
+    const result = resolveProjectBackNavigation("/projects/any-slug", "", null);
     expect(result).toEqual({ href: "/#projects", kind: "push" });
     expect(result).not.toEqual({ href: "/projects", kind: "push" });
   });

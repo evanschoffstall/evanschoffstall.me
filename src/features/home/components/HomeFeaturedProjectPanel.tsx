@@ -114,7 +114,9 @@ function HomeFeaturedProjectActions(props: HomeFeaturedProjectActionsProps) {
           hover:border-zinc-600 hover:bg-zinc-700/60 hover:text-white
         "
         href={`/projects/${featuredProject.slug}`}
-        onClick={markInternalProjectNavigation}
+        onClick={() => {
+          markInternalProjectNavigation("featured");
+        }}
       >
         Read notes <ArrowRight className="size-3" />
       </Link>
@@ -174,7 +176,9 @@ function HomeFeaturedProjectTitle(props: HomeFeaturedProjectTitleProps) {
       <Link
         className="group inline-block"
         href={`/projects/${featuredProject.slug}`}
-        onClick={markInternalProjectNavigation}
+        onClick={() => {
+          markInternalProjectNavigation("featured");
+        }}
       >
         <h2
           className="

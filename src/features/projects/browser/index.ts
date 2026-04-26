@@ -1,6 +1,8 @@
 export {
+  consumeHomeIntroSkip,
   consumeInternalProjectNavigation,
   markInternalProjectNavigation,
+  requestHomeIntroSkip,
   resolveProjectBackNavigation,
 } from "@/features/projects/browser/back-navigation";
 export {

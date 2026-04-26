@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { SocialIconLinks } from "@/components";
 import {
   consumeInternalProjectNavigation,
+  requestHomeIntroSkip,
   resolveProjectBackNavigation,
 } from "@/features/projects/browser";
 import { resolveProjectExternalLinks } from "@/features/projects/model";
@@ -72,6 +73,10 @@ export function ProjectHeader(props: ProjectHeaderProps) {
     if (backNavigation.kind === "history-back") {
       router.back();
       return;
+    }
+
+    if (backNavigation.skipHomeIntro) {
+      requestHomeIntroSkip();
     }
 
     router.push(backNavigation.href);

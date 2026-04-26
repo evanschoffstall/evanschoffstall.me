@@ -9,6 +9,7 @@ import {
 } from "react";
 
 import {
+  consumeHomeIntroSkip,
   consumeProjectsScrollPosition,
   registerProjectsViewport,
 } from "@/features/projects/browser";
@@ -40,16 +41,17 @@ export function useProjectsSectionState() {
 
   useLayoutEffect(() => {
     const hasProjectsHash = isProjectsHash();
-    setSkipHomeIntro((previous) => previous || hasProjectsHash);
+    const shouldSkipHomeIntro = consumeHomeIntroSkip();
+    setSkipHomeIntro(
+      (previous) => previous || hasProjectsHash || shouldSkipHomeIntro,
+    );
     setSkipInitialProjectsEnter((previous) => previous || hasProjectsHash);
     setShowProjects(hasProjectsHash);
     setHasResolvedInitialHash(true);
   }, []);
 
   useEffect(() => {
-    /**
-     * Synchronizes local view state with the browser hash after navigation changes.
-     */
+    /** Synchronizes local view state with the browser hash after navigation changes. */
     const syncFromHash = () => {
       const hasProjectsHash = isProjectsHash();
       setSkipHomeIntro((previous) => previous || hasProjectsHash);
