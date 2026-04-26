@@ -3,12 +3,26 @@
 import type { Project } from "contentlayer/generated";
 
 import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 
 import { Card, Glow } from "@/components";
-import { fadeInUp } from "@/shared";
+import { EASE_IN_OUT, fadeInUp } from "@/shared";
 
-import { ProjectListItem } from "./ProjectListItem";
-import { ProjectsDivider } from "./ProjectsDivider";
+import { ProjectCardLink } from "./ProjectCardLink";
+import { ProjectDateBadge, ProjectViewsBadge } from "./ProjectMeta";
+
+const dividerTransition = {
+  duration: 0.8,
+  ease: EASE_IN_OUT,
+} as const;
+
+/**
+ * Project content and view-count data for one row in the projects list.
+ */
+interface ProjectListItemProps {
+  project: Project;
+  views: number;
+}
 
 /**
  * Minimal list data consumed by the animated card-list renderer inside a projects section.
@@ -62,6 +76,67 @@ export function ProjectsListSection(props: ProjectsListSectionProps) {
 }
 
 /**
+ * Renders a standard list-row card for a project in the projects index.
+ * @param props - The project content and current public view count.
+ * @returns The clickable list row for a project.
+ */
+function ProjectListItem(props: ProjectListItemProps) {
+  const { project, views } = props;
+
+  return (
+    <ProjectCardLink project={project}>
+      <article
+        className="
+        flex h-full items-center justify-between gap-4 p-4
+        md:px-6 md:py-5
+      "
+      >
+        <div className="min-w-0 flex-1 space-y-1">
+          <div className="flex items-center gap-3">
+            <h2
+              className="
+              truncate font-display text-base font-semibold tracking-tight
+              text-zinc-100 transition-colors duration-300
+              group-hover:text-white
+            "
+            >
+              {project.title}
+            </h2>
+            <ProjectDateBadge project={project} />
+          </div>
+          <p
+            className="
+            line-clamp-1 text-sm text-zinc-400 transition-colors duration-300
+            group-hover:text-zinc-300
+          "
+          >
+            {project.description}
+          </p>
+        </div>
+
+        <div className="flex shrink-0 items-center gap-4 text-zinc-500">
+          <ProjectViewsBadge
+            className="
+              hidden items-center gap-1.5 text-xs tabular-nums transition-colors
+              duration-300
+              group-hover:text-zinc-400
+              sm:inline-flex
+            "
+            views={views}
+          />
+          <ArrowRight
+            className="
+            size-4 translate-x-0 transition-all duration-300
+            group-hover:translate-x-1 group-hover:text-zinc-300
+          "
+          />
+        </div>
+      </article>
+    </ProjectCardLink>
+  );
+}
+
+/**
  * Animated list of standard project cards.
  * @param props - The projects to render and their corresponding public view counts.
  * @returns The animated card list for a projects section.
@@ -98,5 +173,24 @@ function ProjectsCardsList(props: ProjectsCardsListProps) {
         </motion.div>
       ))}
     </motion.div>
+  );
+}
+
+/**
+ * Animated horizontal divider used between projects sections.
+ * @returns The animated projects section divider.
+ */
+function ProjectsDivider() {
+  return (
+    <motion.div
+      animate={{ opacity: 1, scaleX: 1 }}
+      className="
+        h-px w-full bg-gradient-to-r from-transparent via-zinc-700/60
+        to-transparent
+      "
+      initial={{ opacity: 0, scaleX: 0 }}
+      style={{ transformOrigin: "left" }}
+      transition={dividerTransition}
+    />
   );
 }
