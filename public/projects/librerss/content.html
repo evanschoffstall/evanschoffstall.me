@@ -1,252 +1,536 @@
 <div align="center" dir="auto">
-<br>
-<a target="_blank" rel="noopener noreferrer" href="/projects/librerss/favicon.svg"><img src="/projects/librerss/favicon.svg" width="112" height="112" alt="LibreRSS logo" style="max-width: 100%; height: auto; max-height: 112px;"></a>
-<h1 dir="auto">LibreRSS</h1>
-<p dir="auto"><em>A modern RSS reader for people who want precious signal, not sludge.</em></p>
-<p dir="auto"><a href="https://nextjs.org" rel="nofollow"><img src="https://camo.githubusercontent.com/7752a6797b44c1335725ef6f7e54d068a88e4f9c5e4fb3eccbabad45b15eb9a8/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4e6578742e6a732d31362d3030303030303f7374796c653d666f722d7468652d6261646765266c6f676f3d6e6578742e6a73266c6f676f436f6c6f723d7768697465" alt="Next.js 16" data-canonical-src="https://img.shields.io/badge/Next.js-16-000000?style=for-the-badge&amp;logo=next.js&amp;logoColor=white" style="max-width: 100%;"></a><br>
-<a href="https://react.dev" rel="nofollow"><img src="https://camo.githubusercontent.com/b633b921b026bc7adc43010e08acaaea4b4c6a06264197f2a0a50f70fc94129f/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f52656163742d31392d3631444146423f7374796c653d666f722d7468652d6261646765266c6f676f3d7265616374266c6f676f436f6c6f723d626c61636b" alt="React 19" data-canonical-src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&amp;logo=react&amp;logoColor=black" style="max-width: 100%;"></a><br>
-<a href="https://www.typescriptlang.org" rel="nofollow"><img src="https://camo.githubusercontent.com/b7fbd1ac133b18867505a43ca849fbf3fcf2042622067586e39e680fb585e564/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f547970655363726970742d352d3331373843363f7374796c653d666f722d7468652d6261646765266c6f676f3d74797065736372697074266c6f676f436f6c6f723d7768697465" alt="TypeScript 5" data-canonical-src="https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&amp;logo=typescript&amp;logoColor=white" style="max-width: 100%;"></a><br>
-<a href="https://bun.sh" rel="nofollow"><img src="https://camo.githubusercontent.com/e32cceedfa148dcbb2fc4d8a6c09a7ed213add295b295690b393ba9b02e8c77d/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f42756e2d72756e74696d652d4639463145313f7374796c653d666f722d7468652d6261646765266c6f676f3d62756e266c6f676f436f6c6f723d626c61636b" alt="Bun" data-canonical-src="https://img.shields.io/badge/Bun-runtime-F9F1E1?style=for-the-badge&amp;logo=bun&amp;logoColor=black" style="max-width: 100%;"></a><br>
-<a href="LICENSE"><img src="https://camo.githubusercontent.com/f77c46cfd34df0f2783a9d96cc43ac41093d5ede3f6ff47dac0b1cfc7bf3a2c7/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4c6963656e73652d4d49542d3232633535653f7374796c653d666f722d7468652d6261646765" alt="MIT License" data-canonical-src="https://img.shields.io/badge/License-MIT-22c55e?style=for-the-badge" style="max-width: 100%;"></a></p>
+  <br />
+  <a
+    target="_blank"
+    rel="noopener noreferrer"
+    href="/projects/librerss/favicon.svg"
+    ><img
+      src="/projects/librerss/favicon.svg"
+      width="112"
+      height="112"
+      alt="LibreRSS logo"
+      style="max-width: 100%; height: auto; max-height: 112px"
+  /></a>
+  <h1 dir="auto">LibreRSS</h1>
+  <p dir="auto">
+    <em
+      >A modern RSS reader for people who want precious signal, not sludge.</em
+    >
+  </p>
+  <p dir="auto">
+    <a href="https://nextjs.org" rel="nofollow"
+      ><img
+        src="https://camo.githubusercontent.com/7752a6797b44c1335725ef6f7e54d068a88e4f9c5e4fb3eccbabad45b15eb9a8/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4e6578742e6a732d31362d3030303030303f7374796c653d666f722d7468652d6261646765266c6f676f3d6e6578742e6a73266c6f676f436f6c6f723d7768697465"
+        alt="Next.js 16"
+        data-canonical-src="https://img.shields.io/badge/Next.js-16-000000?style=for-the-badge&amp;logo=next.js&amp;logoColor=white"
+        style="max-width: 100%" /></a
+    ><br />
+    <a href="https://react.dev" rel="nofollow"
+      ><img
+        src="https://camo.githubusercontent.com/b633b921b026bc7adc43010e08acaaea4b4c6a06264197f2a0a50f70fc94129f/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f52656163742d31392d3631444146423f7374796c653d666f722d7468652d6261646765266c6f676f3d7265616374266c6f676f436f6c6f723d626c61636b"
+        alt="React 19"
+        data-canonical-src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&amp;logo=react&amp;logoColor=black"
+        style="max-width: 100%" /></a
+    ><br />
+    <a href="https://www.typescriptlang.org" rel="nofollow"
+      ><img
+        src="https://camo.githubusercontent.com/b7fbd1ac133b18867505a43ca849fbf3fcf2042622067586e39e680fb585e564/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f547970655363726970742d352d3331373843363f7374796c653d666f722d7468652d6261646765266c6f676f3d74797065736372697074266c6f676f436f6c6f723d7768697465"
+        alt="TypeScript 5"
+        data-canonical-src="https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&amp;logo=typescript&amp;logoColor=white"
+        style="max-width: 100%" /></a
+    ><br />
+    <a href="https://bun.sh" rel="nofollow"
+      ><img
+        src="https://camo.githubusercontent.com/e32cceedfa148dcbb2fc4d8a6c09a7ed213add295b295690b393ba9b02e8c77d/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f42756e2d72756e74696d652d4639463145313f7374796c653d666f722d7468652d6261646765266c6f676f3d62756e266c6f676f436f6c6f723d626c61636b"
+        alt="Bun"
+        data-canonical-src="https://img.shields.io/badge/Bun-runtime-F9F1E1?style=for-the-badge&amp;logo=bun&amp;logoColor=black"
+        style="max-width: 100%" /></a
+    ><br />
+    <a href="LICENSE"
+      ><img
+        src="https://camo.githubusercontent.com/f77c46cfd34df0f2783a9d96cc43ac41093d5ede3f6ff47dac0b1cfc7bf3a2c7/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4c6963656e73652d4d49542d3232633535653f7374796c653d666f722d7468652d6261646765"
+        alt="MIT License"
+        data-canonical-src="https://img.shields.io/badge/License-MIT-22c55e?style=for-the-badge"
+        style="max-width: 100%"
+    /></a>
+  </p>
 </div>
-<p dir="auto">LibreRSS is an open-source, self-hostable RSS reader built for focused reading. It pulls feeds from across the open web, organizes them into a fast dashboard, and keeps the experience calm: no algorithmic feed shaping, no engagement traps, and no platform lock-in.</p>
-<p dir="auto">It is for people who still want the web to feel readable. If you want one place to follow publications, blogs, research, release notes, and long-form writing without surrendering your attention or your data, LibreRSS is the product.</p>
-<div class="markdown-alert markdown-alert-tip" dir="auto"><p class="markdown-alert-title" dir="auto"><svg class="octicon octicon-light-bulb mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"></path></svg>Tip</p><p dir="auto">LibreRSS is a strong fit for personal deployments, research reading, private team dashboards, and any setup where you want a quieter alternative to platform-driven feeds.</p>
+<p dir="auto">
+  LibreRSS is an open-source, self-hostable RSS reader built for focused
+  reading. It pulls feeds from across the open web, organizes them into a fast
+  dashboard, and keeps the experience calm: no algorithmic feed shaping, no
+  engagement traps, and no platform lock-in.
+</p>
+<p dir="auto">
+  It is for people who still want the web to feel readable. If you want one
+  place to follow publications, blogs, research, release notes, and long-form
+  writing without surrendering your attention or your data, LibreRSS is the
+  product.
+</p>
+<div class="markdown-alert markdown-alert-tip" dir="auto">
+  <p class="markdown-alert-title" dir="auto">
+    <svg
+      class="octicon octicon-light-bulb mr-2"
+      viewBox="0 0 16 16"
+      version="1.1"
+      width="16"
+      height="16"
+      aria-hidden="true"
+    >
+      <path
+        d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"
+      ></path></svg
+    >Tip
+  </p>
+  <p dir="auto">
+    LibreRSS is a strong fit for personal deployments, research reading, private
+    team dashboards, and any setup where you want a quieter alternative to
+    platform-driven feeds.
+  </p>
 </div>
 <h2 dir="auto">Why it exists</h2>
 <ul dir="auto">
-<li>Read the web without an engagement treadmill.</li>
-<li>Keep your subscriptions, history, and access rules on infrastructure you control.</li>
-<li>Turn a noisy stream of sources into a clean, durable reading system.</li>
-<li>Move from inbox-style triage to article-first reading.</li>
-<li>Run it privately for yourself or open it up selectively.</li>
+  <li>Read the web without an engagement treadmill.</li>
+  <li>
+    Keep your subscriptions, history, and access rules on infrastructure you
+    control.
+  </li>
+  <li>Turn a noisy stream of sources into a clean, durable reading system.</li>
+  <li>Move from inbox-style triage to article-first reading.</li>
+  <li>Run it privately for yourself or open it up selectively.</li>
 </ul>
 <h2 dir="auto">Highlights</h2>
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>Capability</th>
-<th>What it gives you</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Universal feed support</td>
-<td>Subscribe to RSS, Atom, and JSON feeds from across the open web.</td>
-</tr>
-<tr>
-<td>Category organization</td>
-<td>Group sources into a browsing model that stays usable as your feed list grows.</td>
-</tr>
-<tr>
-<td>Distraction-free reading</td>
-<td>Keep focus on the article instead of interface chrome, prompts, and engagement mechanics.</td>
-</tr>
-<tr>
-<td>Fast dashboard workflows</td>
-<td>Add, sort, refresh, and manage feeds from one responsive control surface.</td>
-</tr>
-<tr>
-<td>Light and dark themes</td>
-<td>Choose the reading environment that fits the room, the hour, and your eyes.</td>
-</tr>
-<tr>
-<td>Self-hosted ownership</td>
-<td>Keep feed data, sessions, and deployment choices under your control.</td>
-</tr>
-<tr>
-<td>Invite-only mode</td>
-<td>Disable public signup for personal, private, or small-team use.</td>
-</tr>
-<tr>
-<td>Streaming refresh</td>
-<td>Watch updates arrive in a flow that feels live without feeling frantic.</td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
+<markdown-accessiblity-table
+  ><table role="table">
+    <thead>
+      <tr>
+        <th>Capability</th>
+        <th>What it gives you</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Universal feed support</td>
+        <td>
+          Subscribe to RSS, Atom, and JSON feeds from across the open web.
+        </td>
+      </tr>
+      <tr>
+        <td>Category organization</td>
+        <td>
+          Group sources into a browsing model that stays usable as your feed
+          list grows.
+        </td>
+      </tr>
+      <tr>
+        <td>Distraction-free reading</td>
+        <td>
+          Keep focus on the article instead of interface chrome, prompts, and
+          engagement mechanics.
+        </td>
+      </tr>
+      <tr>
+        <td>Fast dashboard workflows</td>
+        <td>
+          Add, sort, refresh, and manage feeds from one responsive control
+          surface.
+        </td>
+      </tr>
+      <tr>
+        <td>Light and dark themes</td>
+        <td>
+          Choose the reading environment that fits the room, the hour, and your
+          eyes.
+        </td>
+      </tr>
+      <tr>
+        <td>Self-hosted ownership</td>
+        <td>
+          Keep feed data, sessions, and deployment choices under your control.
+        </td>
+      </tr>
+      <tr>
+        <td>Invite-only mode</td>
+        <td>Disable public signup for personal, private, or small-team use.</td>
+      </tr>
+      <tr>
+        <td>Streaming refresh</td>
+        <td>
+          Watch updates arrive in a flow that feels live without feeling
+          frantic.
+        </td>
+      </tr>
+    </tbody>
+  </table></markdown-accessiblity-table
+>
 <h2 dir="auto">Quick start</h2>
 <h3 dir="auto">Prerequisites</h3>
 <ul dir="auto">
-<li>Bun</li>
-<li>PostgreSQL, or a Neon-compatible Postgres connection string</li>
+  <li>Bun</li>
+  <li>PostgreSQL, or a Neon-compatible Postgres connection string</li>
 </ul>
 <h3 dir="auto">1. Install dependencies</h3>
-<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">bun install</pre></div>
-<h3 dir="auto">2. Configure local overrides</h3>
-<p dir="auto">LibreRSS ships with a committed <code class="notranslate">.env</code> full of documented defaults. Put machine-specific settings in <code class="notranslate">.env.local</code> so you can preserve the defaults and override only what you need.</p>
-<div class="markdown-alert markdown-alert-note" dir="auto"><p class="markdown-alert-title" dir="auto"><svg class="octicon octicon-info mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p><p dir="auto">Keep secrets and machine-specific values in <code class="notranslate">.env.local</code>. The committed <code class="notranslate">.env</code> is meant to document defaults, not to hold your local credentials.</p>
+<div class="highlight highlight-source-shell" dir="auto">
+  <pre class="notranslate">bun install</pre>
 </div>
-<div class="highlight highlight-source-dotenv" dir="auto"><pre class="notranslate"><span class="pl-v">DATABASE_URL</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>postgres://user:password@host:5432/dbname<span class="pl-pds">"</span></span>
+<h3 dir="auto">2. Configure local overrides</h3>
+<p dir="auto">
+  LibreRSS ships with a committed <code class="notranslate">.env</code> full of
+  documented defaults. Put machine-specific settings in
+  <code class="notranslate">.env.local</code> so you can preserve the defaults
+  and override only what you need.
+</p>
+<div class="markdown-alert markdown-alert-note" dir="auto">
+  <p class="markdown-alert-title" dir="auto">
+    <svg
+      class="octicon octicon-info mr-2"
+      viewBox="0 0 16 16"
+      version="1.1"
+      width="16"
+      height="16"
+      aria-hidden="true"
+    >
+      <path
+        d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"
+      ></path></svg
+    >Note
+  </p>
+  <p dir="auto">
+    Keep secrets and machine-specific values in
+    <code class="notranslate">.env.local</code>. The committed
+    <code class="notranslate">.env</code> is meant to document defaults, not to
+    hold your local credentials.
+  </p>
+</div>
+<div class="highlight highlight-source-dotenv" dir="auto">
+  <pre
+    class="notranslate"
+  ><span class="pl-v">DATABASE_URL</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>postgres://user:password@host:5432/dbname<span class="pl-pds">"</span></span>
 <span class="pl-v">DB_DRIVER</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>pg<span class="pl-pds">"</span></span> <span class="pl-c"><span class="pl-c">#</span> or "neon"</span>
 <span class="pl-v">ALLOW_SIGNUP</span><span class="pl-k">=</span><span class="pl-s">false</span>
 <span class="pl-v">NODE_ENV</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>development<span class="pl-pds">"</span></span>
-<span class="pl-v">LOG_LEVEL</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>warn<span class="pl-pds">"</span></span></pre></div>
+<span class="pl-v">LOG_LEVEL</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>warn<span class="pl-pds">"</span></span></pre>
+</div>
 <p dir="auto">Common settings:</p>
 <ul dir="auto">
-<li><code class="notranslate">DATABASE_URL</code>: your Postgres connection string.</li>
-<li><code class="notranslate">DB_DRIVER</code>: <code class="notranslate">pg</code> for pooled TCP connections, or <code class="notranslate">neon</code> for fetch-backed Neon mode.</li>
-<li><code class="notranslate">ALLOW_SIGNUP</code>: set to <code class="notranslate">true</code> if you want public registration.</li>
-<li><code class="notranslate">LOG_LEVEL</code>: one of <code class="notranslate">none</code>, <code class="notranslate">error</code>, <code class="notranslate">warn</code>, <code class="notranslate">info</code>, or <code class="notranslate">verbose</code>.</li>
+  <li>
+    <code class="notranslate">DATABASE_URL</code>: your Postgres connection
+    string.
+  </li>
+  <li>
+    <code class="notranslate">DB_DRIVER</code>:
+    <code class="notranslate">pg</code> for pooled TCP connections, or
+    <code class="notranslate">neon</code> for fetch-backed Neon mode.
+  </li>
+  <li>
+    <code class="notranslate">ALLOW_SIGNUP</code>: set to
+    <code class="notranslate">true</code> if you want public registration.
+  </li>
+  <li>
+    <code class="notranslate">LOG_LEVEL</code>: one of
+    <code class="notranslate">none</code>,
+    <code class="notranslate">error</code>,
+    <code class="notranslate">warn</code>,
+    <code class="notranslate">info</code>, or
+    <code class="notranslate">verbose</code>.
+  </li>
 </ul>
-<div class="markdown-alert markdown-alert-tip" dir="auto"><p class="markdown-alert-title" dir="auto"><svg class="octicon octicon-light-bulb mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"></path></svg>Tip</p><p dir="auto">Leave <code class="notranslate">ALLOW_SIGNUP=false</code> if you want a private or invite-only reader and create accounts with <code class="notranslate">bun run db:create-user</code> instead.</p>
+<div class="markdown-alert markdown-alert-tip" dir="auto">
+  <p class="markdown-alert-title" dir="auto">
+    <svg
+      class="octicon octicon-light-bulb mr-2"
+      viewBox="0 0 16 16"
+      version="1.1"
+      width="16"
+      height="16"
+      aria-hidden="true"
+    >
+      <path
+        d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"
+      ></path></svg
+    >Tip
+  </p>
+  <p dir="auto">
+    Leave <code class="notranslate">ALLOW_SIGNUP=false</code> if you want a
+    private or invite-only reader and create accounts with
+    <code class="notranslate">bun run db:create-user</code> instead.
+  </p>
 </div>
 <details>
-<summary>More useful configuration knobs</summary>
-<ul dir="auto">
-<li><code class="notranslate">LEGAL_PROFILE</code>: switch between generic self-hosted legal copy and a branded hosted deployment.</li>
-<li><code class="notranslate">LOG_COLORS_ENABLED</code>: enable colored logs locally.</li>
-<li><code class="notranslate">ARTICLE_EXTRACT_CACHE_ENABLED</code>: control article extraction caching.</li>
-<li><code class="notranslate">PLAYWRIGHT_BASE_URL</code>: point Playwright at a specific running environment when needed.</li>
-</ul>
+  <summary>More useful configuration knobs</summary>
+  <ul dir="auto">
+    <li>
+      <code class="notranslate">LEGAL_PROFILE</code>: switch between generic
+      self-hosted legal copy and a branded hosted deployment.
+    </li>
+    <li>
+      <code class="notranslate">LOG_COLORS_ENABLED</code>: enable colored logs
+      locally.
+    </li>
+    <li>
+      <code class="notranslate">ARTICLE_EXTRACT_CACHE_ENABLED</code>: control
+      article extraction caching.
+    </li>
+    <li>
+      <code class="notranslate">PLAYWRIGHT_BASE_URL</code>: point Playwright at
+      a specific running environment when needed.
+    </li>
+  </ul>
 </details>
 <h3 dir="auto">3. Provision the database</h3>
-<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">bun run db:provision</pre></div>
+<div class="highlight highlight-source-shell" dir="auto">
+  <pre class="notranslate">bun run db:provision</pre>
+</div>
 <p dir="auto">This verifies the connection and applies the schema.</p>
 <h3 dir="auto">4. Create the first user</h3>
 <p dir="auto">When signup is disabled, create an account from the CLI:</p>
-<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">bun run db:create-user <span class="pl-k">&lt;</span>email<span class="pl-k">&gt;</span> <span class="pl-k">&lt;</span>password<span class="pl-k">&gt;</span></pre></div>
+<div class="highlight highlight-source-shell" dir="auto">
+  <pre
+    class="notranslate"
+  >bun run db:create-user <span class="pl-k">&lt;</span>email<span class="pl-k">&gt;</span> <span class="pl-k">&lt;</span>password<span class="pl-k">&gt;</span></pre>
+</div>
 <p dir="auto">Passwords must be at least 8 characters long.</p>
 <h3 dir="auto">5. Start the app</h3>
-<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">bun dev</pre></div>
-<p dir="auto">Open <a href="http://localhost:3000" rel="nofollow">http://localhost:3000</a> and sign in.</p>
+<div class="highlight highlight-source-shell" dir="auto">
+  <pre class="notranslate">bun dev</pre>
+</div>
+<p dir="auto">
+  Open
+  <a href="http://localhost:3000" rel="nofollow">http://localhost:3000</a> and
+  sign in.
+</p>
 <h3 dir="auto">6. Verify the install</h3>
 <p dir="auto">You should be able to:</p>
 <ul dir="auto">
-<li>open the dashboard without runtime setup errors</li>
-<li>sign in with the user you created</li>
-<li>add a feed and see articles populate in the reading view</li>
+  <li>open the dashboard without runtime setup errors</li>
+  <li>sign in with the user you created</li>
+  <li>add a feed and see articles populate in the reading view</li>
 </ul>
-<div class="markdown-alert markdown-alert-important" dir="auto"><p class="markdown-alert-title" dir="auto"><svg class="octicon octicon-report mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p><p dir="auto">If the app boots but feed refresh fails, check your <code class="notranslate">DATABASE_URL</code>, database reachability, and whether your selected <code class="notranslate">DB_DRIVER</code> matches the connection you are using.</p>
+<div class="markdown-alert markdown-alert-important" dir="auto">
+  <p class="markdown-alert-title" dir="auto">
+    <svg
+      class="octicon octicon-report mr-2"
+      viewBox="0 0 16 16"
+      version="1.1"
+      width="16"
+      height="16"
+      aria-hidden="true"
+    >
+      <path
+        d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"
+      ></path></svg
+    >Important
+  </p>
+  <p dir="auto">
+    If the app boots but feed refresh fails, check your
+    <code class="notranslate">DATABASE_URL</code>, database reachability, and
+    whether your selected <code class="notranslate">DB_DRIVER</code> matches the
+    connection you are using.
+  </p>
 </div>
 <h2 dir="auto">Development</h2>
 <h3 dir="auto">Core commands</h3>
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>Command</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code class="notranslate">bun dev</code></td>
-<td>Start the standard local Next.js development server.</td>
-</tr>
-<tr>
-<td><code class="notranslate">bun run dev:local</code></td>
-<td>Bind the dev server to <code class="notranslate">0.0.0.0:3000</code> for LAN access.</td>
-</tr>
-<tr>
-<td><code class="notranslate">bun run build</code></td>
-<td>Create a production build.</td>
-</tr>
-<tr>
-<td><code class="notranslate">bun run start</code></td>
-<td>Run the production server after building.</td>
-</tr>
-<tr>
-<td><code class="notranslate">bun check summary</code></td>
-<td>Run the repository quality summary.</td>
-</tr>
-<tr>
-<td><code class="notranslate">bun check --junit</code></td>
-<td>Run the Bun unit and integration test suite.</td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
+<markdown-accessiblity-table
+  ><table role="table">
+    <thead>
+      <tr>
+        <th>Command</th>
+        <th>Purpose</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code class="notranslate">bun dev</code></td>
+        <td>Start the standard local Next.js development server.</td>
+      </tr>
+      <tr>
+        <td><code class="notranslate">bun run dev:local</code></td>
+        <td>
+          Bind the dev server to
+          <code class="notranslate">0.0.0.0:3000</code> for LAN access.
+        </td>
+      </tr>
+      <tr>
+        <td><code class="notranslate">bun run build</code></td>
+        <td>Create a production build.</td>
+      </tr>
+      <tr>
+        <td><code class="notranslate">bun run start</code></td>
+        <td>Run the production server after building.</td>
+      </tr>
+      <tr>
+        <td><code class="notranslate">bun check summary</code></td>
+        <td>Run the repository quality summary.</td>
+      </tr>
+      <tr>
+        <td><code class="notranslate">bun check --junit</code></td>
+        <td>Run the Bun unit and integration test suite.</td>
+      </tr>
+    </tbody>
+  </table></markdown-accessiblity-table
+>
 <h3 dir="auto">Quality tooling</h3>
-<p dir="auto">The full quality suite includes a pinned Python-based complexity check powered by <code class="notranslate">lizard</code>.</p>
-<p dir="auto">Install the Python tooling once before running <code class="notranslate">bun check</code> commands that include the <code class="notranslate">lizard</code> step:</p>
-<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">python3 -m pip install -r requirements-dev.txt</pre></div>
+<p dir="auto">
+  The full quality suite includes a pinned Python-based complexity check powered
+  by <code class="notranslate">lizard</code>.
+</p>
+<p dir="auto">
+  Install the Python tooling once before running
+  <code class="notranslate">bun check</code> commands that include the
+  <code class="notranslate">lizard</code> step:
+</p>
+<div class="highlight highlight-source-shell" dir="auto">
+  <pre class="notranslate">python3 -m pip install -r requirements-dev.txt</pre>
+</div>
 <h3 dir="auto">End-to-end testing</h3>
-<p dir="auto">The Playwright workflow is isolated by design. It starts a dedicated Next.js dev server on port <code class="notranslate">3100</code>, uses its own <code class="notranslate">.next-playwright</code> build directory, and cleans up afterward so your regular development session stays untouched.</p>
-<div class="markdown-alert markdown-alert-important" dir="auto"><p class="markdown-alert-title" dir="auto"><svg class="octicon octicon-report mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p><p dir="auto">This separation is intentional. It prevents Playwright runs from clobbering your normal development server or <code class="notranslate">.next</code> output.</p>
+<p dir="auto">
+  The Playwright workflow is isolated by design. It starts a dedicated Next.js
+  dev server on port <code class="notranslate">3100</code>, uses its own
+  <code class="notranslate">.next-playwright</code> build directory, and cleans
+  up afterward so your regular development session stays untouched.
+</p>
+<div class="markdown-alert markdown-alert-important" dir="auto">
+  <p class="markdown-alert-title" dir="auto">
+    <svg
+      class="octicon octicon-report mr-2"
+      viewBox="0 0 16 16"
+      version="1.1"
+      width="16"
+      height="16"
+      aria-hidden="true"
+    >
+      <path
+        d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"
+      ></path></svg
+    >Important
+  </p>
+  <p dir="auto">
+    This separation is intentional. It prevents Playwright runs from clobbering
+    your normal development server or
+    <code class="notranslate">.next</code> output.
+  </p>
 </div>
-<div class="markdown-alert markdown-alert-note" dir="auto"><p class="markdown-alert-title" dir="auto"><svg class="octicon octicon-info mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p><p dir="auto">Playwright is optional. LibreRSS does not install browsers or OS-level dependencies during <code class="notranslate">bun install</code>, so deployments and local setups stay environment-agnostic. If you want to try the Playwright suite, install the browser binaries explicitly on a machine that supports them.</p>
+<div class="markdown-alert markdown-alert-note" dir="auto">
+  <p class="markdown-alert-title" dir="auto">
+    <svg
+      class="octicon octicon-info mr-2"
+      viewBox="0 0 16 16"
+      version="1.1"
+      width="16"
+      height="16"
+      aria-hidden="true"
+    >
+      <path
+        d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"
+      ></path></svg
+    >Note
+  </p>
+  <p dir="auto">
+    Playwright is optional. LibreRSS does not install browsers or OS-level
+    dependencies during <code class="notranslate">bun install</code>, so
+    deployments and local setups stay environment-agnostic. If you want to try
+    the Playwright suite, install the browser binaries explicitly on a machine
+    that supports them.
+  </p>
 </div>
-<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">bun run setup:playwright
-bun run test:e2e</pre></div>
+<div class="highlight highlight-source-shell" dir="auto">
+  <pre class="notranslate">
+bun run setup:playwright
+bun run test:e2e</pre
+  >
+</div>
 <p dir="auto">Other useful variants:</p>
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>Command</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code class="notranslate">bun run test:e2e:headed</code></td>
-<td>Run the suite with a visible browser window.</td>
-</tr>
-<tr>
-<td><code class="notranslate">bun run test:e2e:ui</code></td>
-<td>Open the Playwright UI runner.</td>
-</tr>
-<tr>
-<td><code class="notranslate">bun run test:e2e:coverage</code></td>
-<td>Generate Playwright coverage artifacts and reports.</td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
+<markdown-accessiblity-table
+  ><table role="table">
+    <thead>
+      <tr>
+        <th>Command</th>
+        <th>Purpose</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code class="notranslate">bun run test:e2e:headed</code></td>
+        <td>Run the suite with a visible browser window.</td>
+      </tr>
+      <tr>
+        <td><code class="notranslate">bun run test:e2e:ui</code></td>
+        <td>Open the Playwright UI runner.</td>
+      </tr>
+      <tr>
+        <td><code class="notranslate">bun run test:e2e:coverage</code></td>
+        <td>Generate Playwright coverage artifacts and reports.</td>
+      </tr>
+    </tbody>
+  </table></markdown-accessiblity-table
+>
 <h2 dir="auto">Database workflow</h2>
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>Command</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code class="notranslate">bun run db:provision</code></td>
-<td>Verify the connection and apply the full schema.</td>
-</tr>
-<tr>
-<td><code class="notranslate">bun run db:push</code></td>
-<td>Push schema changes directly without generating migration files.</td>
-</tr>
-<tr>
-<td><code class="notranslate">bun run db:generate</code></td>
-<td>Generate SQL migrations with Drizzle Kit.</td>
-</tr>
-<tr>
-<td><code class="notranslate">bun run db:studio</code></td>
-<td>Open Drizzle Studio in the browser.</td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
+<markdown-accessiblity-table
+  ><table role="table">
+    <thead>
+      <tr>
+        <th>Command</th>
+        <th>Purpose</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code class="notranslate">bun run db:provision</code></td>
+        <td>Verify the connection and apply the full schema.</td>
+      </tr>
+      <tr>
+        <td><code class="notranslate">bun run db:push</code></td>
+        <td>
+          Push schema changes directly without generating migration files.
+        </td>
+      </tr>
+      <tr>
+        <td><code class="notranslate">bun run db:generate</code></td>
+        <td>Generate SQL migrations with Drizzle Kit.</td>
+      </tr>
+      <tr>
+        <td><code class="notranslate">bun run db:studio</code></td>
+        <td>Open Drizzle Studio in the browser.</td>
+      </tr>
+    </tbody>
+  </table></markdown-accessiblity-table
+>
 <h2 dir="auto">Stack</h2>
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>Layer</th>
-<th>Technology</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Framework</td>
-<td>Next.js 16, React 19, TypeScript 5</td>
-</tr>
-<tr>
-<td>Runtime</td>
-<td>Bun</td>
-</tr>
-<tr>
-<td>Styling</td>
-<td>Tailwind CSS v4, shadcn/ui, Radix UI</td>
-</tr>
-<tr>
-<td>Data</td>
-<td>PostgreSQL, Drizzle ORM</td>
-</tr>
-<tr>
-<td>Content pipeline</td>
-<td>Feed parsing, article distillation, sanitization, and extract orchestration</td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
+<markdown-accessiblity-table
+  ><table role="table">
+    <thead>
+      <tr>
+        <th>Layer</th>
+        <th>Technology</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Framework</td>
+        <td>Next.js 16, React 19, TypeScript 5</td>
+      </tr>
+      <tr>
+        <td>Runtime</td>
+        <td>Bun</td>
+      </tr>
+      <tr>
+        <td>Styling</td>
+        <td>Tailwind CSS v4, shadcn/ui, Radix UI</td>
+      </tr>
+      <tr>
+        <td>Data</td>
+        <td>PostgreSQL, Drizzle ORM</td>
+      </tr>
+      <tr>
+        <td>Content pipeline</td>
+        <td>
+          Feed parsing, article distillation, sanitization, and extract
+          orchestration
+        </td>
+      </tr>
+    </tbody>
+  </table></markdown-accessiblity-table
+>
 <h2 dir="auto">Project structure</h2>
 <pre lang="text" class="notranslate"><code class="notranslate">librerss/
 ├── src/
@@ -273,19 +557,67 @@ bun run test:e2e</pre></div>
 </code></pre>
 <h2 dir="auto">Configuration notes</h2>
 <ul dir="auto">
-<li><code class="notranslate">.env</code> is committed and documents the full default configuration surface.</li>
-<li><code class="notranslate">.env.local</code> is the right place for machine-specific secrets and deployment overrides.</li>
-<li><code class="notranslate">ALLOW_SIGNUP=false</code> gives you a private or invite-only setup.</li>
-<li><code class="notranslate">LEGAL_PROFILE</code> and related variables let you switch between generic self-hosted copy and a branded hosted deployment.</li>
-<li><code class="notranslate">PLAYWRIGHT_BASE_URL</code> can point Playwright at a specific running environment when needed.</li>
+  <li>
+    <code class="notranslate">.env</code> is committed and documents the full
+    default configuration surface.
+  </li>
+  <li>
+    <code class="notranslate">.env.local</code> is the right place for
+    machine-specific secrets and deployment overrides.
+  </li>
+  <li>
+    <code class="notranslate">ALLOW_SIGNUP=false</code> gives you a private or
+    invite-only setup.
+  </li>
+  <li>
+    <code class="notranslate">LEGAL_PROFILE</code> and related variables let you
+    switch between generic self-hosted copy and a branded hosted deployment.
+  </li>
+  <li>
+    <code class="notranslate">PLAYWRIGHT_BASE_URL</code> can point Playwright at
+    a specific running environment when needed.
+  </li>
 </ul>
-<div class="markdown-alert markdown-alert-caution" dir="auto"><p class="markdown-alert-title" dir="auto"><svg class="octicon octicon-stop mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M4.47.22A.749.749 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.749.749 0 0 1-.22.53l-4.25 4.25A.749.749 0 0 1 11 16H5a.749.749 0 0 1-.53-.22L.22 11.53A.749.749 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Caution</p><p dir="auto">Do not treat the committed <code class="notranslate">.env</code> as a deployment secret store. Production secrets and local credentials should come from your environment or <code class="notranslate">.env.local</code>.</p>
+<div class="markdown-alert markdown-alert-caution" dir="auto">
+  <p class="markdown-alert-title" dir="auto">
+    <svg
+      class="octicon octicon-stop mr-2"
+      viewBox="0 0 16 16"
+      version="1.1"
+      width="16"
+      height="16"
+      aria-hidden="true"
+    >
+      <path
+        d="M4.47.22A.749.749 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.749.749 0 0 1-.22.53l-4.25 4.25A.749.749 0 0 1 11 16H5a.749.749 0 0 1-.53-.22L.22 11.53A.749.749 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"
+      ></path></svg
+    >Caution
+  </p>
+  <p dir="auto">
+    Do not treat the committed <code class="notranslate">.env</code> as a
+    deployment secret store. Production secrets and local credentials should
+    come from your environment or <code class="notranslate">.env.local</code>.
+  </p>
 </div>
 <h2 dir="auto">Design principle</h2>
-<p dir="auto">LibreRSS is built around a simple idea: the best feed reader should disappear behind the reading. The interface should help you move through information with intent, not trap you in an infinite loop of updates, nudges, and synthetic urgency.</p>
-<p dir="auto">That principle shapes the app from the bottom up. Feed fetching, content extraction, sanitization, dashboard flow, and self-hosted control all exist to make the reading experience calmer, faster, and more trustworthy.</p>
+<p dir="auto">
+  LibreRSS is built around a simple idea: the best feed reader should disappear
+  behind the reading. The interface should help you move through information
+  with intent, not trap you in an infinite loop of updates, nudges, and
+  synthetic urgency.
+</p>
+<p dir="auto">
+  That principle shapes the app from the bottom up. Feed fetching, content
+  extraction, sanitization, dashboard flow, and self-hosted control all exist to
+  make the reading experience calmer, faster, and more trustworthy.
+</p>
 <h2 dir="auto">License</h2>
-<p dir="auto">LibreRSS is released under the <a href="LICENSE">MIT License</a>.</p>
+<p dir="auto">
+  LibreRSS is released under the <a href="LICENSE">MIT License</a>.
+</p>
 <div align="center" dir="auto">
-<p dir="auto">Made with ❤️ by <a href="https://github.com/evanschoffstall">Evan Schoffstall</a></p>
+  <p dir="auto">
+    Made with ❤️ by
+    <a href="https://github.com/evanschoffstall">Evan Schoffstall</a>
+  </p>
 </div>

@@ -108,18 +108,18 @@ Downloads the latest README from each configured GitHub repository and saves a r
 
 ## Commands
 
-| Command                      | Description                                               |
-| ---------------------------- | --------------------------------------------------------- |
-| `bun dev`                    | Contentlayer build, then start Next.js dev with Turbopack |
-| `bun run dev:local`          | Same as `bun dev`, bound to `0.0.0.0:3000`                |
-| `bun run build`              | Contentlayer build, then production Next.js build         |
-| `bun run start`              | Start the production Next.js server                       |
-| `bun run contentlayer:build` | Run the one-shot Contentlayer build script                |
-| `bun run contentlayer:dev`   | Start Contentlayer in watch mode                          |
-| `bun run test:e2e`           | Run Playwright browser tests against an isolated app      |
+| Command                      | Description                                                                   |
+| ---------------------------- | ----------------------------------------------------------------------------- |
+| `bun dev`                    | Contentlayer build, then start Next.js dev with Turbopack                     |
+| `bun run dev:local`          | Same as `bun dev`, bound to `0.0.0.0:3000`                                    |
+| `bun run build`              | Contentlayer build, then production Next.js build                             |
+| `bun run start`              | Start the production Next.js server                                           |
+| `bun run contentlayer:build` | Run the one-shot Contentlayer build script                                    |
+| `bun run contentlayer:dev`   | Start Contentlayer in watch mode                                              |
+| `bun run test:e2e`           | Run Playwright browser tests against an isolated app                          |
 | `bun run readmes:download`   | Download and render GitHub READMEs into `public/projects/[slug]/content.html` |
-| `bun run clean`              | Remove `.next`, `.cache`, and `.contentlayer`             |
-| `bun run types`              | Type-check the project with `tsc --noEmit`                |
+| `bun run clean`              | Remove `.next`, `.cache`, and `.contentlayer`                                 |
+| `bun run types`              | Type-check the project with `tsc --noEmit`                                    |
 
 Unit tests use `bun:test`. Run them with:
 
