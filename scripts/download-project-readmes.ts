@@ -126,7 +126,9 @@ async function getProjects(): Promise<ProjectMeta[]> {
   const projectFiles = fileNames.filter(
     (fileName) =>
       typeof fileName === "string" &&
-      (fileName === "content.mdx" || fileName.endsWith("/content.mdx")),
+      (fileName === "content.mdx" ||
+        fileName.endsWith("/content.mdx") ||
+        /^[^/]+\.mdx$/.test(fileName)),
   );
 
   const projects = await Promise.all(
@@ -166,6 +168,12 @@ function getRepositoryFromFrontmatter(source: string): string | undefined {
  * @returns The slug derived from the file name.
  */
 function getSlugFromPath(filePath: string): string {
+  // Flat layout: springgate.mdx
+  const flatMatch = /^([^/]+)\.mdx$/.exec(filePath);
+  if (flatMatch) {
+    return flatMatch[1]!;
+  }
+  // Folder layout: springgate/content.mdx
   return basename(dirname(filePath));
 }
 
@@ -216,7 +224,12 @@ async function main() {
       repoRootAssets,
     );
 
-    const outputPath = join(PUBLIC_DIR, "projects", project.slug, "content.html");
+    const outputPath = join(
+      PUBLIC_DIR,
+      "projects",
+      project.slug,
+      "content.html",
+    );
     await mkdir(join(outputPath, ".."), { recursive: true });
     await writeFile(outputPath, rewrittenHtml, "utf-8");
     downloadedCount += 1;
