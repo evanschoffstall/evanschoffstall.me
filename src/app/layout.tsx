@@ -1,8 +1,9 @@
-import { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+
 import { Inter } from "next/font/google";
 import LocalFont from "next/font/local";
 
-import "../global.css";
+import "./globals.css";
 
 export const metadata: Metadata = {
   description:
@@ -46,6 +47,16 @@ export const metadata: Metadata = {
     title: "evanschoffstall",
   },
 };
+
+/**
+ * Declares this site as natively dark so browsers and browser extensions such
+ * as Dark Reader treat it as already dark-mode aware and skip any automatic
+ * color augmentation that would invert or recolor the canvas particle layer.
+ */
+export const viewport: Viewport = {
+  colorScheme: "dark",
+};
+
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
