@@ -1,12 +1,10 @@
 export {
   consumeHomeIntroSkip,
   consumeInternalProjectNavigation,
+  consumeProjectsScrollPosition,
   markInternalProjectNavigation,
+  registerProjectsViewport,
   requestHomeIntroSkip,
   resolveProjectBackNavigation,
-} from "@/features/projects/browser/back-navigation";
-export {
-  consumeProjectsScrollPosition,
-  registerProjectsViewport,
   saveProjectsScrollPosition,
-} from "@/features/projects/browser/projects-scroll-session";
+} from "@/features/projects/browser/navigation-state";

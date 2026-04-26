@@ -1,27 +1,27 @@
-import { hasSessionStorage } from "@/shared/browser";
+import { hasSessionStorage } from "@/shared";
 
 const INTERNAL_PROJECT_NAVIGATION_KEY = "projects:internal-navigation";
-const SKIP_HOME_INTRO_KEY = "home:skip-intro";
 const LIBRERSS_HOSTNAME_PATTERN = /(^|\.)librerss\.com$/i;
+const PROJECTS_RESTORE_FLAG_KEY = "projects:restore";
+const PROJECTS_SCROLL_Y_KEY = "projects:scrollY";
+const SKIP_HOME_INTRO_KEY = "home:skip-intro";
 
 /** In-app surface that initiated project-detail navigation. */
 type InternalProjectNavigationSource = "featured" | "projects";
 
-/**
- * Back-navigation decision returned by the project detail page, either using browser history or a fallback href.
- */
+/** Back-navigation decision returned by the project detail page. */
 type ProjectBackNavigation =
   | { href: string; kind: "push"; skipHomeIntro?: boolean }
   | { kind: "history-back" };
+
+let registeredProjectsViewport: HTMLElement | null = null;
 
 /**
  * Reads and clears the one-time home intro skip flag.
  * @returns `true` when the next home render should start in its settled state.
  */
 export function consumeHomeIntroSkip(): boolean {
-  if (!hasSessionStorage()) {
-    return false;
-  }
+  if (!hasSessionStorage()) return false;
 
   try {
     const shouldSkipHomeIntro =
@@ -42,9 +42,7 @@ export function consumeHomeIntroSkip(): boolean {
  * @returns The in-app source that opened the project page, or `null` for external/direct visits.
  */
 export function consumeInternalProjectNavigation(): InternalProjectNavigationSource | null {
-  if (!hasSessionStorage()) {
-    return null;
-  }
+  if (!hasSessionStorage()) return null;
 
   try {
     const navigationSource = normalizeInternalProjectNavigationSource(
@@ -62,15 +60,41 @@ export function consumeInternalProjectNavigation(): InternalProjectNavigationSou
 }
 
 /**
+ * Reads the saved projects-panel scroll position when a restore was requested.
+ * @returns The saved scroll position, or `null` when no valid restore state exists.
+ */
+export function consumeProjectsScrollPosition(): null | number {
+  if (!hasSessionStorage()) return null;
+
+  try {
+    const shouldRestore =
+      window.sessionStorage.getItem(PROJECTS_RESTORE_FLAG_KEY) === "1";
+    if (!shouldRestore) return null;
+
+    window.sessionStorage.removeItem(PROJECTS_RESTORE_FLAG_KEY);
+
+    const rawScrollPosition = window.sessionStorage.getItem(
+      PROJECTS_SCROLL_Y_KEY,
+    );
+    if (!rawScrollPosition) return null;
+
+    const scrollPosition = Number(rawScrollPosition);
+    if (!Number.isFinite(scrollPosition) || scrollPosition < 0) return null;
+
+    return scrollPosition;
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Records that the current project-page visit started from an internal link.
  * @param source - The in-app surface that opened the project detail page.
  */
 export function markInternalProjectNavigation(
   source: InternalProjectNavigationSource = "projects",
 ): void {
-  if (!hasSessionStorage()) {
-    return;
-  }
+  if (!hasSessionStorage()) return;
 
   try {
     window.sessionStorage.setItem(INTERNAL_PROJECT_NAVIGATION_KEY, source);
@@ -79,11 +103,17 @@ export function markInternalProjectNavigation(
   }
 }
 
+/**
+ * Registers or clears the projects ScrollArea viewport element.
+ * @param viewport - The current projects viewport element, or `null` to clear it.
+ */
+export function registerProjectsViewport(viewport: HTMLElement | null): void {
+  registeredProjectsViewport = viewport;
+}
+
 /** Records that the next home-page render should skip the landing intro animation. */
 export function requestHomeIntroSkip(): void {
-  if (!hasSessionStorage()) {
-    return;
-  }
+  if (!hasSessionStorage()) return;
 
   try {
     window.sessionStorage.setItem(SKIP_HOME_INTRO_KEY, "1");
@@ -96,8 +126,7 @@ export function requestHomeIntroSkip(): void {
  * Resolves the project-header back target from the current route and referrer.
  * @param pathname - The current route pathname for the project surface.
  * @param referrer - The browser referrer recorded for the current page visit.
- * @param internalProjectNavigationSource - Indicates which in-app surface opened
- * the current project visit, or `null` for direct/external visits.
+ * @param internalProjectNavigationSource - The in-app source that opened the visit, or `null`.
  * @returns The navigation action that should run when the user presses Back.
  */
 export function resolveProjectBackNavigation(
@@ -118,19 +147,35 @@ export function resolveProjectBackNavigation(
   };
 }
 
+/** Saves the current projects-panel scroll position for the next restore. */
+export function saveProjectsScrollPosition(): void {
+  if (!hasSessionStorage()) return;
+
+  const scrollPosition = registeredProjectsViewport
+    ? registeredProjectsViewport.scrollTop
+    : window.scrollY;
+
+  try {
+    window.sessionStorage.setItem(
+      PROJECTS_SCROLL_Y_KEY,
+      String(scrollPosition),
+    );
+    window.sessionStorage.setItem(PROJECTS_RESTORE_FLAG_KEY, "1");
+  } catch {
+    // Silently fail if storage is full or disabled.
+  }
+}
+
 /**
  * Returns true when the browser referrer belongs to the Librerss origin family.
  * @param referrer - The browser referrer string to inspect.
  * @returns `true` when the referrer belongs to a Librerss hostname.
  */
 function isLibrerssReferrer(referrer: string): boolean {
-  if (!referrer) {
-    return false;
-  }
+  if (!referrer) return false;
 
   try {
     const { hostname } = new URL(referrer);
-
     return LIBRERSS_HOSTNAME_PATTERN.test(hostname);
   } catch {
     return false;
@@ -145,14 +190,8 @@ function isLibrerssReferrer(referrer: string): boolean {
 function normalizeInternalProjectNavigationSource(
   value: null | string,
 ): InternalProjectNavigationSource | null {
-  if (value === "featured" || value === "projects") {
-    return value;
-  }
-
-  if (value === "1") {
-    return "projects";
-  }
-
+  if (value === "featured" || value === "projects") return value;
+  if (value === "1") return "projects";
   return null;
 }
 
@@ -162,22 +201,17 @@ function normalizeInternalProjectNavigationSource(
  * @returns A canonical pathname with empty or trailing-slash variants collapsed.
  */
 function normalizePathname(pathname: string): string {
-  if (!pathname) {
-    return "/";
-  }
-
+  if (!pathname) return "/";
   if (pathname.length > 1 && pathname.endsWith("/")) {
     return pathname.slice(0, -1);
   }
-
   return pathname;
 }
 
 /**
  * Maps in-app routes to the deterministic fallback target expected by the UI.
  * @param pathname - The current pathname for the project or projects surface.
- * @param internalProjectNavigationSource - The in-app source that opened the
- * project detail page, or `null` for direct/external visits.
+ * @param internalProjectNavigationSource - The in-app source that opened the project detail page.
  * @returns The deterministic back-navigation href expected by the UI.
  */
 function resolveDeterministicBackTarget(
@@ -191,9 +225,6 @@ function resolveDeterministicBackTarget(
       return { href: "/", skipHomeIntro: true };
     }
 
-    // Navigate directly to the home page projects section instead of going
-    // through /projects, which server-redirects to /#projects and can produce
-    // the double-hash URL /#projects#projects in the browser.
     return { href: "/#projects" };
   }
 
