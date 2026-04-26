@@ -5,12 +5,12 @@ import { join } from "node:path";
 import { cache } from "react";
 import "github-markdown-css/github-markdown-dark.css";
 
+import { Mdx, VirtualScrollArea } from "@/components";
 import {
   getProjectView,
   ProjectHeader,
   ProjectViewReporter,
 } from "@/features/projects";
-import { Mdx, VirtualScrollArea } from "@/ui";
 
 import "./mdx.css";
 
@@ -28,6 +28,10 @@ interface Props {
   }>;
 }
 
+/**
+ * Generates static params for every published project detail page.
+ * @returns The published project slugs used for static generation.
+ */
 export function generateStaticParams(): { slug: string }[] {
   return allProjects
     .filter((p) => p.published)
@@ -36,7 +40,14 @@ export function generateStaticParams(): { slug: string }[] {
     }));
 }
 
-export default async function ProjectPage({ params }: Props) {
+/**
+ * Renders a project detail page using either the mirrored README HTML or the MDX body.
+ * @param props - The async route params supplied by Next.js for the current slug.
+ * @returns The project detail page for the resolved slug.
+ */
+export default async function ProjectPage(props: Props) {
+  const { params } = props;
+
   const { slug } = await params;
   const project = publishedProjectsBySlug.get(slug);
 
@@ -69,7 +80,7 @@ export default async function ProjectPage({ params }: Props) {
             <section
               className="markdown-body mt-8 overflow-x-auto"
               /**
-               * SECURITY NOTE: This renders pre-generated HTML from public/readmes/*.html
+               * SECURITY NOTE: This renders pre-generated HTML from public/readmes/*.html.
                *
                * These files are generated at build time by scripts/download-project-readmes.ts
                * from GitHub README files. The HTML is sanitized by GitHub's markdown renderer.
@@ -83,9 +94,11 @@ export default async function ProjectPage({ params }: Props) {
               dangerouslySetInnerHTML={{ __html: readmeHtml }}
             />
           ) : (
-            <section className="
+            <section
+              className="
               prose prose-zinc prose-invert prose-quoteless mt-8 max-w-none
-            ">
+            "
+            >
               <Mdx code={project.body.code} />
             </section>
           )}
@@ -96,7 +109,11 @@ export default async function ProjectPage({ params }: Props) {
 
   return (
     <div className="h-screen overflow-hidden">
-      <VirtualScrollArea className="size-full" items={scrollItems} overscan={2} />
+      <VirtualScrollArea
+        className="size-full"
+        items={scrollItems}
+        overscan={2}
+      />
       <ProjectViewReporter slug={project.slug} />
     </div>
   );

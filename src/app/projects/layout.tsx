@@ -1,11 +1,18 @@
-import { ANIMATION } from "@/lib";
-import { ParticlesBackground } from "@/ui";
+import { ParticlesBackground } from "@/components";
+import { ANIMATION } from "@/shared";
 
-export default function ProjectsLayout({
-  children,
-}: {
+interface ProjectsLayoutProps {
   children: React.ReactNode;
-}) {
+}
+
+/**
+ * Wraps the projects routes with a shared particle background.
+ * @param props - The projects route subtree to render inside the layout.
+ * @returns The projects layout shell.
+ */
+export default function ProjectsLayout(props: ProjectsLayoutProps) {
+  const { children } = props;
+
   return (
     <div className="relative">
       <ParticlesBackground

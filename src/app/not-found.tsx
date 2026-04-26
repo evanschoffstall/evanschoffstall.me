@@ -1,8 +1,11 @@
 "use client";
 
-import { StatusPage } from "./status-page";
+import { StatusPage } from "@/app/status-page";
 
-/** 404 not-found boundary rendered by Next.js for unmatched routes. */
+/**
+ * 404 not-found boundary rendered by Next.js for unmatched routes.
+ * @returns The shared status page configured for missing routes.
+ */
 export default function NotFound() {
   return (
     <StatusPage

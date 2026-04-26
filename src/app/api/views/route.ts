@@ -1,5 +1,7 @@
+import type { NextRequest } from "next/server";
+
 import { allProjects } from "contentlayer/generated";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 import {
   extractSlugFromBody,
@@ -13,13 +15,20 @@ const PUBLISHED_SLUGS = new Set(
   allProjects.filter((p) => p.published).map((p) => p.slug),
 );
 
-/** Returns view counts for every published project. */
+/**
+ * Returns view counts for every published project.
+ * @returns A JSON response containing the current public view counts.
+ */
 export async function GET(): Promise<NextResponse> {
   const views = await getProjectViews(Array.from(PUBLISHED_SLUGS));
   return NextResponse.json({ views });
 }
 
-/** Increments the view count for a single project (fire-and-forget from client). */
+/**
+ * Increments the view count for a single project (fire-and-forget from client).
+ * @param req - The incoming request that carries the JSON project slug payload.
+ * @returns A response indicating whether the view update was accepted or rejected.
+ */
 export async function POST(req: NextRequest): Promise<NextResponse> {
   const contentType = req.headers.get("content-type") ?? "";
   if (!contentType.toLowerCase().startsWith("application/json")) {

@@ -1,16 +1,20 @@
 import { allProjects } from "contentlayer/generated";
 
+import { ParticlesBackground } from "@/components";
 import { HomeSections } from "@/features/home";
 import {
   getProjectViews,
   groupAndSortProjects,
   pickFeaturedProjects,
 } from "@/features/projects";
-import { ANIMATION } from "@/lib";
-import { ParticlesBackground } from "@/ui";
+import { ANIMATION } from "@/shared";
 
 export const revalidate = 60;
 
+/**
+ * Renders the home page with the particles background and the home/projects sections.
+ * @returns The home page content for the site's root route.
+ */
 export default async function Home() {
   const views = await getProjectViews(
     allProjects.map((project) => project.slug),
