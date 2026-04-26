@@ -1,6 +1,6 @@
 "use client";
 
-import { StatusPage } from "@/app/status-page";
+import { StatusPage } from "./error";
 
 /**
  * 404 not-found boundary rendered by Next.js for unmatched routes.

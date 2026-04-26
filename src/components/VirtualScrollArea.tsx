@@ -1,11 +1,22 @@
 "use client";
 
+import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import * as React from "react";
 
 import { cn } from "@/shared";
 
-import { ScrollArea } from "./ScrollArea";
+/** Base Radix ScrollArea props plus a viewport ref for virtualizer access. */
+type ScrollAreaProps = React.ComponentPropsWithoutRef<
+  typeof ScrollAreaPrimitive.Root
+> & {
+  viewportRef?: React.Ref<HTMLDivElement>;
+};
+
+/** Base Radix scrollbar props plus the axis used by the styled overlay thumb. */
+type ScrollBarProps = React.ComponentPropsWithoutRef<
+  typeof ScrollAreaPrimitive.ScrollAreaScrollbar
+> & { orientation?: "horizontal" | "vertical" };
 
 /** Variable-height item rendered inside the TanStack-backed scroll surface. */
 interface VirtualScrollAreaItem {
@@ -116,4 +127,67 @@ function assignRef<T>(ref: React.Ref<T> | undefined, value: T): void {
   }
 
   ref.current = value;
+}
+
+/**
+ * Fixed-height scroll container with a permanently visible styled scrollbar.
+ * @param props - ScrollArea props plus an optional forwarded viewport ref.
+ * @returns The styled Radix ScrollArea wrapper.
+ */
+function ScrollArea(props: ScrollAreaProps) {
+  const { children, className, viewportRef, ...rootProps } = props;
+
+  return (
+    <ScrollAreaPrimitive.Root
+      {...rootProps}
+      className={cn("relative overflow-hidden", className)}
+      type="always"
+    >
+      <ScrollAreaPrimitive.Viewport
+        className="size-full rounded-[inherit]"
+        ref={viewportRef}
+      >
+        {children}
+      </ScrollAreaPrimitive.Viewport>
+      <ScrollBar />
+      <ScrollAreaPrimitive.Corner />
+    </ScrollAreaPrimitive.Root>
+  );
+}
+
+/**
+ * Styled scrollbar thumb rendered as a thin overlay track.
+ * @param props - Scrollbar props and the preferred axis orientation.
+ * @returns The styled Radix scrollbar component.
+ */
+function ScrollBar(props: ScrollBarProps) {
+  const { className, orientation = "vertical", ...scrollbarProps } = props;
+
+  return (
+    <ScrollAreaPrimitive.Scrollbar
+      className={cn(
+        "flex touch-none select-none transition-colors",
+        orientation === "vertical" &&
+          `
+            h-full w-2 rounded-full border-l border-l-transparent bg-zinc-900/60
+            p-px
+          `,
+        orientation === "horizontal" &&
+          `
+            h-2 flex-col rounded-full border-t border-t-transparent
+            bg-zinc-900/60 p-px
+          `,
+        className,
+      )}
+      orientation={orientation}
+      {...scrollbarProps}
+    >
+      <ScrollAreaPrimitive.Thumb
+        className="
+        relative flex-1 rounded-full bg-zinc-600/70 transition-colors
+        hover:bg-zinc-500/80
+      "
+      />
+    </ScrollAreaPrimitive.Scrollbar>
+  );
 }

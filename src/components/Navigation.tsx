@@ -2,9 +2,16 @@
 
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 
 import { SocialIconLinks } from "@/components";
-import { useIsIntersecting } from "@/components/hooks";
+
+/** IntersectionObserver configuration forwarded to the tracked element watcher. */
+interface IntersectionOptions {
+  root?: Element | null;
+  rootMargin?: string;
+  threshold?: number | number[];
+}
 
 /**
  * Optional destination label and back action used by the shared top navigation bar.
@@ -73,4 +80,35 @@ export function Navigation(props: Props) {
       </div>
     </header>
   );
+}
+
+/**
+ * Tracks whether an observed element is intersecting the current viewport.
+ * @param options - Intersection observer options for the tracked element.
+ * @returns The observed ref and the current intersection state.
+ */
+function useIsIntersecting<T extends Element>(
+  options: IntersectionOptions = {},
+) {
+  const { root, rootMargin, threshold } = options;
+  const ref = useRef<null | T>(null);
+  const [isIntersecting, setIsIntersecting] = useState(true);
+
+  useEffect(() => {
+    if (!ref.current) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsIntersecting(entry.isIntersecting);
+      },
+      { root, rootMargin, threshold },
+    );
+
+    observer.observe(ref.current);
+    return () => {
+      observer.disconnect();
+    };
+  }, [root, rootMargin, threshold]);
+
+  return { isIntersecting, ref };
 }
