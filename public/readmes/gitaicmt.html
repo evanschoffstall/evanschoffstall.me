@@ -3,7 +3,7 @@
 <br>
 <h1 dir="auto">gitaicmt</h1>
 <a target="_blank" rel="noopener noreferrer" href="/projects/gitaicmt/logo.svg"><img src="/projects/gitaicmt/logo.svg" width="112" height="112" alt="gitaicmt logo" style="max-width: 100%; height: auto; max-height: 112px;"></a>
-<p dir="auto"><em>Run it. Done.</em></p>
+<p dir="auto"><em>High quality AI-Powered conventional commits</em></p>
 <p dir="auto">
   <a href="https://www.typescriptlang.org" rel="nofollow"><img src="https://camo.githubusercontent.com/b7fbd1ac133b18867505a43ca849fbf3fcf2042622067586e39e680fb585e564/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f547970655363726970742d352d3331373843363f7374796c653d666f722d7468652d6261646765266c6f676f3d74797065736372697074266c6f676f436f6c6f723d7768697465" alt="TypeScript 5" data-canonical-src="https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&amp;logo=typescript&amp;logoColor=white" style="max-width: 100%;"></a>
   <a href="https://bun.sh" rel="nofollow"><img src="https://camo.githubusercontent.com/e32cceedfa148dcbb2fc4d8a6c09a7ed213add295b295690b393ba9b02e8c77d/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f42756e2d72756e74696d652d4639463145313f7374796c653d666f722d7468652d6261646765266c6f676f3d62756e266c6f676f436f6c6f723d626c61636b" alt="Bun" data-canonical-src="https://img.shields.io/badge/Bun-runtime-F9F1E1?style=for-the-badge&amp;logo=bun&amp;logoColor=black" style="max-width: 100%;"></a>
@@ -11,9 +11,7 @@
   <a href="LICENSE"><img src="https://camo.githubusercontent.com/f77c46cfd34df0f2783a9d96cc43ac41093d5ede3f6ff47dac0b1cfc7bf3a2c7/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4c6963656e73652d4d49542d3232633535653f7374796c653d666f722d7468652d6261646765" alt="MIT License" data-canonical-src="https://img.shields.io/badge/License-MIT-22c55e?style=for-the-badge" style="max-width: 100%;"></a>
 </p>
 <p dir="auto">
-  High quality AI-powered git commit messages that actually make sense.<br>
-  Reads your staged diff, splits logical changes across files and hunks, previews the plan, then writes Conventional Commits automatically.<br>
-  If nothing is staged, it stages tracked changes for you first.
+  A tool that reads your git diff and turns it into impressive conventional commits across files and hunks alike.<br>
 </p>
 <p dir="auto">
   <a href="#quick-start"><strong>Quick Start</strong></a> ·
@@ -127,7 +125,7 @@
 </tr>
 <tr>
 <td>Default model</td>
-<td><code class="notranslate">gpt-4o-mini</code></td>
+<td><code class="notranslate">gpt-5.3-codex</code></td>
 </tr>
 </tbody>
 </table></markdown-accessiblity-table>
@@ -359,7 +357,7 @@ gitaicmt gen <span class="pl-k">|</span> git commit -F -</pre></div>
   <span class="pl-ent">"openai"</span>: {
     <span class="pl-ent">"apiKey"</span>: <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>,
     <span class="pl-ent">"maxTokens"</span>: <span class="pl-c1">512</span>,
-    <span class="pl-ent">"model"</span>: <span class="pl-s"><span class="pl-pds">"</span>gpt-4o-mini<span class="pl-pds">"</span></span>,
+    <span class="pl-ent">"model"</span>: <span class="pl-s"><span class="pl-pds">"</span>gpt-5.3-codex<span class="pl-pds">"</span></span>,
     <span class="pl-ent">"temperature"</span>: <span class="pl-c1">0.3</span>
   },
   <span class="pl-ent">"performance"</span>: {
@@ -381,10 +379,10 @@ gitaicmt gen <span class="pl-k">|</span> git commit -F -</pre></div>
 </div>
 <hr>
 <h2 dir="auto">Recommended Models</h2>
-<p dir="auto">The default model is <code class="notranslate">gpt-4o-mini</code>.</p>
+<p dir="auto">The default model is <code class="notranslate">gpt-5.3-codex</code>.</p>
 <p dir="auto">The codebase currently documents these as sensible text-generation choices for commit generation:</p>
 <ul dir="auto">
-<li><code class="notranslate">gpt-4o-mini</code></li>
+<li><code class="notranslate">gpt-5.3-codex</code></li>
 <li><code class="notranslate">gpt-4o</code></li>
 <li><code class="notranslate">gpt-4.1-mini</code></li>
 <li><code class="notranslate">gpt-4.1</code></li>
@@ -397,7 +395,7 @@ gitaicmt gen <span class="pl-k">|</span> git commit -F -</pre></div>
 </ul>
 <details>
   <summary><strong>How to think about model choice</strong></summary>
-  <p dir="auto"><code class="notranslate">gpt-4o-mini</code> is the default because it is a pragmatic latency and cost baseline. Move up only when your diffs are large or your project structure is complex enough to justify the extra reasoning budget.</p>
+  <p dir="auto"><code class="notranslate">gpt-5.3-codex</code> is the default because it is a pragmatic latency and cost baseline. Move up only when your diffs are large or your project structure is complex enough to justify the extra reasoning budget.</p>
 </details>
 <hr>
 <h2 dir="auto">Development</h2>

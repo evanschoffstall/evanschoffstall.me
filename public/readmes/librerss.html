@@ -87,7 +87,6 @@
 <li><code class="notranslate">DB_DRIVER</code>: <code class="notranslate">pg</code> for pooled TCP connections, or <code class="notranslate">neon</code> for fetch-backed Neon mode.</li>
 <li><code class="notranslate">ALLOW_SIGNUP</code>: set to <code class="notranslate">true</code> if you want public registration.</li>
 <li><code class="notranslate">LOG_LEVEL</code>: one of <code class="notranslate">none</code>, <code class="notranslate">error</code>, <code class="notranslate">warn</code>, <code class="notranslate">info</code>, or <code class="notranslate">verbose</code>.</li>
-<li><code class="notranslate">DEV_AUTO_LOGIN_EMAIL</code> and <code class="notranslate">DEV_AUTO_LOGIN_PASSWORD</code>: in development only, automatically sign into <code class="notranslate">/dashboard</code> with an existing account using the normal login flow.</li>
 </ul>
 <div class="markdown-alert markdown-alert-tip" dir="auto"><p class="markdown-alert-title" dir="auto"><svg class="octicon octicon-light-bulb mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"></path></svg>Tip</p><p dir="auto">Leave <code class="notranslate">ALLOW_SIGNUP=false</code> if you want a private or invite-only reader and create accounts with <code class="notranslate">bun run db:create-user</code> instead.</p>
 </div>
@@ -155,15 +154,17 @@
 </tr>
 </tbody>
 </table></markdown-accessiblity-table>
-<p dir="auto">For a faster local auth loop in development, you can also add this to <code class="notranslate">.env.local</code>:</p>
-<div class="highlight highlight-source-dotenv" dir="auto"><pre class="notranslate"><span class="pl-v">DEV_AUTO_LOGIN_EMAIL</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>you@example.com<span class="pl-pds">"</span></span>
-<span class="pl-v">DEV_AUTO_LOGIN_PASSWORD</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>your-existing-password<span class="pl-pds">"</span></span></pre></div>
-<p dir="auto">When both values are present and <code class="notranslate">NODE_ENV=development</code>, visiting <code class="notranslate">/</code> will route through <code class="notranslate">/dashboard</code> and auto-create a normal session cookie with those credentials.</p>
+<h3 dir="auto">Quality tooling</h3>
+<p dir="auto">The full quality suite includes a pinned Python-based complexity check powered by <code class="notranslate">lizard</code>.</p>
+<p dir="auto">Install the Python tooling once before running <code class="notranslate">bun check</code> commands that include the <code class="notranslate">lizard</code> step:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">python3 -m pip install -r requirements-dev.txt</pre></div>
 <h3 dir="auto">End-to-end testing</h3>
 <p dir="auto">The Playwright workflow is isolated by design. It starts a dedicated Next.js dev server on port <code class="notranslate">3100</code>, uses its own <code class="notranslate">.next-playwright</code> build directory, and cleans up afterward so your regular development session stays untouched.</p>
 <div class="markdown-alert markdown-alert-important" dir="auto"><p class="markdown-alert-title" dir="auto"><svg class="octicon octicon-report mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p><p dir="auto">This separation is intentional. It prevents Playwright runs from clobbering your normal development server or <code class="notranslate">.next</code> output.</p>
 </div>
-<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">bunx playwright install chromium
+<div class="markdown-alert markdown-alert-note" dir="auto"><p class="markdown-alert-title" dir="auto"><svg class="octicon octicon-info mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p><p dir="auto">Playwright is optional. LibreRSS does not install browsers or OS-level dependencies during <code class="notranslate">bun install</code>, so deployments and local setups stay environment-agnostic. If you want to try the Playwright suite, install the browser binaries explicitly on a machine that supports them.</p>
+</div>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">bun run setup:playwright
 bun run test:e2e</pre></div>
 <p dir="auto">Other useful variants:</p>
 <markdown-accessiblity-table><table role="table">

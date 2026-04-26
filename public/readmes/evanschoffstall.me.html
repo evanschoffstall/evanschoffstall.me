@@ -151,6 +151,10 @@
 <td>Start Contentlayer in watch mode</td>
 </tr>
 <tr>
+<td><code class="notranslate">bun run test:e2e</code></td>
+<td>Run Playwright browser tests against an isolated app</td>
+</tr>
+<tr>
 <td><code class="notranslate">bun run readmes:download</code></td>
 <td>Download and render GitHub READMEs into <code class="notranslate">public/readmes/</code></td>
 </tr>
@@ -164,8 +168,11 @@
 </tr>
 </tbody>
 </table></markdown-accessiblity-table>
-<p dir="auto">Tests live in <code class="notranslate">src/__tests__/</code> and use <code class="notranslate">bun:test</code>. Run them with:</p>
+<p dir="auto">Unit tests use <code class="notranslate">bun:test</code>. Run them with:</p>
 <div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">bun <span class="pl-c1">test</span></pre></div>
+<p dir="auto">Browser tests use Playwright and start a dedicated app on port <code class="notranslate">3100</code> with its<br>
+own <code class="notranslate">.next-playwright</code> output so your regular <code class="notranslate">.next</code> build stays untouched:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">bun run test:e2e</pre></div>
 <hr>
 <h2 dir="auto">Adding a Project</h2>
 <p dir="auto">Create a new MDX file in <code class="notranslate">content/projects/</code>:</p>
