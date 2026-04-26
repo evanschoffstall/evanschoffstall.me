@@ -54,13 +54,13 @@ test.describe("header navigation and social links", () => {
     await assertSocialLinks(page);
   });
 
-  test("project slug page shows header with Go back button and social links", async ({
+  test("project slug page shows header with project-list back button and social links", async ({
     page,
   }) => {
     await page.goto("/projects/librerss");
 
     await expect(
-      page.getByRole("button", { name: "Go back" }),
+      page.getByRole("button", { name: /back to project list/i }),
     ).toBeVisible();
 
     await assertSocialLinks(page);

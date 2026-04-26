@@ -1,18 +1,24 @@
 import { expect, test } from "./playwright";
 
+const HOME_INTRO_TIMEOUT_MS = 10_000;
+
 test.describe("home navigation", () => {
-  test("navigates from featured project card to the project page", async ({ page }) => {
+  test("navigates from featured project card to the project page", async ({
+    page,
+  }) => {
     await page.goto("/");
 
-    const readNotesLink = page.getByRole("link", { name: /read notes/i }).first();
-    await expect(readNotesLink).toBeVisible();
+    const readNotesLink = page
+      .getByRole("link", { name: /read notes/i })
+      .first();
+    await expect(readNotesLink).toBeVisible({ timeout: HOME_INTRO_TIMEOUT_MS });
     await readNotesLink.click();
 
     await expect(page).toHaveURL(/\/projects\/librerss$/);
-    await expect(page.getByRole("button", { name: "Go back" })).toBeVisible();
     await expect(
-      page.getByRole("heading", { name: "Librerss" }),
+      page.getByRole("button", { name: /back to project list/i }),
     ).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Librerss" })).toBeVisible();
   });
 
   test("closes the projects panel and clears the hash", async ({ page }) => {

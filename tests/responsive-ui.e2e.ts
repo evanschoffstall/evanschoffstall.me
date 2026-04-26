@@ -16,11 +16,15 @@ test.describe("responsive ui", () => {
     ).toBeVisible();
   });
 
-  test("keeps the project header actions usable on a mobile viewport", async ({ page }) => {
+  test("keeps the project header actions usable on a mobile viewport", async ({
+    page,
+  }) => {
     await page.setViewportSize({ height: 844, width: 390 });
     await page.goto("/projects/librerss");
 
-    await expect(page.getByRole("button", { name: "Go back" })).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: /back to project list/i }),
+    ).toBeVisible();
     await expect(page.getByRole("link", { name: /live site/i })).toBeVisible();
     await expect(page.getByRole("link", { name: /repository/i })).toBeVisible();
   });

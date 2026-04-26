@@ -64,24 +64,25 @@ test.describe("project page actions", () => {
       return viewport.scrollTop > 0;
     });
 
-    await page
-      .getByRole("heading", { name: "SpringGate E-Commerce" })
-      .click();
+    await page.getByRole("heading", { name: "SpringGate E-Commerce" }).click();
 
     await expect(page).toHaveURL(/\/projects\/springgate-ecommerce$/);
 
-    await page.getByRole("button", { name: "Go back" }).click();
+    await page.getByRole("button", { name: /back to project list/i }).click();
 
     await expect(page).toHaveURL(/\/#projects$/);
-    await expect.poll(async () =>
-      await page.evaluate(() => {
-        const viewport = document.querySelector(
-          "[data-radix-scroll-area-viewport]",
-        );
+    await expect
+      .poll(
+        async () =>
+          await page.evaluate(() => {
+            const viewport = document.querySelector(
+              "[data-radix-scroll-area-viewport]",
+            );
 
-        return viewport instanceof HTMLDivElement ? viewport.scrollTop : -1;
-      })
-    ).toBeGreaterThan(0);
+            return viewport instanceof HTMLDivElement ? viewport.scrollTop : -1;
+          }),
+      )
+      .toBeGreaterThan(0);
     await expect(
       page.getByRole("heading", { name: "SpringGate E-Commerce" }),
     ).toBeVisible();
@@ -130,13 +131,18 @@ test.describe("project page actions", () => {
     expect((await viewReportResponse).status()).toBe(202);
   });
 
-  test("routes project back navigation through projects before returning home", async ({ page }) => {
+  test("routes project back navigation through projects before returning home", async ({
+    page,
+  }) => {
     await page.goto("/");
 
-    await page.getByRole("link", { name: /read notes/i }).first().click();
+    await page
+      .getByRole("link", { name: /read notes/i })
+      .first()
+      .click();
     await expect(page).toHaveURL(/\/projects\/librerss$/);
 
-    await page.getByRole("button", { name: "Go back" }).click();
+    await page.getByRole("button", { name: /back to project list/i }).click();
 
     // Must land on /#projects exactly — not /#projects#projects.
     await expect(page).toHaveURL(/\/#projects$/);
@@ -171,13 +177,15 @@ test.describe("project page actions", () => {
   // Regression: back navigation from a project slug previously routed through
   // /projects, which server-redirects to /#projects. The Next.js router would
   // produce the double-hash URL /#projects#projects instead of /#projects.
-  test("back navigation from project slug never produces double-hash URL", async ({ page }) => {
+  test("back navigation from project slug never produces double-hash URL", async ({
+    page,
+  }) => {
     await page.goto("/#projects");
 
     await page.getByRole("heading", { name: "SpringGate E-Commerce" }).click();
     await expect(page).toHaveURL(/\/projects\/springgate-ecommerce$/);
 
-    await page.getByRole("button", { name: "Go back" }).click();
+    await page.getByRole("button", { name: /back to project list/i }).click();
 
     const url = page.url();
     expect(url).not.toContain("#projects#projects");
@@ -187,25 +195,32 @@ test.describe("project page actions", () => {
     ).toBeVisible();
   });
 
-  test("back navigation from project slug reached via featured-card link never produces double-hash URL", async ({ page }) => {
+  test("back navigation from project slug reached via featured-card link never produces double-hash URL", async ({
+    page,
+  }) => {
     await page.goto("/");
 
-    await page.getByRole("link", { name: /read notes/i }).first().click();
+    await page
+      .getByRole("link", { name: /read notes/i })
+      .first()
+      .click();
     await expect(page).toHaveURL(/\/projects\/librerss$/);
 
-    await page.getByRole("button", { name: "Go back" }).click();
+    await page.getByRole("button", { name: /back to project list/i }).click();
 
     const url = page.url();
     expect(url).not.toContain("#projects#projects");
     await expect(page).toHaveURL(/\/#projects$/);
   });
 
-  test("back navigation from directly-loaded project slug never produces double-hash URL", async ({ page }) => {
+  test("back navigation from directly-loaded project slug never produces double-hash URL", async ({
+    page,
+  }) => {
     // Direct load simulates an external link or page refresh — no session-storage
     // internal-navigation flag is set, so the deterministic path is used.
     await page.goto("/projects/librerss");
 
-    await page.getByRole("button", { name: "Go back" }).click();
+    await page.getByRole("button", { name: /back to project list/i }).click();
 
     const url = page.url();
     expect(url).not.toContain("#projects#projects");

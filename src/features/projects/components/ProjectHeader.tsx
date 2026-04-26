@@ -17,6 +17,7 @@ import { ProjectActionLinks } from "./ProjectActionLinks";
  * Back-navigation callback and current public view count shown in the fixed project header row.
  */
 interface HeaderNavigationProps {
+  links: ReturnType<typeof resolveProjectExternalLinks>;
   onBack: () => void;
   views: number;
 }
@@ -26,7 +27,6 @@ interface HeaderNavigationProps {
  */
 interface ProjectHeaderContentProps {
   hasReadme: boolean;
-  links: ReturnType<typeof resolveProjectExternalLinks>;
   project: ProjectHeaderProps["project"];
 }
 
@@ -79,12 +79,8 @@ export function ProjectHeader(props: ProjectHeaderProps) {
 
   return (
     <header className="relative isolate overflow-hidden">
-      <HeaderNavigation onBack={handleBack} views={views} />
-      <ProjectHeaderContent
-        hasReadme={hasReadme}
-        links={links}
-        project={project}
-      />
+      <HeaderNavigation links={links} onBack={handleBack} views={views} />
+      <ProjectHeaderContent hasReadme={hasReadme} project={project} />
     </header>
   );
 }
@@ -95,7 +91,7 @@ export function ProjectHeader(props: ProjectHeaderProps) {
  * @returns The fixed header navigation row.
  */
 function HeaderNavigation(props: HeaderNavigationProps) {
-  const { onBack, views } = props;
+  const { links, onBack, views } = props;
 
   return (
     <div
@@ -111,21 +107,42 @@ function HeaderNavigation(props: HeaderNavigationProps) {
       "
       >
         <button
-          aria-label="Go back"
+          aria-label="Back to project list"
           className="
-            text-zinc-400 duration-200
+            flex items-center gap-1.5 text-zinc-400 duration-200
             hover:text-zinc-100
           "
           onClick={onBack}
           type="button"
         >
-          <ArrowLeft className="size-6" />
+          <ArrowLeft className="size-5" />
+          <span className="text-sm font-medium">Back</span>
         </button>
 
-        <div className="flex items-center gap-1">
+        <div
+          className="
+          flex min-w-0 flex-1 items-center justify-end gap-1
+        "
+        >
+          <ProjectActionLinks
+            className="
+              flex min-w-0 flex-nowrap items-center justify-end gap-1
+            "
+            linkClassName="
+              inline-flex h-6 items-center justify-center gap-1 rounded-full
+              border border-zinc-800 bg-zinc-900/40 px-2.5 text-[11px]
+              font-medium text-zinc-500 transition-all duration-200
+              hover:border-zinc-600 hover:bg-zinc-800 hover:text-zinc-200
+              sm:h-7 sm:px-3 sm:text-xs
+            "
+            links={links}
+          />
           <span
             className="
-            mr-1 flex items-center gap-1 text-xs tabular-nums text-zinc-600
+            inline-flex h-6 shrink-0 items-center justify-center gap-1
+            rounded-full border border-zinc-800 bg-zinc-900/40 px-2
+            text-[11px] font-medium tabular-nums text-zinc-500
+            sm:h-7 sm:px-2.5 sm:text-xs
           "
           >
             <Eye className="size-3" /> {formatCompactNumber(views)}
@@ -143,45 +160,29 @@ function HeaderNavigation(props: HeaderNavigationProps) {
  * @returns The centered project header content block.
  */
 function ProjectHeaderContent(props: ProjectHeaderContentProps) {
-  const { hasReadme, links, project } = props;
+  const { hasReadme, project } = props;
+
+  if (hasReadme) {
+    return <div className="pt-14" />;
+  }
 
   return (
-    <div
-      className={`
-        container relative isolate mx-auto overflow-hidden
-        ${
-          hasReadme
-            ? `pb-6 pt-20`
-            : `
-          py-16
-          sm:py-20
-        `
-        }
-      `}
-    >
+    <div className="container relative isolate mx-auto overflow-hidden py-16 sm:py-20">
       <div
         className="
         mx-auto flex max-w-2xl flex-col items-center gap-6 px-6 text-center
         lg:px-8
       "
       >
-        {!hasReadme ? (
-          <>
-            <h1
-              className="
+        <h1
+          className="
               font-display text-4xl font-bold tracking-tight text-white
               sm:text-6xl
             "
-            >
-              {project.title}
-            </h1>
-            <p className="text-lg leading-8 text-zinc-400">
-              {project.description}
-            </p>
-          </>
-        ) : null}
-
-        <ProjectActionLinks links={links} />
+        >
+          {project.title}
+        </h1>
+        <p className="text-lg leading-8 text-zinc-400">{project.description}</p>
       </div>
     </div>
   );
