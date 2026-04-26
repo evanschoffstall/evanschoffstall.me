@@ -20,7 +20,7 @@ import { globalIgnores } from "eslint/config";
 import globals from "globals";
 import { readFileSync } from "node:fs";
 
-const sourceFiles = ["src/**/*.{ts,tsx}"];
+const sourceFiles = ["src/**"];
 const testFiles = ["tests/**"];
 const scriptFiles = ["scripts/**"];
 const rootConfigFiles = [
@@ -45,8 +45,32 @@ const nonSourceProjectFiles = [
   ...scriptFiles,
   ...rootConfigFiles,
 ];
+const barrelImportFiles = [
+  "src/app/**/*.ts",
+  "src/app/**/*.tsx",
+  "src/components/**/*.ts",
+  "src/components/**/*.tsx",
+];
 const projectFiles = [...sourceFiles, ...nonSourceProjectFiles];
-const apiAndLibraryFiles = ["src/shared/**", "src/app/api/**"];
+const apiAndLibraryFiles = ["src/lib/**", "src/app/api/**"];
+const barrelOnlyImportPatterns = [
+  {
+    group: ["./lib/server/*"],
+    message: 'Use the public "@/lib/server" barrel instead.',
+  },
+  {
+    group: ["@/lib/core/types"],
+    message: 'Use the public "@/lib" barrel instead.',
+  },
+  {
+    group: ["@/lib/hooks/*"],
+    message: 'Use the public "@/lib" barrel instead.',
+  },
+  {
+    group: ["@/lib/server/*"],
+    message: 'Use the public "@/lib/server" barrel instead.',
+  },
+];
 const typeScriptFlatConfigs = pluginTypeScriptEslintRaw.flatConfigs;
 const typeCheckedParserOptions = {
   projectService: true,
@@ -170,9 +194,15 @@ const strictDocumentationRules = {
       checkSetters: true,
       contexts: [
         "ArrowFunctionExpression",
+        "ClassDeclaration",
+        "ClassExpression",
         "FunctionDeclaration",
         "FunctionExpression",
         "MethodDefinition",
+        "PropertyDefinition",
+        "TSEnumDeclaration",
+        "TSInterfaceDeclaration",
+        "TSTypeAliasDeclaration",
       ],
       exemptEmptyConstructors: false,
       exemptEmptyFunctions: false,
@@ -330,6 +360,17 @@ export default [
     },
   },
   {
+    files: barrelImportFiles,
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: barrelOnlyImportPatterns,
+        },
+      ],
+    },
+  },
+  {
     files: sourceFiles,
     rules: sourceTypeScriptRules,
   },
@@ -381,6 +422,12 @@ export default [
           allow: ["info", "warn", "error"],
         },
       ],
+    },
+  },
+  {
+    files: ["src/lib/logger.ts"],
+    rules: {
+      "no-console": "off",
     },
   },
   {
