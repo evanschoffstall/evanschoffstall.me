@@ -1005,6 +1005,7 @@ function startPlaywrightDevServer(
       cwd: process.cwd(),
       env: {
         ...process.env,
+        NEXT_PUBLIC_PLAYWRIGHT_SKIP_ANIMATIONS: "1",
         NEXT_TYPESCRIPT_CONFIG_PATH: tsconfigPath,
         ...(PLAYWRIGHT_COVERAGE_ENABLED
           ? {
