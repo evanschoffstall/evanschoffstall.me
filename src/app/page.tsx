@@ -1,11 +1,11 @@
 import { allProjects } from "contentlayer/generated";
 
-import { HomeSections } from "@/features/home";
+import { HomeSections } from "@/features/home/components";
 import {
   getProjectViews,
   groupAndSortProjects,
   pickFeaturedProjects,
-} from "@/features/projects";
+} from "@/features/projects/model";
 
 export const revalidate = 60;
 

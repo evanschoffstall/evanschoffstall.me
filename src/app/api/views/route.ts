@@ -7,7 +7,7 @@ import {
   extractSlugFromBody,
   getProjectViews,
   incrementProjectView,
-} from "@/features/projects";
+} from "@/features/projects/model";
 
 export const runtime = "edge";
 

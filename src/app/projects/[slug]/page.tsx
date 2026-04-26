@@ -7,10 +7,10 @@ import "github-markdown-css/github-markdown-dark.css";
 
 import { Mdx, VirtualScrollArea } from "@/components";
 import {
-  getProjectView,
   ProjectHeader,
   ProjectViewReporter,
-} from "@/features/projects";
+} from "@/features/projects/components";
+import { getProjectView } from "@/features/projects/model";
 
 import "./mdx.css";
 
