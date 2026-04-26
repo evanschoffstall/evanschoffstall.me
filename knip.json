@@ -2,20 +2,21 @@
   "$schema": "https://unpkg.com/knip@latest/schema.json",
   "entry": [
     "src/app/index.ts",
+    "src/features/index.ts",
     "src/app/projects/index.ts",
     "src/features/home/index.ts",
     "src/features/projects/index.ts",
-    "src/ui/index.ts",
-    "src/ui/hooks/index.ts",
-    "src/**/*.test.ts",
+    "src/components/index.ts",
+    "src/components/hooks/index.ts",
+    "src/components/mdx/index.ts",
+    "tests/**/*.test.ts",
+    "tests/**/*.e2e.ts",
     "scripts/cicd.ts",
     "contentlayer.config.js",
     "check-suite.config.ts",
     "next-env.test-d.ts"
   ],
-  "ignoreDependencies": [
-    "@secretlint/secretlint-rule-preset-recommend"
-  ],
+  "ignoreDependencies": ["@secretlint/secretlint-rule-preset-recommend"],
   "project": [
     "src/**/*.{ts,tsx}",
     "scripts/**/*.{ts,tsx,js,cjs,mjs}",

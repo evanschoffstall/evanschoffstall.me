@@ -4,6 +4,7 @@ import pluginTypeScriptEslintRaw from "@typescript-eslint/eslint-plugin/use-at-y
 import pluginBetterTailwindcss from "eslint-plugin-better-tailwindcss";
 import pluginEslintComments from "eslint-plugin-eslint-comments";
 import pluginImport from "eslint-plugin-import";
+import pluginJsdoc from "eslint-plugin-jsdoc";
 import pluginNoOnlyTests from "eslint-plugin-no-only-tests";
 import perfectionist from "eslint-plugin-perfectionist";
 import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
@@ -12,73 +13,43 @@ import pluginReactHooks from "eslint-plugin-react-hooks";
 import pluginRegexp from "eslint-plugin-regexp";
 import pluginSecurity from "eslint-plugin-security";
 import pluginSonarjs from "eslint-plugin-sonarjs";
+import pluginTsdoc from "eslint-plugin-tsdoc";
 import pluginUnicorn from "eslint-plugin-unicorn";
 import pluginUnusedImports from "eslint-plugin-unused-imports";
 import { globalIgnores } from "eslint/config";
 import globals from "globals";
 import { readFileSync } from "node:fs";
 
-const sourceFiles = ["src/**/*.{js,jsx,ts,tsx}"];
-const typeScriptFiles = [
-  "check-suite.config.ts",
-  "playwright.config.ts",
-  "src/**/*.ts",
-  "src/**/*.tsx",
-];
-const typeCheckedFiles = ["scripts/**/*.ts", "src/**/*.ts", "src/**/*.tsx"];
-const testFiles = [
-  "tests/**",
-  "src/**/*.test.ts",
-  "src/**/*.test.tsx",
-  "src/**/*.spec.ts",
-  "src/**/*.spec.tsx",
-];
-const scriptFiles = ["scripts/**/*.{js,cjs,mjs,ts,tsx}"];
+const sourceFiles = ["src/**/*.{ts,tsx}"];
+const testFiles = ["tests/**"];
+const scriptFiles = ["scripts/**"];
 const rootConfigFiles = [
-  "contentlayer.config.js",
+  "check-suite.config.ts",
+  "drizzle.config.ts",
   "eslint.config.mjs",
-  "next.config.mjs",
-  "postcss.config.js",
-  "tailwind.config.mjs",
+  "next.config.ts",
+  "playwright.config.ts",
+  "tailwind.config.ts",
+];
+const documentationFiles = [
+  "src/**/*.{ts,tsx}",
+  "scripts/**/*.ts",
+  "check-suite.config.ts",
+  "drizzle.config.ts",
+  "next.config.ts",
+  "playwright.config.ts",
+  "tailwind.config.ts",
 ];
 const nonSourceProjectFiles = [
   ...testFiles,
   ...scriptFiles,
   ...rootConfigFiles,
 ];
-const barrelImportFiles = [
-  "src/app/**/*.ts",
-  "src/app/**/*.tsx",
-  "src/features/**/*.ts",
-  "src/features/**/*.tsx",
-];
-const projectFiles = [
-  ...sourceFiles,
-  ...typeScriptFiles,
-  ...nonSourceProjectFiles,
-];
-const apiAndLibraryFiles = ["src/lib/**", "src/app/api/**"];
-const barrelOnlyImportPatterns = [
-  {
-    group: ["./lib/server/*"],
-    message: 'Use the public "@/lib/server" barrel instead.',
-  },
-  {
-    group: ["@/lib/core/types"],
-    message: 'Use the public "@/lib" barrel instead.',
-  },
-  {
-    group: ["@/lib/hooks/*"],
-    message: 'Use the public "@/lib" barrel instead.',
-  },
-  {
-    group: ["@/lib/server/*"],
-    message: 'Use the public "@/lib/server" barrel instead.',
-  },
-];
+const projectFiles = [...sourceFiles, ...nonSourceProjectFiles];
+const apiAndLibraryFiles = ["src/shared/**", "src/app/api/**"];
 const typeScriptFlatConfigs = pluginTypeScriptEslintRaw.flatConfigs;
 const typeCheckedParserOptions = {
-  project: `${import.meta.dirname}/tsconfig.eslint.json`,
+  projectService: true,
   tsconfigRootDir: import.meta.dirname,
 };
 const banTypeScriptCommentRule = [
@@ -93,7 +64,7 @@ const banTypeScriptCommentRule = [
 ];
 const sourceTailwindSettings = {
   "better-tailwindcss": {
-    entryPoint: `${import.meta.dirname}/src/app/globals.css`,
+    tailwindConfig: `${import.meta.dirname}/tailwind.config.mjs`,
     tsconfig: `${import.meta.dirname}/tsconfig.json`,
   },
 };
@@ -101,16 +72,25 @@ const sourceTailwindRules = {
   "better-tailwindcss/enforce-canonical-classes": "error",
   "better-tailwindcss/enforce-consistent-class-order": "error",
   "better-tailwindcss/enforce-consistent-important-position": "error",
-  "better-tailwindcss/enforce-consistent-line-wrapping": "error",
+  "better-tailwindcss/enforce-consistent-line-wrapping": "off",
   "better-tailwindcss/enforce-consistent-variable-syntax": "error",
   "better-tailwindcss/enforce-shorthand-classes": "error",
   "better-tailwindcss/no-conflicting-classes": "error",
   "better-tailwindcss/no-deprecated-classes": "error",
   "better-tailwindcss/no-duplicate-classes": "error",
   "better-tailwindcss/no-restricted-classes": "error",
-  "better-tailwindcss/no-unnecessary-whitespace": "error",
+  "better-tailwindcss/no-unnecessary-whitespace": "off",
 };
 const sourceTypeScriptRules = {
+  "@typescript-eslint/consistent-type-exports": "error",
+  "@typescript-eslint/consistent-type-imports": [
+    "error",
+    {
+      disallowTypeAnnotations: false,
+      fixStyle: "separate-type-imports",
+      prefer: "type-imports",
+    },
+  ],
   "@typescript-eslint/no-base-to-string": "error",
   "@typescript-eslint/no-confusing-void-expression": "error",
   "@typescript-eslint/no-deprecated": "error",
@@ -139,6 +119,7 @@ const sourceTypeScriptRules = {
       allowRegExp: false,
     },
   ],
+  "@typescript-eslint/switch-exhaustiveness-check": "error",
   "@typescript-eslint/unbound-method": "error",
 };
 const restrictedTypeScriptRules = {
@@ -165,6 +146,58 @@ const testTypeScriptRelaxedRules = {
   "@typescript-eslint/no-unused-vars": "off",
   "no-console": "off",
 };
+const strictDocumentationRules = {
+  "jsdoc/check-tag-names": [
+    "error",
+    {
+      typed: true,
+    },
+  ],
+  "jsdoc/no-bad-blocks": "error",
+  "jsdoc/no-blank-block-descriptions": "error",
+  "jsdoc/no-blank-blocks": "error",
+  "jsdoc/no-defaults": "error",
+  "jsdoc/no-types": "error",
+  "jsdoc/require-description": "error",
+  "jsdoc/require-description-complete-sentence": "error",
+  "jsdoc/require-hyphen-before-param-description": ["error", "always"],
+  "jsdoc/require-jsdoc": [
+    "error",
+    {
+      checkAllFunctionExpressions: true,
+      checkConstructors: true,
+      checkGetters: true,
+      checkSetters: true,
+      contexts: [
+        "ArrowFunctionExpression",
+        "FunctionDeclaration",
+        "FunctionExpression",
+        "MethodDefinition",
+      ],
+      exemptEmptyConstructors: false,
+      exemptEmptyFunctions: false,
+      require: {
+        ArrowFunctionExpression: true,
+        FunctionDeclaration: true,
+        FunctionExpression: true,
+        MethodDefinition: true,
+      },
+    },
+  ],
+  "jsdoc/require-param": "error",
+  "jsdoc/require-param-description": "error",
+  "jsdoc/require-param-name": "error",
+  "jsdoc/require-returns": "error",
+  "jsdoc/require-returns-check": "error",
+  "jsdoc/require-returns-description": "error",
+  "tsdoc/syntax": "error",
+};
+
+const sourceReadabilityRules = {
+  "max-statements": ["error", 30],
+  "no-else-return": ["error", { allowElseIf: false }],
+  "sonarjs/cognitive-complexity": ["error", 15],
+};
 
 function normalizeIgnorePattern(pattern) {
   const trimmedPattern = pattern.startsWith("/") ? pattern.slice(1) : pattern;
@@ -178,20 +211,15 @@ const gitignorePatterns = readFileSync(
   .split(/\r?\n/u)
   .map((line) => normalizeIgnorePattern(line.trim()))
   .filter((line) => line.length > 0 && !line.startsWith("#"));
-const globalIgnorePatterns = [
-  ...gitignorePatterns,
-  "contentlayer.generated.d.ts",
-];
+const globalIgnorePatterns = [...gitignorePatterns, "src/components/ui/**"];
 
 /**
  * Scope flat ESLint config entries to a file set with optional language options.
  */
-function scopeConfigs(configs, options) {
-  const { files, ignores, languageOptions } = options;
+function scopeConfigs(configs, files, languageOptions) {
   return configs.map((config) => ({
     ...config,
     files,
-    ...(ignores ? { ignores } : {}),
     ...(languageOptions
       ? {
           languageOptions: {
@@ -217,7 +245,6 @@ export default [
   globalIgnores(globalIgnorePatterns, "Repo global ignores"),
   { files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"] },
   {
-    files: projectFiles,
     languageOptions: {
       globals: {
         ...globals.browser,
@@ -225,46 +252,37 @@ export default [
       },
     },
   },
-  {
-    ...pluginJs.configs.recommended,
-    files: projectFiles,
-  },
-  {
-    files: typeCheckedFiles,
-    ignores: testFiles,
-    languageOptions: {
+  pluginJs.configs.recommended,
+  ...scopeConfigs(typeScriptFlatConfigs["flat/strict"], projectFiles),
+  ...scopeConfigs(typeScriptFlatConfigs["flat/stylistic"], projectFiles),
+  ...scopeConfigs(
+    typeScriptFlatConfigs["flat/strict-type-checked"],
+    sourceFiles,
+    {
       parserOptions: typeCheckedParserOptions,
     },
-  },
-  ...scopeConfigs(typeScriptFlatConfigs["flat/strict"], {
-    files: typeScriptFiles,
-  }),
-  ...scopeConfigs(typeScriptFlatConfigs["flat/stylistic"], {
-    files: typeScriptFiles,
-  }),
-  ...scopeConfigs(typeScriptFlatConfigs["flat/strict-type-checked"], {
-    files: typeCheckedFiles,
-    ignores: testFiles,
-    parserOptions: typeCheckedParserOptions,
-  }),
-  ...scopeConfigs(typeScriptFlatConfigs["flat/stylistic-type-checked"], {
-    files: typeCheckedFiles,
-    ignores: testFiles,
-    parserOptions: typeCheckedParserOptions,
-  }),
+  ),
+  ...scopeConfigs(
+    typeScriptFlatConfigs["flat/stylistic-type-checked"],
+    sourceFiles,
+    {
+      parserOptions: typeCheckedParserOptions,
+    },
+  ),
   {
-    files: projectFiles,
     plugins: {
       "@typescript-eslint": pluginTypeScriptEslint,
       "better-tailwindcss": pluginBetterTailwindcss,
       "eslint-comments": pluginEslintComments,
       import: pluginImport,
+      jsdoc: pluginJsdoc,
       "no-only-tests": pluginNoOnlyTests,
       promise: pluginPromise,
       "react-hooks": pluginReactHooks,
       regexp: pluginRegexp,
       security: pluginSecurity,
       sonarjs: pluginSonarjs,
+      tsdoc: pluginTsdoc,
       unicorn: pluginUnicorn,
       "unused-imports": pluginUnusedImports,
     },
@@ -290,29 +308,50 @@ export default [
     },
   },
   {
-    files: ["src/**/*.{tsx,jsx}"],
+    files: sourceFiles,
     rules: sourceTailwindRules,
     settings: sourceTailwindSettings,
   },
   {
-    files: typeCheckedFiles,
-    ignores: testFiles,
+    files: sourceFiles,
     rules: sourceTypeScriptRules,
   },
   {
-    files: barrelImportFiles,
-    rules: {
-      "no-restricted-imports": [
-        "error",
-        {
-          patterns: barrelOnlyImportPatterns,
-        },
-      ],
+    files: apiAndLibraryFiles,
+    rules: sourceReadabilityRules,
+  },
+  {
+    files: documentationFiles,
+    rules: strictDocumentationRules,
+    settings: {
+      jsdoc: {
+        mode: "typescript",
+      },
     },
+  },
+  {
+    files: sourceFiles,
+    rules: sourceTypeScriptRules,
   },
   {
     ...perfectionist.configs["recommended-natural"],
     files: projectFiles,
+  },
+  {
+    files: projectFiles,
+    rules: {
+      "unicorn/filename-case": [
+        "error",
+        {
+          cases: {
+            camelCase: true,
+            kebabCase: true,
+            pascalCase: true,
+          },
+          ignore: ["^\\[.*\\]$"],
+        },
+      ],
+    },
   },
   {
     files: nonSourceProjectFiles,
@@ -321,7 +360,6 @@ export default [
     },
   },
   {
-    files: projectFiles,
     rules: sharedTypeScriptRules,
   },
   {
@@ -346,20 +384,8 @@ export default [
     },
   },
   {
-    files: ["src/lib/logger.ts"],
-    rules: {
-      "no-console": "off",
-    },
-  },
-  {
     files: testFiles,
     rules: testTypeScriptRelaxedRules,
-  },
-  {
-    files: ["**/*.d.ts"],
-    rules: {
-      "no-undef": "off",
-    },
   },
   // Keep this last so eslint-config-prettier disables conflicting formatting
   // rules from earlier configs.

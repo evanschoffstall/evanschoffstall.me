@@ -16,7 +16,12 @@ const playwrightServerCommand = isCoverageRun
     ? "bun run dev:playwright"
     : "bun run build:playwright && bun run start:playwright";
 
-/** Builds the canonical Playwright base URL from validated host and port inputs. */
+/**
+ * Builds the canonical Playwright base URL from validated host and port inputs.
+ * @param host - The hostname that Playwright should target.
+ * @param port - The TCP port that hosts the Playwright app server.
+ * @returns The normalized base URL for Playwright requests.
+ */
 function buildPlaywrightBaseUrl(host: string, port: number) {
   const normalizedHost = host.trim();
 
@@ -33,7 +38,10 @@ function buildPlaywrightBaseUrl(host: string, port: number) {
   return `http://${normalizedHost}:${port}`;
 }
 
-/** Resolves Playwright base URL from wrapper env first, then host and port defaults. */
+/**
+ * Resolves Playwright base URL from wrapper env first, then host and port defaults.
+ * @returns The normalized base URL used by the Playwright test runner.
+ */
 function resolvePlaywrightBaseUrl() {
   const configuredBaseUrl = process.env.PLAYWRIGHT_BASE_URL?.trim();
 
