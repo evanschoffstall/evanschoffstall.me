@@ -7,6 +7,9 @@ import { createServer } from "node:net";
 import { join, relative } from "node:path";
 
 if (typeof globalThis.gc !== "function") {
+  /**
+   * Provides a no-op garbage-collection hook when Node was not started with gc exposed.
+   */
   globalThis.gc = async () => {};
 }
 
@@ -36,8 +39,7 @@ const PLAYWRIGHT_SHUTDOWN_TIMEOUT_MS = Number.parseInt(
 );
 const PLAYWRIGHT_DIST_DIR_PREFIX = ".next-playwright";
 const PLAYWRIGHT_LOG_LINE_LIMIT = 120;
-const PLAYWRIGHT_READINESS_PATH =
-  process.env.PLAYWRIGHT_READINESS_PATH ?? "/";
+const PLAYWRIGHT_READINESS_PATH = process.env.PLAYWRIGHT_READINESS_PATH ?? "/";
 const PLAYWRIGHT_TSCONFIG_PREFIX = "tsconfig.playwright";
 const PROJECT_SOURCE_DIRECTORY_PATH = `${process.cwd().replaceAll("\\", "/")}/src/`;
 const SUMMARY_METRIC_KEYS = [
@@ -67,6 +69,10 @@ interface CoverageMetric {
   total: number;
 }
 type CoverageMetricKey = (typeof SUMMARY_METRIC_KEYS)[number];
+interface CoverageSourceInfo {
+  distFile?: string;
+}
+
 type CoverageSummary = Record<string, unknown>;
 type CoverageSummaryEntry = Partial<Record<CoverageMetricKey, CoverageMetric>>;
 
@@ -97,7 +103,11 @@ interface V8CoverageEntry {
   url: string;
 }
 
-/** Ensures the generated summary still points at repository source files under src/. */
+/**
+ * Ensures the generated summary still points at repository source files under src/.
+ * @param reportDirectoryPath - The coverage report directory that contains the summary output.
+ * @param projectSourceFilePathSet - The normalized repository source file paths that should appear in coverage.
+ */
 async function assertSourceMappedCoverage(
   reportDirectoryPath: string,
   projectSourceFilePathSet: ReadonlySet<string>,
@@ -121,7 +131,12 @@ async function assertSourceMappedCoverage(
   );
 }
 
-/** Builds the canonical Playwright base URL from validated host and port inputs. */
+/**
+ * Builds the canonical Playwright base URL from validated host and port inputs.
+ * @param host - The hostname that Playwright should target.
+ * @param port - The TCP port that hosts the Playwright app server.
+ * @returns The normalized base URL for Playwright requests.
+ */
 function buildPlaywrightBaseUrl(host: string, port: number) {
   const normalizedHost = host.trim();
 
@@ -138,16 +153,22 @@ function buildPlaywrightBaseUrl(host: string, port: number) {
   return `http://${normalizedHost}:${port}`;
 }
 
-/** Tracks recent child-process output while forwarding it to the parent streams. */
+/**
+ * Tracks recent child-process output while forwarding it to the parent streams.
+ * @param child - The child process whose stdout and stderr should be mirrored.
+ * @returns Helpers for reading buffered output and starting live forwarding.
+ */
 function createOutputMirror(child: ChildProcess) {
   const bufferedChunks: { stream: NodeJS.WriteStream; text: string }[] = [];
   const recentLines: string[] = [];
   let isForwarding = false;
 
-  const appendChunk = (
-    stream: NodeJS.WriteStream,
-    chunk: Buffer | string,
-  ) => {
+  /**
+   * Buffers child-process output until the caller starts forwarding it.
+   * @param stream - The parent stream that should eventually receive the output.
+   * @param chunk - The output chunk emitted by the child process.
+   */
+  const appendChunk = (stream: NodeJS.WriteStream, chunk: Buffer | string) => {
     const text = chunk.toString();
 
     if (isForwarding) {
@@ -175,8 +196,15 @@ function createOutputMirror(child: ChildProcess) {
     appendChunk(process.stderr, chunk);
   });
 
+  /**
+   * Returns the recent child-process output as newline-delimited text.
+   * @returns The most recent buffered output lines.
+   */
   const getRecentOutput = () => recentLines.join("\n");
 
+  /**
+   * Flushes buffered output and starts forwarding future child-process output.
+   */
   const startForwarding = () => {
     if (isForwarding) {
       return;
@@ -197,12 +225,19 @@ function createOutputMirror(child: ChildProcess) {
   };
 }
 
-/** Creates a filesystem-safe run identifier for per-run Playwright artifacts. */
+/**
+ * Creates a filesystem-safe run identifier for per-run Playwright artifacts.
+ * @returns The unique run identifier for the current Playwright execution.
+ */
 function createPlaywrightRunId() {
   return `${Date.now()}-${process.pid}`;
 }
 
-/** Creates a disposable root tsconfig so Next never mutates the repo file. */
+/**
+ * Creates a disposable root tsconfig so Next never mutates the repo file.
+ * @param runId - The unique identifier for the current Playwright run.
+ * @returns The temporary tsconfig path created for the run.
+ */
 async function createPlaywrightTsconfig(runId: string) {
   const tsconfigPath = `${PLAYWRIGHT_TSCONFIG_PREFIX}.${runId}.json`;
 
@@ -215,7 +250,12 @@ async function createPlaywrightTsconfig(runId: string) {
   return tsconfigPath;
 }
 
-/** Formats a startup failure with recent server output for fast diagnosis. */
+/**
+ * Formats a startup failure with recent server output for fast diagnosis.
+ * @param message - The primary startup failure message.
+ * @param recentOutput - The recent server output captured before the failure.
+ * @returns The enriched startup error.
+ */
 function createStartupError(message: string, recentOutput: string) {
   return new Error(
     recentOutput
@@ -224,10 +264,12 @@ function createStartupError(message: string, recentOutput: string) {
   );
 }
 
-/** Generates the aggregated Playwright coverage reports after a coverage run. */
-async function generatePlaywrightCoverageReport(
-  rawCoverageOutputDir: string,
-) {
+/**
+ * Generates the aggregated Playwright coverage reports after a coverage run.
+ * @param rawCoverageOutputDir - The directory that stores raw V8 coverage output for the run.
+ * @returns The process exit code for coverage generation.
+ */
+async function generatePlaywrightCoverageReport(rawCoverageOutputDir: string) {
   try {
     await access(join(process.cwd(), rawCoverageOutputDir));
   } catch {
@@ -270,10 +312,21 @@ async function generatePlaywrightCoverageReport(
         ["json-summary", { file: "summary.json" }],
         ["lcovonly", { file: "lcov.info" }],
       ],
+      /**
+       * Filters coverage rows down to tracked repository source files.
+       * @param sourcePath - The source path emitted by the coverage report.
+       * @returns Whether the source path belongs to a tracked repository file.
+       */
       sourceFilter: (sourcePath: string) =>
         isTrackedProjectSourceFile(sourcePath, projectSourceFilePathSet),
-      sourcePath: (sourcePath: string, info: { distFile?: string }) =>
-        normalizeCoveragePath(sourcePath, info.distFile),
+      /**
+       * Rewrites coverage source paths back to stable repository-relative paths.
+       * @param sourcePath - The source path emitted by the coverage report.
+       * @param sourceInfo - Additional coverage metadata supplied by Monocart.
+       * @returns The normalized repository-relative coverage path.
+       */
+      sourcePath: (sourcePath: string, sourceInfo: CoverageSourceInfo) =>
+        normalizeCoveragePath(sourcePath, sourceInfo.distFile),
     });
 
     for (const rawCoverageFilePath of rawCoverageFilePaths) {
@@ -286,10 +339,15 @@ async function generatePlaywrightCoverageReport(
     const coverageResults = await coverageReport.generate();
 
     if (!coverageResults) {
-      throw new Error("Playwright coverage generation did not produce results.");
+      throw new Error(
+        "Playwright coverage generation did not produce results.",
+      );
     }
 
-    await rewriteCoverageArtifacts(reportDirectoryPath, projectSourceFilePathSet);
+    await rewriteCoverageArtifacts(
+      reportDirectoryPath,
+      projectSourceFilePathSet,
+    );
     await assertSourceMappedCoverage(
       reportDirectoryPath,
       projectSourceFilePathSet,
@@ -306,7 +364,12 @@ async function generatePlaywrightCoverageReport(
   }
 }
 
-/** Returns the requested metric entry when present in a coverage summary row. */
+/**
+ * Returns the requested metric entry when present in a coverage summary row.
+ * @param summaryEntry - The coverage summary row to inspect.
+ * @param metricKey - The metric key to extract from the summary row.
+ * @returns The requested metric entry when it exists.
+ */
 function getSummaryMetric(
   summaryEntry: CoverageSummaryEntry,
   metricKey: CoverageMetricKey,
@@ -314,12 +377,18 @@ function getSummaryMetric(
   return summaryEntry[metricKey] ?? null;
 }
 
-/** Narrows Node's NODE_V8_COVERAGE payload shape to its result array. */
-function isNodeV8CoveragePayload(value: unknown): value is NodeV8CoveragePayload {
+/**
+ * Narrows Node's NODE_V8_COVERAGE payload shape to its result array.
+ * @param value - The unknown JSON payload to validate.
+ * @returns Whether the payload matches Node's V8 coverage wrapper shape.
+ */
+function isNodeV8CoveragePayload(
+  value: unknown,
+): value is NodeV8CoveragePayload {
   return (
-    isRecord(value)
-    && Array.isArray(value.result)
-    && value.result.every(isV8CoverageEntry)
+    isRecord(value) &&
+    Array.isArray(value.result) &&
+    value.result.every(isV8CoverageEntry)
   );
 }
 
@@ -327,30 +396,49 @@ function isNodeV8CoveragePayload(value: unknown): value is NodeV8CoveragePayload
  * Quickly probes whether a TCP port can be bound without spawning a full
  * Next.js process.  Returns in ~1 ms per port, letting the scan skip
  * obviously-taken ports before paying the cost of a child process.
+ * @param port - The TCP port to probe.
+ * @returns Whether the port can currently be bound.
  */
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise((resolve) => {
     const probe = createServer();
-    probe.once("error", () => { resolve(false); });
+    probe.once("error", () => {
+      resolve(false);
+    });
     probe.listen(port, PLAYWRIGHT_HOST, () => {
-      probe.close(() => { resolve(true); });
+      probe.close(() => {
+        resolve(true);
+      });
     });
   });
 }
 
-/** Detects startup failures that should retry the next port immediately. */
+/**
+ * Detects startup failures that should retry the next port immediately.
+ * @param output - The recent dev-server output to inspect.
+ * @returns Whether the output indicates that the port is already unavailable.
+ */
 function isPortUnavailableOutput(output: string) {
   return /(EADDRINUSE|address already in use|port\s+\d+\s+is in use)/iu.test(
     output,
   );
 }
 
-/** Narrows unknown JSON payloads before coverage processing consumes them. */
+/**
+ * Narrows unknown JSON payloads before coverage processing consumes them.
+ * @param value - The unknown value to validate.
+ * @returns Whether the value is a non-null object record.
+ */
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
 
-/** Checks whether a source-path entry maps to a tracked repository file under src/. */
+/**
+ * Checks whether a source-path entry maps to a tracked repository file under src/.
+ * @param sourcePath - The source path emitted by coverage tooling.
+ * @param projectSourceFilePathSet - The normalized repository source file paths that should be retained.
+ * @returns Whether the source path belongs to a tracked repository file.
+ */
 function isTrackedProjectSourceFile(
   sourcePath: string,
   projectSourceFilePathSet: ReadonlySet<string>,
@@ -358,12 +446,20 @@ function isTrackedProjectSourceFile(
   return projectSourceFilePathSet.has(normalizeCoveragePath(sourcePath));
 }
 
-/** Checks the minimal V8 entry shape expected by Monocart coverage ingestion. */
+/**
+ * Checks the minimal V8 entry shape expected by Monocart coverage ingestion.
+ * @param value - The unknown coverage entry to validate.
+ * @returns Whether the value matches the minimal V8 coverage entry shape.
+ */
 function isV8CoverageEntry(value: unknown): value is V8CoverageEntry {
   return isRecord(value) && typeof value.url === "string";
 }
 
-/** Recursively lists files under a directory without relying on shell utilities. */
+/**
+ * Recursively lists files under a directory without relying on shell utilities.
+ * @param directoryPath - The directory whose files should be listed recursively.
+ * @returns Every file path found under the directory.
+ */
 async function listFilesRecursively(directoryPath: string): Promise<string[]> {
   const directoryEntries = await readdir(directoryPath, {
     withFileTypes: true,
@@ -382,6 +478,10 @@ async function listFilesRecursively(directoryPath: string): Promise<string[]> {
   return nestedFiles.flat();
 }
 
+/**
+ * Runs the Playwright wrapper end to end, including server lifecycle and optional coverage generation.
+ * @returns A promise that resolves after the wrapper exits the process.
+ */
 async function main() {
   const forwardedArguments = process.argv.slice(2);
   const runId = createPlaywrightRunId();
@@ -402,6 +502,9 @@ async function main() {
     ...(PLAYWRIGHT_COVERAGE_ENABLED ? [rawCoverageOutputDir] : []),
   ];
 
+  /**
+   * Removes temporary Playwright processes and runtime directories.
+   */
   const cleanup = async () => {
     if (cleaningUp) {
       return;
@@ -415,9 +518,7 @@ async function main() {
     ]);
 
     await Promise.allSettled(
-      temporaryPaths.map((target) =>
-        removePlaywrightRuntimeDirectory(target),
-      ),
+      temporaryPaths.map((target) => removePlaywrightRuntimeDirectory(target)),
     );
   };
 
@@ -435,6 +536,10 @@ async function main() {
     }
   };
 
+  /**
+   * Exits the process after attempting asynchronous cleanup.
+   * @param exitCode - The process exit code to report.
+   */
   const exitWithCleanup = async (exitCode: number) => {
     const forceExitTimer = setTimeout(() => {
       console.error("Async cleanup timed out — forcing exit.");
@@ -537,10 +642,7 @@ async function main() {
     const coverageExitCode = PLAYWRIGHT_COVERAGE_ENABLED
       ? await generatePlaywrightCoverageReport(rawCoverageOutputDir)
       : 0;
-    const exitCode =
-      code === 0
-        ? coverageExitCode
-        : (code ?? 1);
+    const exitCode = code === 0 ? coverageExitCode : (code ?? 1);
 
     await exitWithCleanup(exitCode);
   } catch (error) {
@@ -549,7 +651,12 @@ async function main() {
   }
 }
 
-/** Merges coverage metrics across all filtered source entries into a total row. */
+/**
+ * Merges coverage metrics across all filtered source entries into a total row.
+ * @param summaryEntries - The filtered coverage summary rows to merge.
+ * @param metricKey - The metric key to aggregate across rows.
+ * @returns The aggregated coverage metric.
+ */
 function mergeCoverageMetric(
   summaryEntries: CoverageSummaryEntry[],
   metricKey: CoverageMetricKey,
@@ -575,7 +682,12 @@ function mergeCoverageMetric(
   };
 }
 
-/** Normalizes Monocart source paths back to repository-relative src/ paths. */
+/**
+ * Normalizes Monocart source paths back to repository-relative src/ paths.
+ * @param sourcePath - The source path emitted by coverage tooling.
+ * @param distFilePath - The optional bundled file path associated with the source path.
+ * @returns The normalized repository-relative coverage path.
+ */
 function normalizeCoveragePath(
   sourcePath: string,
   distFilePath?: string,
@@ -605,12 +717,21 @@ function normalizeCoveragePath(
   return normalizedSourcePath;
 }
 
-/** Normalizes dist-file paths so rewritten coverage artifacts stay stable. */
+/**
+ * Normalizes dist-file paths so rewritten coverage artifacts stay stable.
+ * @param distFilePath - The optional dist-file path to normalize.
+ * @returns The normalized dist-file path.
+ */
 function normalizeDistFilePath(distFilePath?: string): string {
   return distFilePath?.replaceAll("\\", "/") ?? "";
 }
 
-/** Validates a raw coverage JSON payload before handing it to Monocart. */
+/**
+ * Validates a raw coverage JSON payload before handing it to Monocart.
+ * @param rawCoverageJson - The raw JSON payload read from disk.
+ * @param rawCoverageFilePath - The file path that supplied the raw coverage JSON.
+ * @returns The parsed coverage payload in a shape Monocart accepts.
+ */
 function parseRawCoverageData(
   rawCoverageJson: string,
   rawCoverageFilePath: string,
@@ -640,7 +761,10 @@ function parseRawCoverageData(
   );
 }
 
-/** Removes a Playwright runtime directory when the run exits. */
+/**
+ * Removes a Playwright runtime directory when the run exits.
+ * @param directoryName - The runtime directory name relative to the repository root.
+ */
 async function removePlaywrightRuntimeDirectory(directoryName: string) {
   await rm(join(process.cwd(), directoryName), {
     force: true,
@@ -648,7 +772,11 @@ async function removePlaywrightRuntimeDirectory(directoryName: string) {
   });
 }
 
-/** Rewrites the generated summary and LCOV files to tracked repository paths only. */
+/**
+ * Rewrites the generated summary and LCOV files to tracked repository paths only.
+ * @param reportDirectoryPath - The coverage report directory to rewrite.
+ * @param projectSourceFilePathSet - The normalized repository source file paths that should be retained.
+ */
 async function rewriteCoverageArtifacts(
   reportDirectoryPath: string,
   projectSourceFilePathSet: ReadonlySet<string>,
@@ -659,7 +787,11 @@ async function rewriteCoverageArtifacts(
   ]);
 }
 
-/** Filters LCOV output down to repository-owned source files and rewrites their paths. */
+/**
+ * Filters LCOV output down to repository-owned source files and rewrites their paths.
+ * @param reportDirectoryPath - The coverage report directory that contains the LCOV file.
+ * @param projectSourceFilePathSet - The normalized repository source file paths that should be retained.
+ */
 async function rewriteLcovFile(
   reportDirectoryPath: string,
   projectSourceFilePathSet: ReadonlySet<string>,
@@ -681,14 +813,19 @@ async function rewriteLcovFile(
       return [];
     }
 
-    lines[lines.indexOf(sourceFileLine)] = `SF:${normalizeCoveragePath(sourcePath)}`;
+    lines[lines.indexOf(sourceFileLine)] =
+      `SF:${normalizeCoveragePath(sourcePath)}`;
     return [`${lines.join("\n")}\nend_of_record\n`];
   });
 
   await writeFile(lcovFilePath, filteredBlocks.join(""));
 }
 
-/** Filters summary output to repository-owned files and recomputes the total row. */
+/**
+ * Filters summary output to repository-owned files and recomputes the total row.
+ * @param reportDirectoryPath - The coverage report directory that contains the summary file.
+ * @param projectSourceFilePathSet - The normalized repository source file paths that should be retained.
+ */
 async function rewriteSummaryFile(
   reportDirectoryPath: string,
   projectSourceFilePathSet: ReadonlySet<string>,
@@ -703,10 +840,13 @@ async function rewriteSummaryFile(
         sourcePath !== "total" &&
         isTrackedProjectSourceFile(sourcePath, projectSourceFilePathSet),
     )
-    .map(([sourcePath, summaryEntry]) => [
-      normalizeCoveragePath(sourcePath),
-      summaryEntry as CoverageSummaryEntry,
-    ] as const);
+    .map(
+      ([sourcePath, summaryEntry]) =>
+        [
+          normalizeCoveragePath(sourcePath),
+          summaryEntry as CoverageSummaryEntry,
+        ] as const,
+    );
   const totalEntry = Object.fromEntries(
     SUMMARY_METRIC_KEYS.map((metricKey) => [
       metricKey,
@@ -726,7 +866,11 @@ async function rewriteSummaryFile(
   );
 }
 
-/** Sleeps without depending on Bun runtime globals. */
+/**
+ * Sleeps without depending on Bun runtime globals.
+ * @param milliseconds - The number of milliseconds to wait.
+ * @returns A promise that resolves after the requested delay.
+ */
 function sleep(milliseconds: number) {
   return new Promise<void>((resolve) => {
     setTimeout(resolve, milliseconds);
@@ -738,6 +882,10 @@ function sleep(milliseconds: number) {
  * hundreds of concurrent runs spread across the range instead of all piling
  * up on port 3100.  A fast TCP probe skips obviously-taken ports before
  * spawning a child process.
+ * @param distDir - The temporary Next.js dist directory for the run.
+ * @param rawCoverageOutputDir - The raw coverage output directory for the run.
+ * @param tsconfigPath - The temporary tsconfig path for the run.
+ * @returns The first dev server that starts successfully.
  */
 async function startFirstAvailableDevServer(
   distDir: string,
@@ -791,7 +939,14 @@ async function startFirstAvailableDevServer(
   );
 }
 
-/** Starts the dedicated Next.js Playwright dev server on the chosen port. */
+/**
+ * Starts the dedicated Next.js Playwright dev server on the chosen port.
+ * @param port - The TCP port the dev server should bind to.
+ * @param distDir - The temporary Next.js dist directory for the run.
+ * @param rawCoverageOutputDir - The raw coverage output directory for the run.
+ * @param tsconfigPath - The temporary tsconfig path for the run.
+ * @returns The dev server handle used by the wrapper.
+ */
 function startPlaywrightDevServer(
   port: number,
   distDir: string,
@@ -840,7 +995,15 @@ function startPlaywrightDevServer(
   };
 }
 
-/** Runs the Playwright CLI with the dynamically selected base URL. */
+/**
+ * Runs the Playwright CLI with the dynamically selected base URL.
+ * @param baseURL - The base URL that Playwright should target.
+ * @param port - The TCP port used by the dev server.
+ * @param forwardedArguments - The CLI arguments forwarded to Playwright.
+ * @param rawCoverageOutputDir - The raw coverage output directory for the run.
+ * @param runId - The unique identifier for the current Playwright run.
+ * @returns The spawned Playwright CLI child process.
+ */
 function startPlaywrightTestRun(
   baseURL: string,
   port: number,
@@ -867,7 +1030,10 @@ function startPlaywrightTestRun(
   });
 }
 
-/** Stops the foreground Playwright CLI process if the wrapper is interrupted. */
+/**
+ * Stops the foreground Playwright CLI process if the wrapper is interrupted.
+ * @param child - The child process to stop.
+ */
 async function stopProcess(child: ChildProcess | null) {
   if (child?.exitCode !== null || child.signalCode !== null) {
     return;
@@ -886,7 +1052,10 @@ async function stopProcess(child: ChildProcess | null) {
   }
 }
 
-/** Performs a best-effort synchronous kill of the Playwright CLI process. */
+/**
+ * Performs a best-effort synchronous kill of the Playwright CLI process.
+ * @param child - The child process to kill synchronously.
+ */
 function stopProcessNow(child: ChildProcess | null) {
   if (child?.exitCode !== null || child.signalCode !== null) {
     return;
@@ -895,7 +1064,11 @@ function stopProcessNow(child: ChildProcess | null) {
   child.kill("SIGKILL");
 }
 
-/** Waits for a child process to exit and resolves with its exit status. */
+/**
+ * Waits for a child process to exit and resolves with its exit status.
+ * @param child - The child process to observe.
+ * @returns The child's exit code and terminating signal.
+ */
 async function waitForChildExit(child: ChildProcess) {
   return await new Promise<{
     code: null | number;
@@ -908,7 +1081,11 @@ async function waitForChildExit(child: ChildProcess) {
   });
 }
 
-/** Waits for the configured app route to be reachable before tests start. */
+/**
+ * Waits for the configured app route to be reachable before tests start.
+ * @param server - The dev server handle to poll for readiness.
+ * @param timeoutMs - The maximum time to wait for readiness.
+ */
 async function waitForServerReadiness(
   server: DevServerHandle,
   timeoutMs: number,
@@ -964,6 +1141,8 @@ async function waitForServerReadiness(
  * output for the "- Local:" line that Next.js emits once its HTTP server is
  * listening.  Falls back to EADDRINUSE detection and process-exit checks so
  * the port-scan loop can advance without the old two-second blind timer.
+ * @param child - The spawned dev-server process to observe.
+ * @param getRecentOutput - The callback that returns the recent server output.
  */
 async function waitForServerStartup(
   child: ChildProcess,
