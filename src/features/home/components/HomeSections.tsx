@@ -11,6 +11,9 @@ import { ANIMATION } from "@/shared";
 import { HomeContent } from "./HomeContent";
 import { HomeProjectsPanel, preloadProjectsContent } from "./HomeProjectsPanel";
 
+/**
+ * Inputs required to render the hero-and-overview home state before the projects overlay opens.
+ */
 interface HomeSectionProps {
   hasResolvedInitialHash: boolean;
   onViewProjects: () => void;
@@ -18,6 +21,9 @@ interface HomeSectionProps {
   shouldSkipHomeAnimations: boolean;
 }
 
+/**
+ * Preloaded project data shared between the home state and the projects overlay.
+ */
 interface Props {
   projectData: HomeProjectData | null;
 }

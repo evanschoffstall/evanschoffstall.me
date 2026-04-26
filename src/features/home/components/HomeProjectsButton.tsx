@@ -1,5 +1,8 @@
 import { ArrowRight, Layers } from "lucide-react";
 
+/**
+ * Callback used to switch the landing page from the overview to the projects panel.
+ */
 interface HomeProjectsButtonProps {
   onViewProjects?: () => void;
 }

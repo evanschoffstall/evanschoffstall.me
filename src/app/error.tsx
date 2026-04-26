@@ -4,6 +4,9 @@ import { useEffect } from "react";
 
 import { StatusPage } from "@/app/status-page";
 
+/**
+ * Next.js error-boundary payload for the global app error page.
+ */
 interface ErrorPageProps {
   error: Error & { digest?: string };
   reset: () => void;

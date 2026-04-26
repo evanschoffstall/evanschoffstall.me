@@ -6,6 +6,9 @@ import Link from "next/link";
 import { ParticlesBackground } from "@/components";
 import { fadeIn, fadeInUp } from "@/shared";
 
+/**
+ * One call-to-action rendered in the shared status-page footer row.
+ */
 interface StatusPageAction {
   href?: string;
   label: string;
@@ -13,10 +16,16 @@ interface StatusPageAction {
   tone: "primary" | "secondary";
 }
 
+/**
+ * Wrapper props for rendering a single status-page action as either a button or link.
+ */
 interface StatusPageActionButtonProps {
   action: StatusPageAction;
 }
 
+/**
+ * Copy and action data required to render the shared full-screen status surface.
+ */
 interface StatusPageProps {
   actions: StatusPageAction[];
   code: string;

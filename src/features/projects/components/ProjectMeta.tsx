@@ -8,14 +8,23 @@ import {
   formatMediumDate,
 } from "@/shared";
 
+/**
+ * Project date input needed to render the normalized release-date badge.
+ */
 interface ProjectDateBadgeProps {
   project: Pick<Project, "date">;
 }
 
+/**
+ * Flag that decides whether the featured badge should render.
+ */
 interface ProjectFeatureBadgeProps {
   featured: boolean;
 }
 
+/**
+ * Display options and public view count for the shared views badge.
+ */
 interface ProjectViewsBadgeProps {
   className?: string;
   iconClassName?: string;

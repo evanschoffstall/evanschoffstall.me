@@ -10,11 +10,17 @@ import { fadeInUp } from "@/shared";
 import { ProjectListItem } from "./ProjectListItem";
 import { ProjectsDivider } from "./ProjectsDivider";
 
+/**
+ * Minimal list data consumed by the animated card-list renderer inside a projects section.
+ */
 type ProjectsCardsListProps = Pick<
   ProjectsListSectionProps,
   "projects" | "views"
 >;
 
+/**
+ * Title, project collection, and view-count map for one grouped section on the projects page.
+ */
 interface ProjectsListSectionProps {
   projects: Project[];
   title?: string;

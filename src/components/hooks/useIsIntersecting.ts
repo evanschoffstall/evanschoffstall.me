@@ -2,6 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 
+/**
+ * IntersectionObserver configuration forwarded to the tracked element watcher.
+ */
 interface Options {
   root?: Element | null;
   rootMargin?: string;

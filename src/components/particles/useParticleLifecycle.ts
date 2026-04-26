@@ -9,6 +9,9 @@ import {
   syncMousePosition,
 } from "@/components/particles/particleCanvasEngine";
 
+/**
+ * Canvas lifecycle inputs used to bind DOM events and initialize the particle runtime.
+ */
 interface UseParticleLifecycleOptions {
   initCanvas: () => void;
   interactive: boolean;

@@ -14,22 +14,34 @@ import {
 
 import { HomeGradientRule } from "./HomeGradientRule";
 
+/**
+ * External links and project metadata needed to render the featured-project CTA row.
+ */
 interface HomeFeaturedProjectActionsProps {
   featuredLinks: ReturnType<typeof resolveProjectExternalLinks>;
   featuredProject: Project;
 }
 
+/**
+ * Date and view metadata displayed at the top of the featured-project panel.
+ */
 interface HomeFeaturedProjectMetaProps {
   featuredDateTime: string;
   featuredProject: Project;
   featuredViews: number;
 }
 
+/**
+ * Featured-project content and public view count shown in the home overview.
+ */
 interface HomeFeaturedProjectPanelProps {
   featuredProject: Project;
   featuredViews: number;
 }
 
+/**
+ * Project identity used to render the featured-project title link.
+ */
 interface HomeFeaturedProjectTitleProps {
   featuredProject: Project;
 }

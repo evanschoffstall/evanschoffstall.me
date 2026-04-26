@@ -1,8 +1,14 @@
+/**
+ * Logical canvas dimensions used by the particle engine before DPR scaling.
+ */
 export interface CanvasSize {
   h: number;
   w: number;
 }
 
+/**
+ * Mutable particle record tracked by the animation engine for each rendered dot.
+ */
 export interface Circle {
   alpha: number;
   /** Random phase offset (radians) so each particle twinkles out of sync. */
@@ -20,11 +26,18 @@ export interface Circle {
   y: number;
 }
 
+/**
+ * Pointer position sampled relative to the canvas for magnetic particle motion.
+ */
 export interface MouseVector {
   x: number;
   y: number;
 }
 
+/**
+ * Shared refs that hold the live particle runtime state across the animation,
+ * lifecycle, and rendering hooks.
+ */
 export interface ParticleState {
   canvasContainerRef: React.RefObject<HTMLDivElement | null>;
   canvasRef: React.RefObject<HTMLCanvasElement | null>;
@@ -37,6 +50,9 @@ export interface ParticleState {
   mouse: React.RefObject<MouseVector>;
 }
 
+/**
+ * Public configuration accepted by `useParticleCanvas` from the `Particles` component.
+ */
 export interface UseParticleCanvasOptions {
   ease: number;
   interactive: boolean;

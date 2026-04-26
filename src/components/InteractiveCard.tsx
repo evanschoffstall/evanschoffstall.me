@@ -7,6 +7,10 @@ import { motion, useMotionTemplate, useSpring } from "framer-motion";
 
 import { cn } from "@/shared";
 
+/**
+ * Visual configuration for the shared mouse-reactive card surface, including
+ * overlay classes, accent treatment, and optional top accent content.
+ */
 interface InteractiveCardProps extends PropsWithChildren {
   accentClassName: string;
   className?: string;

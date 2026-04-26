@@ -1,6 +1,9 @@
 import { ParticlesBackground } from "@/components";
 import { ANIMATION } from "@/shared";
 
+/**
+ * Child routes rendered inside the shared projects-section background shell.
+ */
 interface ProjectsLayoutProps {
   children: React.ReactNode;
 }

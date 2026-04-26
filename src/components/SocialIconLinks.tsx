@@ -46,6 +46,9 @@ const SOCIAL_LINKS: readonly SocialLink[] = [
   },
 ] as const;
 
+/**
+ * Optional layout class overrides for the shared row of external profile links.
+ */
 interface SocialIconLinksProps {
   className?: string;
 }

@@ -25,6 +25,10 @@ import { createSafeRegExp, isSafeRegExpPattern } from "check-suite/regex";
 import { defineStep, runGitFileScan } from "check-suite/step";
 import { PurgeCSS } from "purgecss";
 
+/**
+ * File-glob and module-resolution inputs used when the architecture check
+ * discovers the repository's source graph.
+ */
 interface ArchitectureCodeTargetsConfig {
   declarationFilePatterns: string[];
   includePatterns: string[];
@@ -32,6 +36,10 @@ interface ArchitectureCodeTargetsConfig {
   resolutionExtensions: string[];
   testFilePatterns: string[];
 }
+/**
+ * Normalized configuration for a coverage-producing check-suite step before it
+ * is converted into a concrete `defineStep` invocation.
+ */
 interface CoverageCommandStepOptions {
   allowSuiteFlagArgs?: boolean;
   args: string[];
@@ -53,6 +61,10 @@ interface CoverageCommandStepOptions {
   timeoutMs?: number | string;
   tokens?: Record<string, number | string>;
 }
+/**
+ * Coverage artifact paths, path filters, and threshold settings consumed by a
+ * coverage step and its post-processing pipeline.
+ */
 interface CoverageOptions {
   excludedFiles?: string[];
   excludedPaths?: string[];
@@ -62,6 +74,10 @@ interface CoverageOptions {
   reportPath?: string;
   threshold?: number | string;
 }
+/**
+ * Strategy hooks for turning raw coverage command output and report artifacts
+ * into the summary shown by check-suite.
+ */
 interface CoverageReportPostProcessOptions {
   defaultThreshold: number;
   parseConsoleCoverage?: (output: string) => CoverageTotals | null;
@@ -72,6 +88,10 @@ interface CoverageReportPostProcessOptions {
     readFileSync: InlineTypeScriptPostProcessContext["readFileSync"],
   ) => ExecutionReport;
 }
+/**
+ * Resolved coverage inputs after token expansion, matcher normalization, and
+ * default-threshold fallback handling.
+ */
 interface CoverageState {
   coverageExcludedFiles: Set<string>;
   coverageExcludedPaths: string[];
@@ -81,6 +101,10 @@ interface CoverageState {
   coverageThreshold: number;
   reportPath: string;
 }
+/**
+ * Optional knobs used by the higher-level `createCoverageStep` helper when it
+ * assembles a concrete check-suite step.
+ */
 interface CoverageStepOptions {
   enabled?: boolean;
   failMsg?: string;
@@ -91,11 +115,18 @@ interface CoverageStepOptions {
   timeoutMs?: number | string;
   tokens?: Record<string, number | string>;
 }
+/**
+ * Aggregated line-coverage totals used for threshold evaluation and reporting.
+ */
 interface CoverageTotals {
   covered: number;
   found: number;
   pct: number;
 }
+/**
+ * Pass, fail, and skip counts extracted from a command's execution report,
+ * plus the individual failed and skipped case labels shown in summaries.
+ */
 interface ExecutionReport {
   failed: number;
   failedItems: string[];
@@ -103,10 +134,21 @@ interface ExecutionReport {
   skipped: number;
   skippedItems: string[];
 }
+/**
+ * Summary configuration narrowed to the pattern-driven summary shape used by
+ * the lint, typecheck, duplicate, and coverage steps below.
+ */
 type PatternSummary = Extract<Summary, { type: "pattern" }>;
+/**
+ * Result emitted by the PurgeCSS helper, either with a validation failure for
+ * the safelist configuration or with the set of rejected selectors.
+ */
 type PurgeCssCheckResult =
   | { kind: "invalid-safelist"; message: string }
   | { kind: "ok"; unusedSelectors: string[] };
+/**
+ * Runtime-safe subset of PurgeCSS configuration read from step data.
+ */
 interface PurgeCssConfig {
   contentGlobs: string[];
   cssFiles: string[];
@@ -117,6 +159,10 @@ interface PurgeCssConfig {
 // ── Helper functions ──────────────────────────────────────────────────────────
 const BUN_LINE_COVERAGE_PATTERN =
   /(?:^|\n)\s*[│|]\s*Lines\s*[│|]\s*([\d.]+)\s*%\s*[│|]\s*([\d,]+)\s*[│|]\s*[\d,]+\s*[│|]\s*([\d,]+)\s*[│|]/u;
+/**
+ * Inputs required to derive line coverage from an LCOV artifact after include
+ * and exclude filters have been resolved.
+ */
 interface CollectLineCoverageOptions {
   coveragePath: string;
   excludedFiles: ReadonlySet<string>;
@@ -126,12 +172,20 @@ interface CollectLineCoverageOptions {
   readFileSync: InlineTypeScriptPostProcessContext["readFileSync"];
 }
 
+/**
+ * Coverage totals and labeling data needed to append an extra check-suite
+ * result row for a coverage-producing command.
+ */
 interface CoverageCheckResultInput {
   coverageLabel: string;
   coveragePath?: string;
   coverageThreshold: number;
   totals: CoverageTotals | null;
 }
+/**
+ * Execution inputs for the PurgeCSS helper after the step data has been parsed
+ * and validated.
+ */
 interface PurgeCssOptions {
   config: PurgeCssConfig;
   cwd: string;

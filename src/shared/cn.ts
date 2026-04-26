@@ -1,3 +1,6 @@
+/**
+ * Truthy-or-falsy class fragment accepted by the lightweight class-name joiner.
+ */
 type ClassValue = false | null | string | undefined;
 
 /**

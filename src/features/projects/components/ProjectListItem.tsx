@@ -5,6 +5,9 @@ import { ArrowRight } from "lucide-react";
 import { ProjectCardLink } from "./ProjectCardLink";
 import { ProjectDateBadge, ProjectViewsBadge } from "./ProjectMeta";
 
+/**
+ * Project content and view-count data for one row in the projects list.
+ */
 interface Props {
   project: Project;
   views: number;

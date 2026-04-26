@@ -3,6 +3,9 @@ import { hasSessionStorage } from "@/shared/browser";
 const INTERNAL_PROJECT_NAVIGATION_KEY = "projects:internal-navigation";
 const LIBRERSS_HOSTNAME_PATTERN = /(^|\.)librerss\.com$/i;
 
+/**
+ * Back-navigation decision returned by the project detail page, either using browser history or a fallback href.
+ */
 type ProjectBackNavigation =
   | { href: string; kind: "push" }
   | { kind: "history-back" };

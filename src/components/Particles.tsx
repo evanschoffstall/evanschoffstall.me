@@ -4,6 +4,9 @@ import { useEffect } from "react";
 
 import { useParticleCanvas } from "@/components/particles";
 
+/**
+ * Density, motion, interactivity, and wrapper styling options for the particle canvas.
+ */
 interface ParticlesProps {
   className?: string;
   ease?: number;

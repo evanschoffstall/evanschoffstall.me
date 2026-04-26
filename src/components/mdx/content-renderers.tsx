@@ -3,12 +3,33 @@ import * as React from "react";
 
 import { cn } from "@/shared";
 
+/**
+ * Native anchor props forwarded from compiled MDX links.
+ */
 type AnchorProps = React.AnchorHTMLAttributes<HTMLAnchorElement>;
+/**
+ * Native blockquote props forwarded from compiled MDX content.
+ */
 type BlockquoteProps = React.BlockquoteHTMLAttributes<HTMLQuoteElement>;
+/**
+ * Inline code element props forwarded from compiled MDX content.
+ */
 type CodeProps = React.HTMLAttributes<HTMLElement>;
+/**
+ * List item props forwarded from compiled MDX list content.
+ */
 type ListItemProps = React.LiHTMLAttributes<HTMLLIElement>;
+/**
+ * Ordered and unordered list props forwarded from compiled MDX content.
+ */
 type ListProps = React.HTMLAttributes<HTMLOListElement | HTMLUListElement>;
+/**
+ * Paragraph props forwarded from compiled MDX prose blocks.
+ */
 type ParagraphProps = React.HTMLAttributes<HTMLParagraphElement>;
+/**
+ * Preformatted code-block props forwarded from compiled MDX content.
+ */
 type PreProps = React.HTMLAttributes<HTMLPreElement>;
 
 /**

@@ -1,6 +1,10 @@
 import { mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { basename, join } from "node:path";
 
+/**
+ * Minimal project frontmatter needed to find the matching repository and write
+ * its rendered README into the public assets tree.
+ */
 interface ProjectMeta {
   repository?: string;
   slug: string;

@@ -8,6 +8,9 @@ import {
   saveProjectsScrollPosition,
 } from "@/features/projects/browser";
 
+/**
+ * Linked project slug and wrapped content for a card that preserves list scroll state.
+ */
 interface ProjectCardLinkProps extends PropsWithChildren {
   project: Pick<Project, "slug">;
 }

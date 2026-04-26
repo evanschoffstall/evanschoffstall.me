@@ -34,6 +34,9 @@ const ProjectsContent = dynamic(loadProjectsContent, {
   ),
 });
 
+/**
+ * Data and viewport state required to render the full-screen projects overlay from home.
+ */
 interface HomeProjectsPanelProps {
   onBack: () => void;
   projectData: HomeProjectData | null;

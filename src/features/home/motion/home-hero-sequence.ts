@@ -1,5 +1,8 @@
 import type { useAnimationControls } from "framer-motion";
 
+/**
+ * Animation controls and DOM anchors required to move the intro title into its settled home layout.
+ */
 interface RunHomeHeroSequenceOptions {
   controls: ReturnType<typeof useAnimationControls>;
   onSettled?: () => void;

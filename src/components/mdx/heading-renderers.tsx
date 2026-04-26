@@ -2,7 +2,13 @@ import * as React from "react";
 
 import { cn } from "@/shared";
 
+/**
+ * Heading props forwarded from compiled MDX heading elements.
+ */
 type HeadingProps = React.HTMLAttributes<HTMLHeadingElement>;
+/**
+ * Horizontal-rule props forwarded from compiled MDX divider elements.
+ */
 type HrProps = React.HTMLAttributes<HTMLHRElement>;
 
 /**

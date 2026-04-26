@@ -1,5 +1,8 @@
 import { Particles } from "@/components";
 
+/**
+ * Background-particle intensity and interactivity controls for section backdrops.
+ */
 interface ParticlesBackgroundProps {
   interactive?: boolean;
   quantity?: number;

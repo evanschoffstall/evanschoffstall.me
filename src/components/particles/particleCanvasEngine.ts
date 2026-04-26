@@ -6,6 +6,9 @@ import type {
 
 const MAX_DEVICE_PIXEL_RATIO = 2;
 
+/**
+ * Inputs required to resize the particle canvas and reseed particles for the new bounds.
+ */
 interface ResizeCanvasOptions {
   canvas: HTMLCanvasElement | null;
   canvasSize: CanvasSize;
@@ -15,6 +18,9 @@ interface ResizeCanvasOptions {
   drawingContext: CanvasRenderingContext2D | null;
 }
 
+/**
+ * Inputs required to translate a browser mouse event into canvas-relative coordinates.
+ */
 interface SyncMousePositionOptions {
   canvas: HTMLCanvasElement | null;
   canvasSize: CanvasSize;
@@ -23,6 +29,9 @@ interface SyncMousePositionOptions {
   mouse: MouseVector;
 }
 
+/**
+ * Inputs required to advance one particle toward its magnetic target for the current frame.
+ */
 interface UpdateCircleMotionOptions {
   circle: Circle;
   ease: number;

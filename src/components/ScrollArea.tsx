@@ -10,6 +10,9 @@ import * as React from "react";
 
 import { cn } from "@/shared";
 
+/**
+ * Base Radix ScrollArea props plus an optional forwarded viewport ref for scroll-state access.
+ */
 type ScrollAreaProps = React.ComponentPropsWithoutRef<
   typeof ScrollAreaPrimitive.Root
 > & {
@@ -21,6 +24,9 @@ type ScrollAreaProps = React.ComponentPropsWithoutRef<
   viewportRef?: React.Ref<HTMLDivElement>;
 };
 
+/**
+ * Base Radix scrollbar props plus the axis used by the styled overlay thumb.
+ */
 type ScrollBarProps = React.ComponentPropsWithoutRef<
   typeof ScrollAreaPrimitive.ScrollAreaScrollbar
 > & { orientation?: "horizontal" | "vertical" };

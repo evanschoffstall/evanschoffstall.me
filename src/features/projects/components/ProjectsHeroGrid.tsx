@@ -8,6 +8,9 @@ import { EASE_IN_OUT, fadeInUp } from "@/shared";
 
 import { ProjectHeroCard } from "./ProjectHeroCard";
 
+/**
+ * The featured project trio and view counts rendered in the top projects grid.
+ */
 interface ProjectsHeroGridProps {
   featured: Project;
   second: Project;

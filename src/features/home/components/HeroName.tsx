@@ -5,14 +5,23 @@ import { useEffect, useRef, useState } from "react";
 
 import { runHomeHeroSequence } from "@/features/home/motion/index";
 
+/**
+ * Animation controls for the fixed-position intro heading shown during the hero sequence.
+ */
 interface AnimatedHeroNameProps {
   controls: ReturnType<typeof useAnimationControls>;
 }
 
+/**
+ * Ref target used to measure the settled heading position for the hero transition.
+ */
 interface HeroNamePlaceholderProps {
   placeholderRef: React.RefObject<HTMLDivElement | null>;
 }
 
+/**
+ * Options for running or skipping the home hero intro animation.
+ */
 interface HeroNameProps {
   onSettled?: () => void;
   skipInitialAnimation?: boolean;

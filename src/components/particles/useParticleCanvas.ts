@@ -11,6 +11,9 @@ import { useParticleState } from "@/components/particles/useParticleState";
 /** Target frame interval — throttle to 30 fps so the loop stays inexpensive. */
 const TARGET_FRAME_MS = 1000 / 30;
 
+/**
+ * Refs required by the raw requestAnimationFrame loop that drives particle rendering.
+ */
 interface ParticleAnimationLoopOptions {
   isMountedRef: RefObject<boolean>;
   renderFrameRef: RefObject<(time: number) => void>;

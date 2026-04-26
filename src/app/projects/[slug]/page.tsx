@@ -22,6 +22,9 @@ const publishedProjectsBySlug = new Map(
     .map((project) => [project.slug, project] as const),
 );
 
+/**
+ * Async route params supplied by Next.js for a project detail page request.
+ */
 interface Props {
   params: Promise<{
     slug: string;

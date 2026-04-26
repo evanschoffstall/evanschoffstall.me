@@ -13,17 +13,26 @@ import { formatCompactNumber } from "@/shared";
 
 import { ProjectActionLinks } from "./ProjectActionLinks";
 
+/**
+ * Back-navigation callback and current public view count shown in the fixed project header row.
+ */
 interface HeaderNavigationProps {
   onBack: () => void;
   views: number;
 }
 
+/**
+ * README state, outbound links, and project metadata needed by the main header content block.
+ */
 interface ProjectHeaderContentProps {
   hasReadme: boolean;
   links: ReturnType<typeof resolveProjectExternalLinks>;
   project: ProjectHeaderProps["project"];
 }
 
+/**
+ * Project detail header inputs, including hero copy, action links, and public view count.
+ */
 interface ProjectHeaderProps {
   /**
    * When true the README takes over as the page title and description, so the

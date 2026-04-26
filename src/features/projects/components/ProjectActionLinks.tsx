@@ -4,6 +4,9 @@ import type { ProjectExternalLinks } from "@/features/projects/model";
 
 import { RepositoryIcon } from "@/components";
 
+/**
+ * Normalized external repository and live-site links for the current project.
+ */
 interface ProjectActionLinksProps {
   links: ProjectExternalLinks;
 }

@@ -6,6 +6,9 @@ import Link from "next/link";
 import { SocialIconLinks } from "@/components";
 import { useIsIntersecting } from "@/components/hooks";
 
+/**
+ * Optional destination label and back action used by the shared top navigation bar.
+ */
 interface Props {
   href?: string;
   label?: string;

@@ -2,9 +2,21 @@ import * as React from "react";
 
 import { cn } from "@/shared";
 
+/**
+ * Table props forwarded from compiled MDX table nodes.
+ */
 type TableProps = React.HTMLAttributes<HTMLTableElement>;
+/**
+ * Data-cell props forwarded from compiled MDX table nodes.
+ */
 type TdProps = React.TdHTMLAttributes<HTMLTableCellElement>;
+/**
+ * Header-cell props forwarded from compiled MDX table nodes.
+ */
 type ThProps = React.ThHTMLAttributes<HTMLTableCellElement>;
+/**
+ * Table-row props forwarded from compiled MDX table nodes.
+ */
 type TrProps = React.HTMLAttributes<HTMLTableRowElement>;
 
 /**

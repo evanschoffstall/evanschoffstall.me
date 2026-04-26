@@ -11,18 +11,30 @@ import {
   ProjectViewsBadge,
 } from "./ProjectMeta";
 
+/**
+ * Accent mode for the card footer CTA row.
+ */
 interface HeroCardActionProps {
   featured: boolean;
 }
 
+/**
+ * Project identity and display flags needed by the card body section.
+ */
 type HeroCardBodyProps = Pick<Props, "featured" | "headingId" | "project">;
 
+/**
+ * Project metadata shown in the top badge row of a hero card.
+ */
 interface HeroCardMetaProps {
   featured: boolean;
   project: Project;
   views: number;
 }
 
+/**
+ * Content, emphasis mode, and view-count inputs for a project hero card.
+ */
 interface Props {
   featured?: boolean;
   headingId?: string;

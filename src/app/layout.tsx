@@ -67,6 +67,9 @@ const calSans = LocalFont({
   variable: "--font-calsans",
 });
 
+/**
+ * Child subtree rendered inside the app's root HTML shell.
+ */
 interface RootLayoutProps {
   children: React.ReactNode;
 }

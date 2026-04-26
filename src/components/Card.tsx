@@ -4,6 +4,9 @@ import type { PropsWithChildren } from "react";
 
 import { InteractiveCard } from "./InteractiveCard";
 
+/**
+ * Content and optional class overrides for the default interactive card shell.
+ */
 type CardProps = PropsWithChildren<{ className?: string }>;
 
 /**

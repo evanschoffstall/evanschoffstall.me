@@ -15,24 +15,49 @@ import { createInterface } from "node:readline/promises";
 
 const MAIN_BRANCH = "main";
 const CICD_LOCK_NAME = "check-suite-cicd.lock";
+/**
+ * Tuple shape used to invoke subprocess commands without shell interpolation.
+ */
 type Command = readonly [string, ...string[]];
+/**
+ * Captured subprocess result, including buffered output and total runtime.
+ */
 interface CommandResult {
   durationInMilliseconds: number;
   exitCode: number;
   stderr: string;
   stdout: string;
 }
+/**
+ * Local and remote `main` revisions used to decide whether the release flow can
+ * continue without first synchronizing the branch.
+ */
 interface MainBranchRevisionState {
   headRevision: string;
   remoteRevision: string;
 }
+/**
+ * Operator choices available when the local `main` branch is out of sync.
+ */
 type MainBranchSyncAction = "continue" | "fail" | "fast-forward";
+/**
+ * Release phase labels used when reporting pre-release versus post-release sync checks.
+ */
 type MainBranchSyncPhase = "post-release" | "pre-release";
+/**
+ * Whether a subprocess should inherit stdio directly or return captured output.
+ */
 type OutputMode = "capture" | "inherit";
+/**
+ * Operator choices for handling a dirty working tree before a release candidate is built.
+ */
 type ReleaseCandidatePreparationAction =
   | "auto-stage"
   | "continue"
   | "use-clean-head";
+/**
+ * Named release command executed as part of the scripted CI/CD workflow.
+ */
 interface ReleaseStep {
   command: Command;
   label: string;

@@ -13,12 +13,18 @@ import { HeroName } from "./HeroName";
 import { HomeNavigation } from "./HomeNavigation";
 import { HomeOverview } from "./HomeOverview";
 
+/**
+ * Inputs required to build the hero section item inside the virtualized home scroll list.
+ */
 interface CreateHeroScrollItemOptions {
   handleSettled: () => void;
   heroRunId: number;
   skipInitialAnimations: boolean;
 }
 
+/**
+ * Inputs required to build the overview section item once the hero has settled.
+ */
 interface CreateOverviewScrollItemOptions {
   featuredProject?: Project;
   featuredViews: number;
@@ -26,6 +32,9 @@ interface CreateOverviewScrollItemOptions {
   skipInitialAnimations: boolean;
 }
 
+/**
+ * Featured-project data and callbacks needed to render the landing-page home surface.
+ */
 interface Props {
   featuredProject?: Project;
   featuredViews?: number;

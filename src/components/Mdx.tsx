@@ -5,6 +5,9 @@ import * as React from "react";
 
 import { mdxComponents } from "@/components/mdx";
 
+/**
+ * Serialized MDX code string that should be hydrated with the shared renderer map.
+ */
 interface MdxProps {
   code: string;
 }

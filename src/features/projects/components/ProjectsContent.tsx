@@ -11,6 +11,9 @@ import { ProjectsHeroGrid } from "./ProjectsHeroGrid";
 import { ProjectsIntro } from "./ProjectsIntro";
 import { ProjectsListSection } from "./ProjectsListSection";
 
+/**
+ * Featured cards, grouped project lists, and per-project view counts for the full projects surface.
+ */
 interface Props {
   featured: Project;
   second: Project;

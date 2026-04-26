@@ -7,6 +7,9 @@ const JSON_CONTENT_TYPE = "application/json";
 const REQUEST_IDLE_TIMEOUT_MS = 1000;
 const REQUEST_IDLE_FALLBACK_MS = 250;
 
+/**
+ * Project slug sent to the views endpoint once the page becomes idle.
+ */
 interface ProjectViewReporterProps {
   slug: string;
 }

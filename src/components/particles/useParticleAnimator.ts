@@ -14,6 +14,9 @@ import {
   updateCircleMotion,
 } from "@/components/particles/particleCanvasEngine";
 
+/**
+ * Runtime knobs and shared refs needed to seed and animate the particle canvas.
+ */
 interface UseParticleAnimatorOptions {
   ease: number;
   quantity: number;

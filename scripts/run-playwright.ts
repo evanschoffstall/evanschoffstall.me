@@ -62,20 +62,39 @@ const PYTHON_PARENT_DEATHSIG_LAUNCHER = [
   "os.execv(sys.argv[1], sys.argv[1:])",
 ].join("\n");
 
+/**
+ * Metric totals for a single coverage dimension in the generated summary.
+ */
 interface CoverageMetric {
   covered: number;
   pct: number;
   skipped: number;
   total: number;
 }
+/**
+ * Valid keys that can appear in the normalized coverage summary entries.
+ */
 type CoverageMetricKey = (typeof SUMMARY_METRIC_KEYS)[number];
+/**
+ * Additional source-mapping metadata recorded for a covered output file.
+ */
 interface CoverageSourceInfo {
   distFile?: string;
 }
 
+/**
+ * Raw summary object loaded from the generated monocart coverage report.
+ */
 type CoverageSummary = Record<string, unknown>;
+/**
+ * Summary entry containing whichever metric groups were emitted for one file.
+ */
 type CoverageSummaryEntry = Partial<Record<CoverageMetricKey, CoverageMetric>>;
 
+/**
+ * Running Playwright app-server process plus the helpers needed to monitor and
+ * stream its output while the test run is active.
+ */
 interface DevServerHandle {
   baseURL: string;
   getRecentOutput: () => string;
@@ -84,21 +103,37 @@ interface DevServerHandle {
   startForwarding: () => void;
 }
 
+/**
+ * Narrow runtime surface used from `monocart-coverage-reports` without pulling
+ * its full type declarations into this script.
+ */
 interface MonocartCoverageReport {
   add: (coverageData: RawCoverageData) => Promise<void>;
   generate: () => Promise<unknown>;
 }
 
+/**
+ * Factory signature returned by the dynamically imported monocart module.
+ */
 type MonocartCoverageReportFactory = (
   options: Record<string, unknown>,
 ) => MonocartCoverageReport;
 
+/**
+ * Shape of the V8 coverage JSON payload emitted by Node during coverage collection.
+ */
 interface NodeV8CoveragePayload {
   result: V8CoverageEntry[];
 }
 
+/**
+ * Coverage payload variants accepted by monocart when aggregating browser and V8 data.
+ */
 type RawCoverageData = Record<string, unknown> | V8CoverageEntry[];
 
+/**
+ * Minimal V8 coverage entry surface needed by the coverage aggregation helpers.
+ */
 interface V8CoverageEntry {
   url: string;
 }

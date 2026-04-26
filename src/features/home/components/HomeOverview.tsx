@@ -9,6 +9,9 @@ import { HomeGradientRule } from "./HomeGradientRule";
 import { HomeProjectsButton } from "./HomeProjectsButton";
 import { HomeStackSection } from "./HomeStackSection";
 
+/**
+ * Featured-project data and CTA handlers rendered beneath the home hero.
+ */
 interface HomeOverviewProps {
   featuredProject?: Project;
   featuredViews?: number;

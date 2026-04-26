@@ -6,6 +6,9 @@ import { RefreshCw } from "lucide-react";
 import { iconButtonClassName, SocialIconLinks } from "@/components";
 import { fadeIn } from "@/shared";
 
+/**
+ * Visibility and replay controls for the fixed home navigation overlay.
+ */
 interface HomeNavigationProps {
   nameSettled: boolean;
   onReplayHero: () => void;

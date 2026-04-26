@@ -15,6 +15,9 @@ interface VirtualScrollAreaItem {
   node: React.ReactNode;
 }
 
+/**
+ * ScrollArea props plus the virtualized item list and overscan settings used by TanStack.
+ */
 type VirtualScrollAreaProps = Omit<
   React.ComponentPropsWithoutRef<typeof ScrollArea>,
   "children"

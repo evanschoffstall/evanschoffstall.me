@@ -1,5 +1,8 @@
 import { cn } from "@/shared";
 
+/**
+ * Optional class overrides for the decorative glow layer rendered behind cards.
+ */
 interface Props {
   className?: string;
 }
