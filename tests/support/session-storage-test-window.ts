@@ -10,7 +10,11 @@ interface SessionStorageTestWindowOptions {
   throwOnSet?: boolean;
 }
 
-/** Installs a minimal window/sessionStorage pair for Bun browser-storage tests. */
+/**
+ * Installs a minimal window/sessionStorage pair for Bun browser-storage tests.
+ * @param options - Storage behavior overrides for the installed window stub.
+ * @returns The backing store used by the installed sessionStorage stub.
+ */
 export function installSessionStorageTestWindow(
   options: SessionStorageTestWindowOptions = {},
 ): { store: Map<string, string> } {
@@ -39,14 +43,26 @@ export function restoreSessionStorageTestWindow(): void {
   Reflect.deleteProperty(globalThis, "window");
 }
 
+/**
+ * Builds a sessionStorage-compatible stub over a mutable Map.
+ * @param store - The backing store used by the storage stub.
+ * @param options - Behavioral overrides used to simulate storage failures.
+ * @returns A `Storage` implementation suitable for browser-storage tests.
+ */
 function createStorageStub(
   store: Map<string, string>,
   options: SessionStorageTestWindowOptions,
 ): Storage {
   return {
+    /** Clears every stored session key. */
     clear() {
       store.clear();
     },
+    /**
+     * Reads a stored session value.
+     * @param key - The storage key to read.
+     * @returns The stored value, or `null` when the key is absent.
+     */
     getItem(key) {
       if (options.throwOnGet) {
         throw new Error("get failed");
@@ -54,12 +70,22 @@ function createStorageStub(
 
       return store.get(key) ?? null;
     },
+    /**
+     * Resolves the storage key at a specific numeric index.
+     * @param index - The numeric position to resolve.
+     * @returns The key at the requested position, or `null` when out of range.
+     */
     key(index) {
       return Array.from(store.keys())[index] ?? null;
     },
+    /** Reports the number of currently stored items. */
     get length() {
       return store.size;
     },
+    /**
+     * Removes a stored key from the stubbed storage.
+     * @param key - The storage key to remove.
+     */
     removeItem(key) {
       if (options.throwOnRemove) {
         throw new Error("remove failed");
@@ -67,6 +93,11 @@ function createStorageStub(
 
       store.delete(key);
     },
+    /**
+     * Persists a string value under the provided storage key.
+     * @param key - The storage key to update.
+     * @param value - The string value to store.
+     */
     setItem(key, value) {
       if (options.throwOnSet) {
         throw new Error("set failed");

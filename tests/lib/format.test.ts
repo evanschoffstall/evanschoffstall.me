@@ -7,7 +7,7 @@ import {
   formatCompactNumber,
   formatDateTime,
   formatMediumDate,
-} from "./format";
+} from "@/shared/format";
 
 describe("formatCompactNumber", () => {
   test("formats numbers using the compact US locale formatter", () => {

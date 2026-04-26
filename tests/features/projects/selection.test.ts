@@ -5,7 +5,7 @@ import { describe, expect, test } from "bun:test";
 import {
   groupAndSortProjects,
   pickFeaturedProjects,
-} from "./selection";
+} from "@/features/projects/model/selection";
 
 describe("groupAndSortProjects", () => {
   test("groups published projects by type and sorts each group by date", () => {
@@ -38,7 +38,10 @@ describe("pickFeaturedProjects", () => {
     const projects = [
       createProject({ date: "2024-01-01", slug: "gitaicmt" }),
       createProject({ date: "2024-01-02", slug: "librerss" }),
-      createProject({ date: "2024-01-03", slug: "example-traefik-multitenant-ssl" }),
+      createProject({
+        date: "2024-01-03",
+        slug: "example-traefik-multitenant-ssl",
+      }),
       createProject({ date: "2024-01-04", slug: "other-project" }),
     ];
 
@@ -60,11 +63,11 @@ describe("pickFeaturedProjects", () => {
     const result = pickFeaturedProjects(projects);
 
     expect(result).not.toBeNull();
-    expect([result?.featured.slug, result?.second.slug, result?.third.slug]).toEqual([
-      "newest",
-      "middle",
-      "oldest",
-    ]);
+    expect([
+      result?.featured.slug,
+      result?.second.slug,
+      result?.third.slug,
+    ]).toEqual(["newest", "middle", "oldest"]);
   });
 
   test("returns null when fewer than three published projects exist", () => {

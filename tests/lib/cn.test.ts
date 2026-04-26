@@ -3,7 +3,7 @@
  */
 import { describe, expect, test } from "bun:test";
 
-import { cn } from "./cn";
+import { cn } from "@/shared/cn";
 
 describe("cn", () => {
   test("joins only truthy class values", () => {

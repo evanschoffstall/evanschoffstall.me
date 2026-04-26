@@ -15,7 +15,7 @@ import {
 import {
   installSessionStorageTestWindow,
   restoreSessionStorageTestWindow,
-} from "../../../lib/browser/session-storage/test-window";
+} from "../../support/session-storage-test-window";
 
 afterEach(() => {
   registerProjectsViewport(null);
@@ -163,10 +163,6 @@ describe("project back navigation", () => {
     });
   });
 
-  // Regression: back navigation from a project slug must never produce
-  // the double-hash URL /#projects#projects. This happens when the target is
-  // /projects, which server-redirects to /#projects and then a second #projects
-  // fragment gets appended by the Next.js router during the redirect.
   test("back navigation href never produces a double-hash URL", () => {
     const slugs = [
       "/projects/librerss",
@@ -189,9 +185,11 @@ describe("project back navigation", () => {
   });
 
   test("back navigation href never routes through /projects server redirect", () => {
-    // /projects triggers a server redirect to /#projects that can produce
-    // a double-hash in the browser. The back target must be /#projects directly.
-    const result = resolveProjectBackNavigation("/projects/any-slug", "", false);
+    const result = resolveProjectBackNavigation(
+      "/projects/any-slug",
+      "",
+      false,
+    );
     expect(result).toEqual({ href: "/#projects", kind: "push" });
     expect(result).not.toEqual({ href: "/projects", kind: "push" });
   });

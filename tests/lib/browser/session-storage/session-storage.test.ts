@@ -1,11 +1,12 @@
 /** Regression coverage for the browser storage availability guard. */
 import { afterEach, describe, expect, test } from "bun:test";
 
-import { hasSessionStorage } from "./index";
+import { hasSessionStorage } from "@/shared/browser/session-storage";
+
 import {
   installSessionStorageTestWindow,
   restoreSessionStorageTestWindow,
-} from "./test-window";
+} from "../../../support/session-storage-test-window";
 
 afterEach(() => {
   restoreSessionStorageTestWindow();

@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 
-import { resolveProjectExternalLinks } from "./links";
+import { resolveProjectExternalLinks } from "@/features/projects/model/links";
 
 describe("resolveProjectExternalLinks", () => {
   test("normalizes repository and live URLs", () => {
