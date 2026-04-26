@@ -6,7 +6,14 @@ import { InteractiveCard } from "./InteractiveCard";
 
 type CardProps = PropsWithChildren<{ className?: string }>;
 
-export function Card({ children, className }: CardProps) {
+/**
+ * Renders the default interactive card shell used across the site.
+ * @param props - The card content and optional wrapper class name.
+ * @returns The default interactive card surface.
+ */
+export function Card(props: CardProps) {
+  const { children, className } = props;
+
   return (
     <InteractiveCard
       accentClassName="

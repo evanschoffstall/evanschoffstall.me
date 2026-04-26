@@ -3,7 +3,7 @@
 import { useVirtualizer } from "@tanstack/react-virtual";
 import * as React from "react";
 
-import { cn } from "@/lib";
+import { cn } from "@/shared";
 
 import { ScrollArea } from "./ScrollArea";
 
@@ -26,19 +26,37 @@ type VirtualScrollAreaProps = Omit<
 /**
  * Shared scroll surface that keeps the shadcn ScrollArea chrome while letting
  * TanStack own item measurement and render-windowing.
+ * @param props - ScrollArea props plus the virtualized item list configuration.
+ * @returns The virtualized scroll surface.
  */
-export function VirtualScrollArea({
-  className,
-  items,
-  overscan = 3,
-  viewportRef,
-  ...props
-}: VirtualScrollAreaProps) {
+export function VirtualScrollArea(props: VirtualScrollAreaProps) {
+  const {
+    className,
+    items,
+    overscan = 3,
+    viewportRef,
+    ...scrollAreaProps
+  } = props;
+
   const internalViewportRef = React.useRef<HTMLDivElement | null>(null);
   const virtualizer = useVirtualizer({
     count: items.length,
+    /**
+     * Estimates the height for an item before it is measured.
+     * @param index - The index of the item being estimated.
+     * @returns The estimated item height.
+     */
     estimateSize: (index) => items[index].estimateSize,
+    /**
+     * Returns the current scroll element managed by the virtualizer.
+     * @returns The active viewport element, if mounted.
+     */
     getScrollElement: () => internalViewportRef.current,
+    /**
+     * Measures a rendered item after layout.
+     * @param element - The rendered element to measure.
+     * @returns The element height in pixels.
+     */
     measureElement: (element) => element.getBoundingClientRect().height,
     overscan,
   });
@@ -47,7 +65,7 @@ export function VirtualScrollArea({
 
   return (
     <ScrollArea
-      {...props}
+      {...scrollAreaProps}
       className={className}
       viewportRef={(element) => {
         internalViewportRef.current = element;
@@ -79,10 +97,12 @@ export function VirtualScrollArea({
   );
 }
 
-function assignRef<T>(
-  ref: React.Ref<T> | undefined,
-  value: T,
-): void {
+/**
+ * Assigns a value to either a callback ref or a mutable ref object.
+ * @param ref - The ref to update.
+ * @param value - The value to assign to the ref.
+ */
+function assignRef<T>(ref: React.Ref<T> | undefined, value: T): void {
   if (!ref) {
     return;
   }

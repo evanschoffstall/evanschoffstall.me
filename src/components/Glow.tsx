@@ -1,10 +1,17 @@
-import { cn } from "@/lib";
+import { cn } from "@/shared";
 
 interface Props {
   className?: string;
 }
 
-export function Glow({ className }: Props) {
+/**
+ * Renders the blurred background glow used behind interactive cards.
+ * @param props - The optional class name overrides for the glow wrapper.
+ * @returns The decorative glow element.
+ */
+export function Glow(props: Props) {
+  const { className } = props;
+
   return (
     <div
       aria-hidden="true"

@@ -4,10 +4,16 @@ import type { PropsWithChildren } from "react";
 
 import { InteractiveCard } from "./InteractiveCard";
 
-export function FeaturedCard({
-  children,
-  className,
-}: PropsWithChildren<{ className?: string }>) {
+type FeaturedCardProps = PropsWithChildren<{ className?: string }>;
+
+/**
+ * Renders the highlighted interactive card shell used for featured projects.
+ * @param props - The card content and optional wrapper class name.
+ * @returns The featured interactive card surface.
+ */
+export function FeaturedCard(props: FeaturedCardProps) {
+  const { children, className } = props;
+
   return (
     <InteractiveCard
       accentClassName="
@@ -34,12 +40,14 @@ export function FeaturedCard({
         transition duration-1000
         group-hover:opacity-100
       "
-      topAccent={(
-        <div className="
+      topAccent={
+        <div
+          className="
           absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent
           via-amber-500/50 to-transparent
-        " />
-      )}
+        "
+        />
+      }
     >
       {children}
     </InteractiveCard>

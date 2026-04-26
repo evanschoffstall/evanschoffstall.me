@@ -1,5 +1,5 @@
 /**
- * Thin shadcn-style wrapper around @radix-ui/react-scroll-area.
+ * Thin shadcn-style wrapper around \@radix-ui/react-scroll-area.
  *
  * Replaces the native browser scrollbar with a styled overlay thumb.
  * Use as a drop-in for any scrollable region that needs custom scroll styling.
@@ -8,7 +8,7 @@
 import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
 import * as React from "react";
 
-import { cn } from "@/lib";
+import { cn } from "@/shared";
 
 type ScrollAreaProps = React.ComponentPropsWithoutRef<
   typeof ScrollAreaPrimitive.Root
@@ -16,7 +16,7 @@ type ScrollAreaProps = React.ComponentPropsWithoutRef<
   /**
    * Optional ref forwarded to the inner Radix ScrollArea Viewport element.
    * Use this when you need to programmatically read or set `scrollTop` on the
-   * scroll container (e.g. for save/restore of scroll position).
+   * scroll container (e.g. For save/restore of scroll position).
    */
   viewportRef?: React.Ref<HTMLDivElement>;
 };
@@ -29,16 +29,15 @@ type ScrollBarProps = React.ComponentPropsWithoutRef<
  * Fixed-height scroll container with a permanently visible styled scrollbar.
  * Uses type="always" so the custom track is rendered whether or not the user
  * is actively hovering — avoids the OS native scrollbar appearing instead.
+ * @param props - ScrollArea props plus an optional forwarded viewport ref.
+ * @returns The styled Radix ScrollArea wrapper.
  */
-export function ScrollArea({
-  children,
-  className,
-  viewportRef,
-  ...props
-}: ScrollAreaProps) {
+export function ScrollArea(props: ScrollAreaProps) {
+  const { children, className, viewportRef, ...rootProps } = props;
+
   return (
     <ScrollAreaPrimitive.Root
-      {...props}
+      {...rootProps}
       className={cn("relative overflow-hidden", className)}
       type="always"
     >
@@ -54,12 +53,14 @@ export function ScrollArea({
   );
 }
 
-/** Styled scrollbar thumb rendered as a thin overlay track. */
-function ScrollBar({
-  className,
-  orientation = "vertical",
-  ...props
-}: ScrollBarProps) {
+/**
+ * Styled scrollbar thumb rendered as a thin overlay track.
+ * @param props - Scrollbar props and the preferred axis orientation.
+ * @returns The styled Radix scrollbar component.
+ */
+function ScrollBar(props: ScrollBarProps) {
+  const { className, orientation = "vertical", ...scrollbarProps } = props;
+
   return (
     <ScrollAreaPrimitive.Scrollbar
       className={cn(
@@ -77,12 +78,14 @@ function ScrollBar({
         className,
       )}
       orientation={orientation}
-      {...props}
+      {...scrollbarProps}
     >
-      <ScrollAreaPrimitive.Thumb className="
+      <ScrollAreaPrimitive.Thumb
+        className="
         relative flex-1 rounded-full bg-zinc-600/70 transition-colors
         hover:bg-zinc-500/80
-      " />
+      "
+      />
     </ScrollAreaPrimitive.Scrollbar>
   );
 }

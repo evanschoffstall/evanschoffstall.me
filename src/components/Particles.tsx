@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 
-import { useParticleCanvas } from "@/ui/particles";
+import { useParticleCanvas } from "@/components/particles";
 
 interface ParticlesProps {
   className?: string;
@@ -13,14 +13,21 @@ interface ParticlesProps {
   staticity?: number;
 }
 
-export function Particles({
-  className = "",
-  ease = 50,
-  interactive = true,
-  quantity = 30,
-  refresh = false,
-  staticity = 50,
-}: ParticlesProps) {
+/**
+ * Renders the interactive particles canvas and manages its lifecycle.
+ * @param props - Canvas behavior, density, and styling options.
+ * @returns The particles canvas wrapper.
+ */
+export function Particles(props: ParticlesProps) {
+  const {
+    className = "",
+    ease = 50,
+    interactive = true,
+    quantity = 30,
+    refresh = false,
+    staticity = 50,
+  } = props;
+
   const { canvasContainerRef, canvasRef, initCanvas } = useParticleCanvas({
     ease,
     interactive,
@@ -37,6 +44,11 @@ export function Particles({
   );
 }
 
+/**
+ * Reinitializes the particle canvas whenever the refresh key changes.
+ * @param refresh - The refresh toggle that should reinitialize the canvas.
+ * @param initCanvas - The callback that rebuilds the particle runtime.
+ */
 function useParticleRefresh(refresh: boolean, initCanvas: () => void) {
   useEffect(() => {
     initCanvas();

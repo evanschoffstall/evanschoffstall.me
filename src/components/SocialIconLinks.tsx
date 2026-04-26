@@ -1,10 +1,7 @@
 import type { LucideIcon } from "lucide-react";
 import type { IconType } from "react-icons";
 
-import {
-  Code2,
-  Mail,
-} from "lucide-react";
+import { Code2, Mail } from "lucide-react";
 import Link from "next/link";
 import { FaGithub, FaLinkedin, FaXTwitter } from "react-icons/fa6";
 
@@ -53,10 +50,14 @@ interface SocialIconLinksProps {
   className?: string;
 }
 
-/** Shared social link row used by the home, projects, and detail nav surfaces. */
-export function SocialIconLinks({
-  className = "flex items-center gap-1",
-}: SocialIconLinksProps) {
+/**
+ * Shared social link row used by the home, projects, and detail nav surfaces.
+ * @param props - Optional layout overrides for the shared social link row.
+ * @returns The shared row of external social links.
+ */
+export function SocialIconLinks(props: SocialIconLinksProps) {
+  const { className = "flex items-center gap-1" } = props;
+
   return (
     <div className={className}>
       {SOCIAL_LINKS.map(({ href, Icon, label }) => (
