@@ -5,7 +5,7 @@ import { describe, expect, test } from "bun:test";
 import {
   groupAndSortProjects,
   pickFeaturedProjects,
-} from "@/features/projects/model/selection";
+} from "@/features/projects/model";
 
 describe("groupAndSortProjects", () => {
   test("groups published projects by type and sorts each group by date", () => {
@@ -100,8 +100,8 @@ function createProject(overrides: Partial<Project> = {}): Project {
 
 function createRawFields(slug: string): Project["_raw"] {
   return {
+    contentType: "mdx",
     flattenedPath: slug,
-    flattenedPaths: [],
     sourceFileDir: "projects",
     sourceFileName: `${slug}.mdx`,
     sourceFilePath: `projects/${slug}.mdx`,

@@ -4,7 +4,7 @@ import {
   extractSlugFromBody,
   isValidProjectSlug,
   validateProjectSlug,
-} from "@/features/projects/model/slug";
+} from "@/features/projects/model";
 
 describe("validateProjectSlug", () => {
   test("accepts valid slug", () => {

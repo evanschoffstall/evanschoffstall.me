@@ -1,7 +1,7 @@
 /** Regression coverage for the browser storage availability guard. */
 import { afterEach, describe, expect, test } from "bun:test";
 
-import { hasSessionStorage } from "@/shared/browser/session-storage";
+import { hasSessionStorage } from "@/shared";
 
 import {
   installSessionStorageTestWindow,

@@ -4,15 +4,13 @@ import { afterEach, describe, expect, test } from "bun:test";
 import {
   consumeHomeIntroSkip,
   consumeInternalProjectNavigation,
+  consumeProjectsScrollPosition,
   markInternalProjectNavigation,
+  registerProjectsViewport,
   requestHomeIntroSkip,
   resolveProjectBackNavigation,
-} from "@/features/projects/browser/back-navigation";
-import {
-  consumeProjectsScrollPosition,
-  registerProjectsViewport,
   saveProjectsScrollPosition,
-} from "@/features/projects/browser/projects-scroll-session";
+} from "@/features/projects/browser";
 
 import {
   installSessionStorageTestWindow,
