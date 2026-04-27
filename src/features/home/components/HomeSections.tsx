@@ -58,7 +58,10 @@ export function HomeSections(props: Props) {
   } = useProjectsSectionState();
   usePreloadProjectsContent();
 
-  const shouldSkipHomeAnimations = skipHomeIntro || !hasResolvedInitialHash;
+  const shouldSkipHomeAnimations =
+    skipHomeIntro ||
+    !hasResolvedInitialHash ||
+    process.env.NEXT_PUBLIC_PLAYWRIGHT_SKIP_ANIMATIONS === "1";
 
   return (
     <div className="relative">

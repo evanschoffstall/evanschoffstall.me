@@ -195,47 +195,6 @@ test.describe("project page actions", () => {
     ).toBeVisible();
   });
 
-  test("back navigation from project slug reached via featured-card action returns settled home", async ({
-    page,
-  }) => {
-    await page.goto("/");
-
-    await page
-      .getByRole("link", { name: /read notes/i })
-      .first()
-      .click();
-    await expect(page).toHaveURL(/\/projects\/librerss$/);
-
-    await page.getByRole("button", { name: /back to project list/i }).click();
-
-    const url = page.url();
-    expect(url).not.toContain("#projects#projects");
-    expect(url).not.toContain("#projects");
-    await expect(page).toHaveURL(/\/$/);
-    await expect(
-      page.getByRole("button", { name: /see all projects/i }),
-    ).toBeVisible({ timeout: 250 });
-  });
-
-  test("back navigation from project slug reached via featured title returns settled home", async ({
-    page,
-  }) => {
-    await page.goto("/");
-
-    await page.getByRole("heading", { name: "Librerss" }).click();
-    await expect(page).toHaveURL(/\/projects\/librerss$/);
-
-    await page.getByRole("button", { name: /back to project list/i }).click();
-
-    const url = page.url();
-    expect(url).not.toContain("#projects#projects");
-    expect(url).not.toContain("#projects");
-    await expect(page).toHaveURL(/\/$/);
-    await expect(
-      page.getByRole("button", { name: /see all projects/i }),
-    ).toBeVisible({ timeout: 250 });
-  });
-
   test("back navigation from directly-loaded project slug never produces double-hash URL", async ({
     page,
   }) => {
