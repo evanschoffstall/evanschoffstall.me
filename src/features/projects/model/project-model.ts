@@ -21,6 +21,17 @@ export interface ProjectExternalLinks {
   repositoryHref: string;
 }
 
+/** Prepared project collections and view counts shared by landing and projects routes. */
+export interface ProjectIndexData {
+  featured: Project;
+  second: Project;
+  sorted: Project[];
+  sortedContributions: Project[];
+  sortedLegacy: Project[];
+  third: Project;
+  views: Record<string, number>;
+}
+
 /** Minimal project link shape accepted by the shared project link resolver. */
 interface ProjectLinkSource {
   repository?: string;
@@ -189,6 +200,36 @@ export function pickFeaturedProjects(projects: Project[]) {
 
   const [featured, second, third] = selected;
   return { featured, second, third };
+}
+
+/**
+ * Prepares the featured trio, grouped project lists, and batched view counts for route rendering.
+ * @param projects - The project list loaded from Contentlayer.
+ * @returns Complete projects index data, or `null` when required featured projects are unavailable.
+ */
+export async function prepareProjectIndexData(
+  projects: Project[],
+): Promise<ProjectIndexData | null> {
+  const views = await getProjectViews(projects.map((project) => project.slug));
+  const featuredSelection = pickFeaturedProjects(projects);
+
+  if (!featuredSelection) return null;
+
+  const grouped = groupAndSortProjects(projects, [
+    featuredSelection.featured.slug,
+    featuredSelection.second.slug,
+    featuredSelection.third.slug,
+  ]);
+
+  return {
+    featured: featuredSelection.featured,
+    second: featuredSelection.second,
+    sorted: grouped.sorted,
+    sortedContributions: grouped.sortedContributions,
+    sortedLegacy: grouped.sortedLegacy,
+    third: featuredSelection.third,
+    views,
+  };
 }
 
 /**
