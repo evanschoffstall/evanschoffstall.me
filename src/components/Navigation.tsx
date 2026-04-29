@@ -20,6 +20,7 @@ interface Props {
   href?: string;
   label?: string;
   onBack?: () => void;
+  onNavigate?: () => void;
 }
 
 /**
@@ -28,7 +29,7 @@ interface Props {
  * @returns The shared navigation bar.
  */
 export function Navigation(props: Props) {
-  const { href = "/", label, onBack } = props;
+  const { href = "/", label, onBack, onNavigate } = props;
 
   const { isIntersecting, ref } = useIsIntersecting<HTMLElement>();
 
@@ -70,6 +71,7 @@ export function Navigation(props: Props) {
                 hover:text-zinc-100
               "
               href={href}
+              onClick={onNavigate}
             >
               <ArrowLeft className="size-5" />
               {label && <span className="text-sm font-medium">{label}</span>}

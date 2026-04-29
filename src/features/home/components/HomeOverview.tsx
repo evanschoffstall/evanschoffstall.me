@@ -5,7 +5,10 @@ import type { Project } from "contentlayer/generated";
 import { ArrowRight, Layers, Star } from "lucide-react";
 import Link from "next/link";
 
-import { markInternalProjectNavigation } from "@/features/projects/browser";
+import {
+  markInternalProjectNavigation,
+  requestHomeIntroSkip,
+} from "@/features/projects/browser";
 import { ProjectActionLinks } from "@/features/projects/components";
 import { resolveProjectExternalLinks } from "@/features/projects/model";
 import {

@@ -3,7 +3,7 @@
 import type { Project } from "contentlayer/generated";
 
 import { motion } from "framer-motion";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useLayoutEffect, useMemo, useState } from "react";
 
 import { VirtualScrollArea } from "@/components";
 import { fadeInUp } from "@/shared";
@@ -112,7 +112,13 @@ export function HomeContent(props: Props) {
  * @returns The hero row configuration for the virtual scroll surface.
  */
 function createHeroScrollItem(options: CreateHeroScrollItemOptions) {
-  const { handleSettled, heroRunId, skipInitialAnimations } = options;
+  const {
+    animateSettledEntry,
+    disableInitialAnimations,
+    handleSettled,
+    heroRunId,
+    shouldSkipHeroAnimation,
+  } = options;
 
   return {
     estimateSize: 220,
@@ -127,9 +133,12 @@ function createHeroScrollItem(options: CreateHeroScrollItemOptions) {
       "
       >
         <HeroName
+          animateSettledEntry={animateSettledEntry}
           key={heroRunId}
           onSettled={handleSettled}
-          skipInitialAnimation={skipInitialAnimations}
+          skipInitialAnimation={
+            disableInitialAnimations || shouldSkipHeroAnimation
+          }
         />
       </div>
     ),
@@ -175,12 +184,21 @@ function createOverviewScrollItem(options: CreateOverviewScrollItemOptions) {
 
 /**
  * Owns replay and settled state for the animated home hero name.
- * @param skipInitialAnimations - When true, initialize the hero in its settled state.
+ * @param shouldStartSettled - When true, initialize the hero in its settled state.
  * @returns State and callbacks used to drive the home hero animation.
  */
-function useHomeHeroState(skipInitialAnimations = false) {
-  const [nameSettled, setNameSettled] = useState(skipInitialAnimations);
+function useHomeHeroState(shouldStartSettled = false) {
+  const [nameSettled, setNameSettled] = useState(shouldStartSettled);
+  const [shouldSkipHeroAnimation, setShouldSkipHeroAnimation] =
+    useState(shouldStartSettled);
   const [heroRunId, setHeroRunId] = useState(0);
+
+  useLayoutEffect(() => {
+    if (!shouldStartSettled) return;
+
+    setNameSettled(true);
+    setShouldSkipHeroAnimation(true);
+  }, [shouldStartSettled]);
 
   const handleSettled = useCallback(() => {
     setNameSettled(true);
@@ -188,6 +206,7 @@ function useHomeHeroState(skipInitialAnimations = false) {
 
   const handleReplayHero = useCallback(() => {
     setNameSettled(false);
+    setShouldSkipHeroAnimation(false);
     setHeroRunId((runId) => runId + 1);
   }, []);
 
@@ -196,5 +215,6 @@ function useHomeHeroState(skipInitialAnimations = false) {
     handleSettled,
     heroRunId,
     nameSettled,
+    shouldSkipHeroAnimation,
   };
 }
