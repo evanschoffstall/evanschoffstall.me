@@ -75,12 +75,12 @@ export default async function ProjectPage(props: Props) {
       estimateSize: 1800,
       key: "project-body",
       node: (
-        <div
+        <ProjectContentMotion
           className={`mx-auto max-w-3xl px-4 ${hasReadme ? "py-12" : "py-4"}`}
         >
           {readmeHtml ? (
             <section
-              className="markdown-body mt-8 overflow-x-auto"
+              className="markdown-body mt-8"
               /**
                * SECURITY NOTE: This renders pre-generated HTML from public/projects/[slug]/content.html.
                *
@@ -104,7 +104,7 @@ export default async function ProjectPage(props: Props) {
               <Mdx code={project.body.code} />
             </section>
           )}
-        </div>
+        </ProjectContentMotion>
       ),
     },
   ];

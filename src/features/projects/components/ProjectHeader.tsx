@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { ArrowLeft, Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -10,9 +11,20 @@ import {
   resolveProjectBackNavigation,
 } from "@/features/projects/browser";
 import { resolveProjectExternalLinks } from "@/features/projects/model";
-import { formatCompactNumber } from "@/shared";
+import { ANIMATION, formatCompactNumber } from "@/shared";
 
 import { ProjectActionLinks } from "./ProjectActionLinks";
+
+const headerChromeTransition = {
+  duration: 0.5,
+  ease: ANIMATION.EASE,
+} as const;
+
+const headerContentTransition = {
+  delay: 0.04,
+  duration: 0.76,
+  ease: ANIMATION.EASE,
+} as const;
 
 /**
  * Back-navigation callback and current public view count shown in the fixed project header row.
@@ -99,11 +111,14 @@ function HeaderNavigation(props: HeaderNavigationProps) {
   const { links, onBack, views } = props;
 
   return (
-    <div
+    <motion.div
+      animate={{ opacity: 1, y: 0 }}
       className="
       fixed inset-x-0 top-0 z-50 border-b border-transparent bg-zinc-900/0
       backdrop-blur
     "
+      initial={{ opacity: 0, y: -10 }}
+      transition={headerChromeTransition}
     >
       <div
         className="
@@ -150,12 +165,13 @@ function HeaderNavigation(props: HeaderNavigationProps) {
             sm:h-7 sm:px-2.5 sm:text-xs
           "
           >
-            <Eye className="size-3" /> {formatCompactNumber(views)}
+            <Eye className="size-3" />
+            {formatCompactNumber(views)}
           </span>
           <SocialIconLinks />
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -172,7 +188,13 @@ function ProjectHeaderContent(props: ProjectHeaderContentProps) {
   }
 
   return (
-    <div className="container relative isolate mx-auto overflow-hidden pb-4 pt-24">
+    <motion.div
+      animate={{ filter: "blur(0px)", opacity: 1, y: 0 }}
+      className="container relative isolate mx-auto overflow-hidden pb-4 pt-24"
+      initial={{ filter: "blur(10px)", opacity: 0, y: 24 }}
+      style={{ willChange: "opacity, transform, filter" }}
+      transition={headerContentTransition}
+    >
       <div
         className="
         mx-auto flex max-w-2xl flex-col items-center gap-6 px-6 text-center
@@ -189,6 +211,6 @@ function ProjectHeaderContent(props: ProjectHeaderContentProps) {
         </h1>
         <p className="text-lg leading-8 text-zinc-400">{project.description}</p>
       </div>
-    </div>
+    </motion.div>
   );
 }

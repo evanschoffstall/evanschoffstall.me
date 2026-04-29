@@ -117,6 +117,38 @@ test.describe("content loads", () => {
     expect(pureMdxLayout.bodyGapAfterHero).toBeLessThanOrEqual(56);
   });
 
+  test("applies the project body fade-in shell to README and MDX project content", async ({
+    page,
+  }) => {
+    await page.goto("/projects/librerss", { waitUntil: "domcontentloaded" });
+    const readmeMotionShell = page.locator("[data-project-content-motion]");
+    const readmeFirstContentBlock = readmeMotionShell
+      .locator(".markdown-body > *")
+      .first();
+
+    await expect(readmeMotionShell).toBeVisible();
+    await expect(readmeMotionShell.locator(".markdown-body")).toBeVisible();
+    await expect(readmeMotionShell).toHaveCSS("opacity", "1");
+    await expect(readmeFirstContentBlock).toHaveCSS(
+      "animation-name",
+      "projectContentItemReveal",
+    );
+
+    await page.goto("/projects/springgate-ecommerce", {
+      waitUntil: "domcontentloaded",
+    });
+    const mdxMotionShell = page.locator("[data-project-content-motion]");
+    const mdxFirstContentBlock = mdxMotionShell.locator(".mdx > *").first();
+
+    await expect(mdxMotionShell).toBeVisible();
+    await expect(mdxMotionShell.locator(".prose")).toBeVisible();
+    await expect(mdxMotionShell).toHaveCSS("opacity", "1");
+    await expect(mdxFirstContentBlock).toHaveCSS(
+      "animation-name",
+      "projectContentItemReveal",
+    );
+  });
+
   test("opens the projects view from a direct hash route", async ({ page }) => {
     await page.goto("/#projects");
 
