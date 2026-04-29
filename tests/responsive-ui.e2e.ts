@@ -11,7 +11,7 @@ test.describe("responsive ui", () => {
       page.getByRole("heading", { name: "Evan Schoffstall" }),
     ).toBeVisible();
     await expect(
-      page.getByRole("button", { name: /see all projects/i }),
+      page.getByRole("link", { name: /see all projects/i }),
     ).toBeVisible();
     await expect(
       page.getByRole("button", { name: /replay intro/i }),

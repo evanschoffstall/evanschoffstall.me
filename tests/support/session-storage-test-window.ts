@@ -4,10 +4,19 @@ const originalWindowDescriptor = Object.getOwnPropertyDescriptor(
 );
 
 interface SessionStorageTestWindowOptions {
+  hash?: string;
+  pathname?: string;
   scrollY?: number;
+  search?: string;
   throwOnGet?: boolean;
   throwOnRemove?: boolean;
   throwOnSet?: boolean;
+}
+
+interface ReplaceStateCall {
+  state: unknown;
+  title: string;
+  url?: string | URL | null;
 }
 
 /**
@@ -17,20 +26,44 @@ interface SessionStorageTestWindowOptions {
  */
 export function installSessionStorageTestWindow(
   options: SessionStorageTestWindowOptions = {},
-): { store: Map<string, string> } {
+): { replaceStateCalls: ReplaceStateCall[]; store: Map<string, string> } {
   const store = new Map<string, string>();
   const storage = createStorageStub(store, options);
+  const replaceStateCalls: ReplaceStateCall[] = [];
+  const locationStub = {
+    hash: options.hash ?? "",
+    pathname: options.pathname ?? "/",
+    search: options.search ?? "",
+  };
+  const historyStub = {
+    /** Records and applies same-origin replaceState calls for location tests. */
+    replaceState(state: unknown, title: string, url?: string | URL | null) {
+      replaceStateCalls.push({ state, title, url });
+
+      if (url === undefined || url === null) return;
+
+      const parsedUrl = new URL(String(url), "http://localhost");
+      locationStub.hash = parsedUrl.hash;
+      locationStub.pathname = parsedUrl.pathname;
+      locationStub.search = parsedUrl.search;
+    },
+  } satisfies Pick<History, "replaceState">;
   const windowStub = {
+    history: historyStub,
+    location: locationStub,
     scrollY: options.scrollY ?? 0,
     sessionStorage: storage,
-  } as Pick<Window, "scrollY" | "sessionStorage"> as Window;
+  } as Pick<
+    Window,
+    "history" | "location" | "scrollY" | "sessionStorage"
+  > as Window;
 
   Object.defineProperty(globalThis, "window", {
     configurable: true,
     value: windowStub,
   });
 
-  return { store };
+  return { replaceStateCalls, store };
 }
 
 /** Restores the original global window binding after storage-focused tests. */

@@ -3,6 +3,8 @@
 import { motion, useAnimationControls } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
+import { fadeInUp } from "@/shared";
+
 /**
  * Animation controls for the fixed-position intro heading shown during the hero sequence.
  */
@@ -21,6 +23,7 @@ interface HeroNamePlaceholderProps {
  * Options for running or skipping the home hero intro animation.
  */
 interface HeroNameProps {
+  animateSettledEntry?: boolean;
   onSettled?: () => void;
   skipInitialAnimation?: boolean;
 }
@@ -28,6 +31,7 @@ interface HeroNameProps {
 /** Animation controls and anchors required to move the intro title into place. */
 interface RunHomeHeroSequenceOptions {
   controls: ReturnType<typeof useAnimationControls>;
+  isCancelled: () => boolean;
   onSettled?: () => void;
   placeholder: HTMLDivElement | null;
   setSettled: (value: boolean) => void;
@@ -42,27 +46,55 @@ const TITLE_CLASSES =
  * @returns The animated title or its settled heading counterpart.
  */
 export function HeroName(props: HeroNameProps) {
-  const { onSettled, skipInitialAnimation = false } = props;
+  const {
+    animateSettledEntry = false,
+    onSettled,
+    skipInitialAnimation = false,
+  } = props;
 
   const placeholderRef = useRef<HTMLDivElement>(null);
   const controls = useAnimationControls();
   const [settled, setSettled] = useState(skipInitialAnimation);
 
   useEffect(() => {
+    let isCancelled = false;
+
     if (skipInitialAnimation) {
       onSettled?.();
-      return;
+      return () => {
+        isCancelled = true;
+      };
     }
 
     void runHomeHeroSequence({
       controls,
+      isCancelled: () => isCancelled,
       onSettled,
       placeholder: placeholderRef.current,
       setSettled,
     });
+
+    return () => {
+      isCancelled = true;
+      controls.stop();
+    };
   }, [controls, onSettled, skipInitialAnimation]);
 
   if (settled) {
+    if (animateSettledEntry) {
+      return (
+        <motion.h1
+          animate="visible"
+          className={TITLE_CLASSES}
+          initial="hidden"
+          style={{ letterSpacing: "-0.02em" }}
+          variants={fadeInUp}
+        >
+          Evan Schoffstall
+        </motion.h1>
+      );
+    }
+
     return (
       <h1 className={TITLE_CLASSES} style={{ letterSpacing: "-0.02em" }}>
         Evan Schoffstall
@@ -142,9 +174,11 @@ function HeroNamePlaceholder(props: HeroNamePlaceholderProps) {
 async function runHomeHeroSequence(
   options: RunHomeHeroSequenceOptions,
 ): Promise<void> {
-  const { controls, onSettled, placeholder, setSettled } = options;
+  const { controls, isCancelled, onSettled, placeholder, setSettled } = options;
 
   await waitForPageReady();
+  if (isCancelled()) return;
+
   await controls.start({
     letterSpacing: "0.02em",
     lineHeight: "100%",
@@ -154,7 +188,10 @@ async function runHomeHeroSequence(
       ease: [0.16, 1, 0.3, 1] as const,
     },
   });
+  if (isCancelled()) return;
+
   await delay(500);
+  if (isCancelled()) return;
 
   if (placeholder) {
     const rect = placeholder.getBoundingClientRect();
@@ -169,6 +206,7 @@ async function runHomeHeroSequence(
       },
     });
   }
+  if (isCancelled()) return;
 
   setSettled(true);
   onSettled?.();

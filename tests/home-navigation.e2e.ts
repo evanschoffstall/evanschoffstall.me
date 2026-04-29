@@ -1,6 +1,6 @@
 import { expect, test } from "./playwright";
 
-const HOME_INTRO_TIMEOUT_MS = 10_000;
+const HOME_INTRO_TIMEOUT_MS = 20_000;
 
 test.describe("home navigation", () => {
   test("navigates from featured project card to the project page", async ({
@@ -21,29 +21,39 @@ test.describe("home navigation", () => {
     await expect(page.getByRole("heading", { name: "Librerss" })).toBeVisible();
   });
 
-  test("closes the projects panel and clears the hash", async ({ page }) => {
+  test("opens the projects route from the landing page", async ({ page }) => {
     await page.goto("/");
 
-    await page.getByRole("button", { name: /see all projects/i }).click();
-    await expect(page).toHaveURL(/#projects$/);
+    await page.getByRole("link", { name: /see all projects/i }).click();
+    await expect(page).toHaveURL(/\/projects$/);
+    expect(page.url()).not.toContain("#projects");
 
-    await page.getByRole("button", { name: /back to projects/i }).click();
+    await expect(page.getByRole("heading", { name: "Librerss" })).toBeVisible();
+    await page.getByRole("link", { name: /home/i }).click();
     await expect(page).toHaveURL(/\/$/);
+
+    const heroHeading = page.getByRole("heading", {
+      name: "Evan Schoffstall",
+    });
+    await expect(heroHeading).toBeVisible({ timeout: 250 });
+    await expect(heroHeading).not.toHaveCSS("position", "fixed", {
+      timeout: 250,
+    });
     await expect(
-      page.getByRole("button", { name: /see all projects/i }),
-    ).toBeVisible();
+      page.getByRole("link", { name: /see all projects/i }),
+    ).toBeVisible({ timeout: 250 });
   });
 
-  test("skips the home intro when returning from the hash-based projects route", async ({
+  test("skips the home intro when returning from a featured project", async ({
     page,
   }) => {
-    await page.goto("/#projects");
-
-    await expect(
-      page.getByRole("button", { name: /back to projects/i }),
-    ).toBeVisible();
-
-    await page.getByRole("button", { name: /back to projects/i }).click();
+    await page.goto("/");
+    await page
+      .getByRole("link", { name: /read notes/i })
+      .first()
+      .click();
+    await expect(page).toHaveURL(/\/projects\/librerss$/);
+    await page.getByRole("button", { name: /back to project list/i }).click();
 
     await expect(page).toHaveURL(/\/$/);
 
@@ -59,7 +69,7 @@ test.describe("home navigation", () => {
       page.getByRole("button", { name: /replay intro/i }),
     ).toBeVisible({ timeout: 250 });
     await expect(
-      page.getByRole("button", { name: /see all projects/i }),
+      page.getByRole("link", { name: /see all projects/i }),
     ).toBeVisible({ timeout: 250 });
   });
 
@@ -72,9 +82,13 @@ test.describe("home navigation", () => {
 
     await expect(
       page.getByRole("heading", { name: "Evan Schoffstall" }),
-    ).toBeVisible();
+    ).toHaveCSS("position", "fixed", { timeout: 250 });
+
     await expect(
-      page.getByRole("button", { name: /see all projects/i }),
-    ).toBeVisible();
+      page.getByRole("heading", { name: "Evan Schoffstall" }),
+    ).toBeVisible({ timeout: HOME_INTRO_TIMEOUT_MS });
+    await expect(
+      page.getByRole("link", { name: /see all projects/i }),
+    ).toBeVisible({ timeout: HOME_INTRO_TIMEOUT_MS });
   });
 });

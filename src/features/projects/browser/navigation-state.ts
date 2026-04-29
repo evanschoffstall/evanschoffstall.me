@@ -15,13 +15,17 @@ type ProjectBackNavigation =
   | { kind: "history-back" };
 
 let registeredProjectsViewport: HTMLElement | null = null;
+let pendingHomeIntroSkip = false;
 
 /**
  * Reads and clears the one-time home intro skip flag.
  * @returns `true` when the next home render should start in its settled state.
  */
 export function consumeHomeIntroSkip(): boolean {
-  if (!hasSessionStorage()) return false;
+  const shouldSkipPendingHomeIntro = pendingHomeIntroSkip;
+  pendingHomeIntroSkip = false;
+
+  if (!hasSessionStorage()) return shouldSkipPendingHomeIntro;
 
   try {
     const shouldSkipHomeIntro =
@@ -31,9 +35,9 @@ export function consumeHomeIntroSkip(): boolean {
       window.sessionStorage.removeItem(SKIP_HOME_INTRO_KEY);
     }
 
-    return shouldSkipHomeIntro;
+    return shouldSkipPendingHomeIntro || shouldSkipHomeIntro;
   } catch {
-    return false;
+    return shouldSkipPendingHomeIntro;
   }
 }
 
@@ -60,7 +64,7 @@ export function consumeInternalProjectNavigation(): InternalProjectNavigationSou
 }
 
 /**
- * Reads the saved projects-panel scroll position when a restore was requested.
+ * Reads the saved projects route scroll position when a restore was requested.
  * @returns The saved scroll position, or `null` when no valid restore state exists.
  */
 export function consumeProjectsScrollPosition(): null | number {
@@ -113,6 +117,8 @@ export function registerProjectsViewport(viewport: HTMLElement | null): void {
 
 /** Records that the next home-page render should skip the landing intro animation. */
 export function requestHomeIntroSkip(): void {
+  pendingHomeIntroSkip = true;
+
   if (!hasSessionStorage()) return;
 
   try {
@@ -147,7 +153,7 @@ export function resolveProjectBackNavigation(
   };
 }
 
-/** Saves the current projects-panel scroll position for the next restore. */
+/** Saves the current projects route scroll position for the next restore. */
 export function saveProjectsScrollPosition(): void {
   if (!hasSessionStorage()) return;
 
@@ -225,7 +231,7 @@ function resolveDeterministicBackTarget(
       return { href: "/", skipHomeIntro: true };
     }
 
-    return { href: "/#projects" };
+    return { href: "/projects" };
   }
 
   if (normalizedPathname === "/projects") {

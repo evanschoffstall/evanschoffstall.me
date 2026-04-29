@@ -1,126 +1,83 @@
 "use client";
 
-import type { Project } from "contentlayer/generated";
+import { useLayoutEffect, useState } from "react";
 
-import { AnimatePresence, motion } from "framer-motion";
-import { useEffect } from "react";
+import { motion } from "framer-motion";
 
-import { useProjectsSectionState } from "@/features/home/hooks";
+import { consumeHomeIntroSkip } from "@/features/projects/browser";
+import type { ProjectIndexData } from "@/features/projects/model";
 import { ANIMATION } from "@/shared";
 
 import { HomeContent } from "./HomeContent";
-import { HomeProjectsPanel, preloadProjectsContent } from "./HomeProjectsPanel";
-
-/** Aggregated project collections needed by the home sections coordinator. */
-interface HomeProjectData {
-  featured: Project;
-  second: Project;
-  sorted: Project[];
-  sortedContributions: Project[];
-  sortedLegacy: Project[];
-  third: Project;
-  views: Record<string, number>;
-}
 
 /**
- * Inputs required to render the hero-and-overview home state before the projects overlay opens.
+ * Inputs required to render the hero-and-overview landing state.
  */
 interface HomeSectionProps {
-  hasResolvedInitialHash: boolean;
-  onViewProjects: () => void;
-  projectData: HomeProjectData | null;
-  shouldSkipHomeAnimations: boolean;
+  shouldDisableHomeAnimations: boolean;
+  shouldStartHomeSettled: boolean;
+  projectData: ProjectIndexData | null;
 }
 
 /**
- * Preloaded project data shared between the home state and the projects overlay.
+ * Project data used by the landing page featured-project preview.
  */
 interface Props {
-  projectData: HomeProjectData | null;
+  projectData: ProjectIndexData | null;
 }
 
 /**
- * Coordinates the home and projects sections for the landing page shell.
- * @param props - The precomputed project data used by the home and projects surfaces.
- * @returns The home section or the projects overlay, depending on navigation state.
+ * Coordinates the landing page section inside the shared site shell.
+ * @param props - The precomputed project data used by the landing preview.
+ * @returns The animated landing section with its featured project preview.
  */
 export function HomeSections(props: Props) {
   const { projectData } = props;
+  const [shouldStartHomeSettled, setShouldStartHomeSettled] = useState(false);
+  const [hasResolvedNavigationIntent, setHasResolvedNavigationIntent] =
+    useState(false);
 
-  const {
-    handleBack,
-    handleViewProjects,
-    hasResolvedInitialHash,
-    projectsViewportRef,
-    showProjects,
-    skipHomeIntro,
-    skipInitialProjectsEnter,
-  } = useProjectsSectionState();
-  usePreloadProjectsContent();
+  useLayoutEffect(() => {
+    setShouldStartHomeSettled(
+      (shouldAlreadyStartSettled) =>
+        shouldAlreadyStartSettled || consumeHomeIntroSkip(),
+    );
+    setHasResolvedNavigationIntent(true);
+  }, []);
 
-  const shouldSkipHomeAnimations =
-    skipHomeIntro ||
-    !hasResolvedInitialHash ||
+  const shouldDisableHomeAnimations =
     process.env.NEXT_PUBLIC_PLAYWRIGHT_SKIP_ANIMATIONS === "1";
+  const canRenderHomeContent =
+    hasResolvedNavigationIntent || shouldDisableHomeAnimations;
 
   return (
     <div className="relative">
-      {showProjects ? null : (
+      {canRenderHomeContent ? (
         <HomeSection
-          hasResolvedInitialHash={hasResolvedInitialHash}
-          onViewProjects={handleViewProjects}
+          shouldDisableHomeAnimations={shouldDisableHomeAnimations}
+          shouldStartHomeSettled={shouldStartHomeSettled}
           projectData={projectData}
-          shouldSkipHomeAnimations={shouldSkipHomeAnimations}
         />
-      )}
-
-      <AnimatePresence initial={false}>
-        {showProjects ? (
-          <HomeProjectsPanel
-            key="projects"
-            onBack={handleBack}
-            projectData={projectData}
-            projectsViewportRef={projectsViewportRef}
-            skipInitialProjectsEnter={skipInitialProjectsEnter}
-          />
-        ) : null}
-      </AnimatePresence>
+      ) : null}
     </div>
   );
 }
 
 /**
- * Checks whether the browser exposes `requestIdleCallback` before scheduling preload work.
- * @returns `true` when idle callbacks are available in the current browser.
- */
-function hasRequestIdleCallback(): boolean {
-  return typeof window.requestIdleCallback === "function";
-}
-
-/**
- * Renders the interactive home section while the projects panel is hidden.
- * @param props - Visibility state, project data, and callbacks required for the home view.
- * @returns The animated home section container.
+ * Renders the interactive landing section.
+ * @param props - Project data and animation state required for the landing view.
+ * @returns The animated landing section container.
  */
 function HomeSection(props: HomeSectionProps) {
-  const {
-    hasResolvedInitialHash,
-    onViewProjects,
-    projectData,
-    shouldSkipHomeAnimations,
-  } = props;
+  const { projectData, shouldDisableHomeAnimations, shouldStartHomeSettled } =
+    props;
 
   return (
     <motion.section
       animate={{ opacity: 1 }}
-      className={
-        hasResolvedInitialHash
-          ? "pointer-events-auto"
-          : "pointer-events-none invisible"
-      }
-      initial={shouldSkipHomeAnimations ? false : { opacity: 0 }}
+      initial={shouldDisableHomeAnimations ? false : { opacity: 0 }}
       transition={
-        shouldSkipHomeAnimations
+        shouldDisableHomeAnimations
           ? { duration: 0 }
           : { duration: ANIMATION.FADE_DURATION, ease: ANIMATION.EASE }
       }
@@ -130,40 +87,9 @@ function HomeSection(props: HomeSectionProps) {
         featuredViews={
           projectData ? (projectData.views[projectData.featured.slug] ?? 0) : 0
         }
-        key={shouldSkipHomeAnimations ? "home-settled" : "home-intro"}
-        onViewProjects={onViewProjects}
-        skipInitialAnimations={shouldSkipHomeAnimations}
+        disableInitialAnimations={shouldDisableHomeAnimations}
+        initiallySettled={shouldStartHomeSettled}
       />
     </motion.section>
   );
-}
-
-/**
- * Preloads the projects bundle during idle time so opening the overlay stays responsive.
- */
-function usePreloadProjectsContent(): void {
-  useEffect(() => {
-    /**
-     * Triggers the projects chunk preload when the browser grants idle time.
-     */
-    const preload = () => {
-      preloadProjectsContent();
-    };
-
-    if (hasRequestIdleCallback()) {
-      const idleCallbackId = window.requestIdleCallback(preload, {
-        timeout: 1000,
-      });
-
-      return () => {
-        window.cancelIdleCallback(idleCallbackId);
-      };
-    }
-
-    const timeoutId = window.setTimeout(preload, 300);
-
-    return () => {
-      window.clearTimeout(timeoutId);
-    };
-  }, []);
 }

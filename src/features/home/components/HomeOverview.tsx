@@ -5,7 +5,10 @@ import type { Project } from "contentlayer/generated";
 import { ArrowRight, Layers, Star } from "lucide-react";
 import Link from "next/link";
 
-import { markInternalProjectNavigation } from "@/features/projects/browser";
+import {
+  markInternalProjectNavigation,
+  requestHomeIntroSkip,
+} from "@/features/projects/browser";
 import { ProjectActionLinks } from "@/features/projects/components";
 import { resolveProjectExternalLinks } from "@/features/projects/model";
 import {
@@ -53,14 +56,6 @@ interface HomeFeaturedProjectTitleProps {
 interface HomeOverviewProps {
   featuredProject?: Project;
   featuredViews?: number;
-  onViewProjects?: () => void;
-}
-
-/**
- * Callback used to switch the landing page from the overview to the projects panel.
- */
-interface HomeProjectsButtonProps {
-  onViewProjects?: () => void;
 }
 
 /** Display-ready stack badge definition for the home overview. */
@@ -116,7 +111,7 @@ const homeStackTierClassNames: Record<HomeStackTier, string> = {
  * @returns The lower home-page overview content beneath the animated hero.
  */
 export function HomeOverview(props: HomeOverviewProps) {
-  const { featuredProject, featuredViews = 0, onViewProjects } = props;
+  const { featuredProject, featuredViews = 0 } = props;
 
   return (
     <div
@@ -140,7 +135,7 @@ export function HomeOverview(props: HomeOverviewProps) {
         ) : null}
       </div>
 
-      <HomeProjectsButton onViewProjects={onViewProjects} />
+      <HomeProjectsLink />
 
       <HomeGradientRule />
 
@@ -276,7 +271,8 @@ function HomeFeaturedProjectMeta(props: HomeFeaturedProjectMetaProps) {
         ring-amber-500/20
       "
       >
-        <Star className="size-2.5 fill-current" /> Featured
+        <Star className="size-2.5 fill-current" />
+        Featured
       </span>
       {featuredProject.date && featuredDateTime ? (
         <time className="text-xs text-zinc-600" dateTime={featuredDateTime}>
@@ -403,23 +399,20 @@ function HomeGradientRule() {
 }
 
 /**
- * Entry point from the home overview into the projects panel.
- * @param props - The button callback used to open the projects panel.
- * @returns The projects CTA button rendered beneath the overview cards.
+ * Entry point from the home overview into the canonical projects route.
+ * @returns The projects CTA link rendered beneath the overview content.
  */
-function HomeProjectsButton(props: HomeProjectsButtonProps) {
-  const { onViewProjects } = props;
-
+function HomeProjectsLink() {
   return (
-    <button
+    <Link
       className="
         group flex w-full items-center justify-between rounded-lg border
         border-zinc-800/70 bg-zinc-900/30 px-3 py-2.5 text-left transition-all
         duration-200
         hover:border-zinc-700/80 hover:bg-zinc-800/40
       "
-      onClick={onViewProjects}
-      type="button"
+      href="/projects"
+      onClick={requestHomeIntroSkip}
     >
       <span
         className="
@@ -437,7 +430,7 @@ function HomeProjectsButton(props: HomeProjectsButtonProps) {
         group-hover:translate-x-0.5 group-hover:text-zinc-400
       "
       />
-    </button>
+    </Link>
   );
 }
 

@@ -4,7 +4,7 @@ test.describe("project card chrome", () => {
   test("keeps the projects surface on the shared interactive card chrome", async ({
     page,
   }) => {
-    await page.goto("/#projects");
+    await page.goto("/projects");
 
     const featuredCard = page
       .getByRole("heading", { name: "Librerss" })
