@@ -18,7 +18,6 @@ interface ProjectContentMotionProps {
   className: string;
 }
 
-
 /**
  * Gives the project detail body a polished page-level entrance while the
  * format-specific prose nodes animate through shared CSS descendant rules.
