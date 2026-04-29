@@ -44,16 +44,12 @@ test.describe("header navigation and social links", () => {
     await assertSocialLinks(page);
   });
 
-  test("projects panel shows Navigation header with back button and social links", async ({
+  test("projects route shows Navigation header with home link and social links", async ({
     page,
   }) => {
-    await page.goto("/#projects");
+    await page.goto("/projects");
 
-    // The Navigation component renders the back control as a button when
-    // onBack is supplied (label="Projects" → aria-label="Back to Projects").
-    await expect(
-      page.getByRole("button", { name: /back to projects/i }),
-    ).toBeVisible();
+    await expect(page.getByRole("link", { name: /home/i })).toBeVisible();
 
     await assertSocialLinks(page);
   });

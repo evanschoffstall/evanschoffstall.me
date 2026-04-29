@@ -2,23 +2,22 @@ import { expect, test } from "./playwright";
 
 /**
  * These assertions exercise the user-visible contract that matters most here:
- * the landing page renders, the projects drawer fills with published content,
+ * the landing page renders, the projects route fills with published content,
  * and a README-backed project page loads its mirrored content.
  */
 test.describe("content loads", () => {
-  test("redirects the projects route into the hash-based projects view", async ({
-    page,
-  }) => {
+  test("renders the canonical projects route", async ({ page }) => {
     await page.goto("/projects");
 
-    await expect(page).toHaveURL(/\/#projects$/);
-    await expect(
-      page.getByRole("button", { name: /back to projects/i }),
-    ).toBeVisible();
+    await expect(page).toHaveURL(/\/projects$/);
+    expect(page.url()).not.toContain("#projects");
+    await expect(page.getByRole("link", { name: /home/i })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Librerss" })).toBeVisible();
   });
 
-  test("renders home page content and the projects panel", async ({ page }) => {
+  test("renders home page content and links to the projects route", async ({
+    page,
+  }) => {
     await page.goto("/");
 
     await expect(page).toHaveTitle(/evanschoffstall\.me/i);
@@ -29,14 +28,15 @@ test.describe("content loads", () => {
       page.getByText(/Technologist .* Engineer .* Business Officer/i),
     ).toBeVisible();
 
-    const viewProjectsButton = page.getByRole("button", {
+    const viewProjectsLink = page.getByRole("link", {
       name: /See all projects/i,
     });
 
-    await expect(viewProjectsButton).toBeVisible();
-    await viewProjectsButton.click();
+    await expect(viewProjectsLink).toBeVisible();
+    await viewProjectsLink.click();
 
-    await expect(page).toHaveURL(/#projects$/);
+    await expect(page).toHaveURL(/\/projects$/);
+    expect(page.url()).not.toContain("#projects");
     await expect(
       page.getByText(
         "Some of the projects are from work and some are on my own time.",
@@ -44,7 +44,7 @@ test.describe("content loads", () => {
     ).toBeVisible();
     await expect(page.getByRole("heading", { name: "Gitaicmt" })).toBeVisible();
 
-    await page.getByRole("button", { name: /back to projects/i }).click();
+    await page.getByRole("link", { name: /home/i }).click();
     await expect(page).toHaveURL(/\/$/);
     await expect(
       page.getByRole("heading", { name: "Evan Schoffstall" }),
@@ -70,6 +70,10 @@ test.describe("content loads", () => {
     page,
   }) => {
     await page.goto("/projects/librerss");
+    await expect(page.locator("[data-project-content-motion]")).toHaveCSS(
+      "opacity",
+      "1",
+    );
     const readmeBody = page.locator(".markdown-body").first();
     await expect(readmeBody).toBeVisible();
     const readmeContentTop = await readmeBody.evaluate((markdownBody) =>
@@ -82,11 +86,15 @@ test.describe("content loads", () => {
       page.getByRole("heading", { name: "SpringGate E-Commerce" }),
     ).toBeVisible();
     await expect(
-      page.getByText(/ordering options for pickup and local delivery/i),
+      page.getByText(/pickup, delivery, and ordering expectations/i),
     ).toBeVisible();
     await expect(
-      page.getByText(/responsive design for optimal viewing experience/i),
+      page.getByText(/smoother path from product discovery to checkout/i),
     ).toBeVisible();
+    await expect(page.locator("[data-project-content-motion]")).toHaveCSS(
+      "opacity",
+      "1",
+    );
 
     const pureMdxLayout = await page.evaluate(() => {
       const title = document.querySelector("header h1");
@@ -149,13 +157,13 @@ test.describe("content loads", () => {
     );
   });
 
-  test("opens the projects view from a direct hash route", async ({ page }) => {
-    await page.goto("/#projects");
+  test("opens the projects view from the direct projects route", async ({
+    page,
+  }) => {
+    await page.goto("/projects");
 
-    await expect(page).toHaveURL(/#projects$/);
-    await expect(
-      page.getByRole("button", { name: /back to projects/i }),
-    ).toBeVisible();
+    await expect(page).toHaveURL(/\/projects$/);
+    await expect(page.getByRole("link", { name: /home/i })).toBeVisible();
     await expect(
       page.getByText(
         "Some of the projects are from work and some are on my own time.",

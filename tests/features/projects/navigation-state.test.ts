@@ -137,20 +137,36 @@ describe("project back navigation", () => {
     expect(consumeHomeIntroSkip()).toBe(false);
   });
 
-  test("routes project detail pages directly to the home projects section", () => {
+  test("consumes the in-memory home intro skip flag when storage is unavailable", () => {
+    requestHomeIntroSkip();
+
+    expect(consumeHomeIntroSkip()).toBe(true);
+    expect(consumeHomeIntroSkip()).toBe(false);
+  });
+
+  test("falls back to the in-memory home intro skip flag when storage reads fail", () => {
+    installSessionStorageTestWindow({ throwOnGet: true });
+
+    requestHomeIntroSkip();
+
+    expect(consumeHomeIntroSkip()).toBe(true);
+    expect(consumeHomeIntroSkip()).toBe(false);
+  });
+
+  test("routes project detail pages directly to the canonical projects route", () => {
     expect(
       resolveProjectBackNavigation("/projects/librerss", "", null),
     ).toEqual({
-      href: "/#projects",
+      href: "/projects",
       kind: "push",
     });
   });
 
-  test("routes project detail pages with trailing slash directly to the home projects section", () => {
+  test("routes project detail pages with trailing slash directly to the projects route", () => {
     expect(
       resolveProjectBackNavigation("/projects/librerss/", "", null),
     ).toEqual({
-      href: "/#projects",
+      href: "/projects",
       kind: "push",
     });
   });
@@ -187,7 +203,7 @@ describe("project back navigation", () => {
         "projects",
       ),
     ).toEqual({
-      href: "/#projects",
+      href: "/projects",
       kind: "push",
     });
   });
@@ -202,7 +218,7 @@ describe("project back navigation", () => {
     });
   });
 
-  test("back navigation href never produces a double-hash URL", () => {
+  test("back navigation href always uses the real projects route", () => {
     const slugs = [
       "/projects/librerss",
       "/projects/gitaicmt",
@@ -216,16 +232,14 @@ describe("project back navigation", () => {
       expect(result.kind).toBe("push");
 
       if (result.kind === "push") {
-        expect(result.href).not.toContain("#projects#projects");
-        expect(result.href).not.toBe("/projects");
-        expect(result.href).toBe("/#projects");
+        expect(result.href).not.toContain("#");
+        expect(result.href).toBe("/projects");
       }
     }
   });
 
-  test("back navigation href never routes through /projects server redirect", () => {
+  test("back navigation href does not depend on a projects redirect", () => {
     const result = resolveProjectBackNavigation("/projects/any-slug", "", null);
-    expect(result).toEqual({ href: "/#projects", kind: "push" });
-    expect(result).not.toEqual({ href: "/projects", kind: "push" });
+    expect(result).toEqual({ href: "/projects", kind: "push" });
   });
 });

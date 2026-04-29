@@ -4,7 +4,7 @@ test.describe("project page actions", () => {
   test("preserves the particle background when opening a project from the projects panel", async ({
     page,
   }) => {
-    await page.goto("/#projects");
+    await page.goto("/projects");
 
     await page.evaluate(() => {
       const canvas = document.querySelector("div[aria-hidden='true'] canvas");
@@ -49,7 +49,7 @@ test.describe("project page actions", () => {
     page,
   }) => {
     await page.setViewportSize({ height: 720, width: 390 });
-    await page.goto("/#projects");
+    await page.goto("/projects");
 
     await page.waitForFunction(() => {
       const viewport = document.querySelector(
@@ -70,7 +70,8 @@ test.describe("project page actions", () => {
 
     await page.getByRole("button", { name: /back to project list/i }).click();
 
-    await expect(page).toHaveURL(/\/#projects$/);
+    await expect(page).toHaveURL(/\/projects$/);
+    expect(page.url()).not.toContain("#projects");
     await expect
       .poll(
         async () =>
@@ -150,19 +151,34 @@ test.describe("project page actions", () => {
     await page.getByRole("button", { name: /back to project list/i }).click();
 
     await expect(page).toHaveURL(/\/$/);
-    expect(page.url()).not.toContain("#projects#projects");
     expect(page.url()).not.toContain("#projects");
 
     const heroHeading = page.getByRole("heading", {
       name: "Evan Schoffstall",
     });
     await expect(heroHeading).toBeVisible({ timeout: 250 });
+
+    await expect
+      .poll(
+        async () =>
+          await heroHeading.evaluate((element) => {
+            const computedStyle = getComputedStyle(element);
+
+            return (
+              computedStyle.opacity !== "1" ||
+              computedStyle.transform !== "none"
+            );
+          }),
+        { timeout: 250 },
+      )
+      .toBe(true);
+
     await expect(heroHeading).not.toHaveCSS("position", "fixed", {
       timeout: 250,
     });
 
     const replayButton = page.getByRole("button", { name: /replay intro/i });
-    const seeAllProjectsButton = page.getByRole("button", {
+    const seeAllProjectsLink = page.getByRole("link", {
       name: /see all projects/i,
     });
     const bioCopy = page.getByText(
@@ -170,17 +186,41 @@ test.describe("project page actions", () => {
     );
 
     await expect(replayButton).toBeVisible({ timeout: 250 });
-    await expect(seeAllProjectsButton).toBeVisible({ timeout: 250 });
+    await expect(seeAllProjectsLink).toBeVisible({ timeout: 250 });
     await expect(bioCopy).toBeVisible({ timeout: 250 });
   });
 
-  // Regression: back navigation from a project slug previously routed through
-  // /projects, which server-redirects to /#projects. The Next.js router would
-  // produce the double-hash URL /#projects#projects instead of /#projects.
-  test("back navigation from project slug never produces double-hash URL", async ({
+  test("routes the featured-project title back to landing", async ({
     page,
   }) => {
-    await page.goto("/#projects");
+    // The featured card has two internal slug links. Both must mark the visit as
+    // featured-origin navigation so Back returns to the landing view, not the
+    // canonical projects route.
+    await page.goto("/");
+
+    await page.getByRole("link", { name: /^librerss$/i }).click();
+    await expect(page).toHaveURL(/\/projects\/librerss$/);
+
+    await page.getByRole("button", { name: /back to project list/i }).click();
+
+    await expect(page).toHaveURL(/\/$/);
+    expect(page.url()).not.toContain("#projects");
+    const heroHeading = page.getByRole("heading", {
+      name: "Evan Schoffstall",
+    });
+    await expect(heroHeading).toBeVisible({ timeout: 250 });
+    await expect(heroHeading).not.toHaveCSS("position", "fixed", {
+      timeout: 250,
+    });
+    await expect(
+      page.getByRole("link", { name: /see all projects/i }),
+    ).toBeVisible({ timeout: 250 });
+  });
+
+  test("back navigation from project slug returns to the projects route", async ({
+    page,
+  }) => {
+    await page.goto("/projects");
 
     await page.getByRole("heading", { name: "SpringGate E-Commerce" }).click();
     await expect(page).toHaveURL(/\/projects\/springgate-ecommerce$/);
@@ -188,14 +228,30 @@ test.describe("project page actions", () => {
     await page.getByRole("button", { name: /back to project list/i }).click();
 
     const url = page.url();
-    expect(url).not.toContain("#projects#projects");
-    await expect(page).toHaveURL(/\/#projects$/);
-    await expect(
-      page.getByRole("button", { name: /back to projects/i }),
-    ).toBeVisible();
+    expect(url).not.toContain("#projects");
+    await expect(page).toHaveURL(/\/projects$/);
+    await expect(page.getByRole("link", { name: /home/i })).toBeVisible();
   });
 
-  test("back navigation from directly-loaded project slug never produces double-hash URL", async ({
+  test("back navigation from projects route stays canonical after another slug", async ({
+    page,
+  }) => {
+    // This covers a repeated real-route navigation sequence that used to be
+    // sensitive to stale hash state when the projects surface was hash-driven.
+    await page.goto("/projects");
+
+    await page.getByRole("heading", { name: "Gitaicmt" }).click();
+    await expect(page).toHaveURL(/\/projects\/gitaicmt$/);
+
+    await page.getByRole("button", { name: /back to project list/i }).click();
+
+    const url = page.url();
+    expect(url).not.toContain("#projects");
+    await expect(page).toHaveURL(/\/projects$/);
+    await expect(page.getByRole("heading", { name: "Gitaicmt" })).toBeVisible();
+  });
+
+  test("back navigation from directly-loaded project slug opens projects route", async ({
     page,
   }) => {
     // Direct load simulates an external link or page refresh — no session-storage
@@ -205,7 +261,7 @@ test.describe("project page actions", () => {
     await page.getByRole("button", { name: /back to project list/i }).click();
 
     const url = page.url();
-    expect(url).not.toContain("#projects#projects");
-    await expect(page).toHaveURL(/\/#projects$/);
+    expect(url).not.toContain("#projects");
+    await expect(page).toHaveURL(/\/projects$/);
   });
 });
