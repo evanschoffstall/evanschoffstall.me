@@ -16,29 +16,30 @@ import { HomeOverview } from "./HomeOverview";
  * Inputs required to build the hero section item inside the virtualized home scroll list.
  */
 interface CreateHeroScrollItemOptions {
+  animateSettledEntry: boolean;
+  disableInitialAnimations: boolean;
   handleSettled: () => void;
   heroRunId: number;
-  skipInitialAnimations: boolean;
+  shouldSkipHeroAnimation: boolean;
 }
 
 /**
  * Inputs required to build the overview section item once the hero has settled.
  */
 interface CreateOverviewScrollItemOptions {
+  disableInitialAnimations: boolean;
   featuredProject?: Project;
   featuredViews: number;
-  onViewProjects?: () => void;
-  skipInitialAnimations: boolean;
 }
 
 /**
  * Featured-project data and callbacks needed to render the landing-page home surface.
  */
 interface Props {
+  disableInitialAnimations?: boolean;
   featuredProject?: Project;
   featuredViews?: number;
-  onViewProjects?: () => void;
-  skipInitialAnimations?: boolean;
+  initiallySettled?: boolean;
 }
 
 /**
@@ -50,19 +51,26 @@ interface Props {
  */
 export function HomeContent(props: Props) {
   const {
+    disableInitialAnimations = false,
     featuredProject,
     featuredViews = 0,
-    onViewProjects,
-    skipInitialAnimations = false,
+    initiallySettled = false,
   } = props;
 
-  const { handleReplayHero, handleSettled, heroRunId, nameSettled } =
-    useHomeHeroState(skipInitialAnimations);
+  const {
+    handleReplayHero,
+    handleSettled,
+    heroRunId,
+    nameSettled,
+    shouldSkipHeroAnimation,
+  } = useHomeHeroState(initiallySettled || disableInitialAnimations);
   const scrollItems = useMemo(() => {
     const heroItem = createHeroScrollItem({
+      animateSettledEntry: !disableInitialAnimations && shouldSkipHeroAnimation,
+      disableInitialAnimations,
       handleSettled,
       heroRunId,
-      skipInitialAnimations,
+      shouldSkipHeroAnimation,
     });
 
     if (!nameSettled) {
@@ -72,20 +80,19 @@ export function HomeContent(props: Props) {
     return [
       heroItem,
       createOverviewScrollItem({
+        disableInitialAnimations,
         featuredProject,
         featuredViews,
-        onViewProjects,
-        skipInitialAnimations,
       }),
     ];
   }, [
+    disableInitialAnimations,
     featuredProject,
     featuredViews,
     handleSettled,
     heroRunId,
     nameSettled,
-    onViewProjects,
-    skipInitialAnimations,
+    shouldSkipHeroAnimation,
   ]);
 
   return (
@@ -94,7 +101,7 @@ export function HomeContent(props: Props) {
         <HomeNavigation
           nameSettled={nameSettled}
           onReplayHero={handleReplayHero}
-          skipInitialAnimation={skipInitialAnimations}
+          skipInitialAnimation={disableInitialAnimations}
         />
       ) : null}
       <VirtualScrollArea
@@ -151,12 +158,7 @@ function createHeroScrollItem(options: CreateHeroScrollItemOptions) {
  * @returns The overview row configuration for the virtual scroll surface.
  */
 function createOverviewScrollItem(options: CreateOverviewScrollItemOptions) {
-  const {
-    featuredProject,
-    featuredViews,
-    onViewProjects,
-    skipInitialAnimations,
-  } = options;
+  const { disableInitialAnimations, featuredProject, featuredViews } = options;
 
   return {
     estimateSize: 520,
@@ -169,13 +171,12 @@ function createOverviewScrollItem(options: CreateOverviewScrollItemOptions) {
           sm:px-6 sm:pb-20
           md:mt-14
         "
-        initial={skipInitialAnimations ? false : "hidden"}
+        initial={disableInitialAnimations ? false : "hidden"}
         variants={fadeInUp}
       >
         <HomeOverview
           featuredProject={featuredProject}
           featuredViews={featuredViews}
-          onViewProjects={onViewProjects}
         />
       </motion.div>
     ),

@@ -1,44 +1,16 @@
 import { allProjects } from "contentlayer/generated";
 
 import { HomeSections } from "@/features/home/components";
-import {
-  getProjectViews,
-  groupAndSortProjects,
-  pickFeaturedProjects,
-} from "@/features/projects/model";
+import { prepareProjectIndexData } from "@/features/projects/model";
 
 export const revalidate = 60;
 
 /**
- * Renders the home page with the particles background and the home/projects sections.
+ * Renders the landing page inside the shared particles background shell.
  * @returns The home page content for the site's root route.
  */
 export default async function Home() {
-  const views = await getProjectViews(
-    allProjects.map((project) => project.slug),
-  );
-  const featuredSelection = pickFeaturedProjects(allProjects);
-
-  const grouped = featuredSelection
-    ? groupAndSortProjects(allProjects, [
-        featuredSelection.featured.slug,
-        featuredSelection.second.slug,
-        featuredSelection.third.slug,
-      ])
-    : null;
-
-  const projectData =
-    featuredSelection && grouped
-      ? {
-          featured: featuredSelection.featured,
-          second: featuredSelection.second,
-          sorted: grouped.sorted,
-          sortedContributions: grouped.sortedContributions,
-          sortedLegacy: grouped.sortedLegacy,
-          third: featuredSelection.third,
-          views,
-        }
-      : null;
+  const projectData = await prepareProjectIndexData(allProjects);
 
   return (
     <div className="relative w-full">
