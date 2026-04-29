@@ -127,7 +127,9 @@
   animation-delay: 620ms;
 }
 
-[data-project-content-motion] :where(.markdown-body, .mdx) > :nth-child(n + 11) {
+[data-project-content-motion]
+  :where(.markdown-body, .mdx)
+  > :nth-child(n + 11) {
   animation-delay: 680ms;
 }
 
