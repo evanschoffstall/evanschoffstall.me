@@ -10,3 +10,4 @@ export {
   resolveProjectExternalLinks,
   validateProjectSlug,
 } from "./project-model";
+export { addReadmeHeadingIds, slugifyHeadingText } from "./readme-html";

@@ -6,6 +6,9 @@ import * as React from "react";
 
 import { cn } from "@/shared";
 
+const HASH_SCROLL_OFFSET_PX = 24;
+const HASH_SCROLL_RETRY_DELAYS_MS = [0, 100, 500] as const;
+
 /** Base Radix ScrollArea props plus a viewport ref for virtualizer access. */
 type ScrollAreaProps = React.ComponentPropsWithoutRef<
   typeof ScrollAreaPrimitive.Root
@@ -33,6 +36,7 @@ type VirtualScrollAreaProps = Omit<
   React.ComponentPropsWithoutRef<typeof ScrollArea>,
   "children"
 > & {
+  enableHashNavigation?: boolean;
   items: VirtualScrollAreaItem[];
   overscan?: number;
 };
@@ -46,6 +50,7 @@ type VirtualScrollAreaProps = Omit<
 export function VirtualScrollArea(props: VirtualScrollAreaProps) {
   const {
     className,
+    enableHashNavigation = false,
     items,
     overscan = 3,
     viewportRef,
@@ -76,6 +81,8 @@ export function VirtualScrollArea(props: VirtualScrollAreaProps) {
   });
   const virtualItems = virtualizer.getVirtualItems();
   const totalSize = virtualizer.getTotalSize();
+
+  useHashNavigation({ enabled: enableHashNavigation, internalViewportRef });
 
   return (
     <ScrollArea
@@ -109,6 +116,151 @@ export function VirtualScrollArea(props: VirtualScrollAreaProps) {
       </div>
     </ScrollArea>
   );
+}
+
+/** Coordinates URL hash jumps with the custom scroll viewport. */
+interface UseHashNavigationOptions {
+  enabled: boolean;
+  internalViewportRef: React.RefObject<HTMLDivElement | null>;
+}
+
+/**
+ * Handles fragment navigation inside the virtualized Radix viewport.
+ * @param options - The viewport ref and feature flag controlling hash navigation.
+ */
+function useHashNavigation(options: UseHashNavigationOptions): void {
+  const { enabled, internalViewportRef } = options;
+
+  const scrollHashIntoView = React.useCallback(
+    (hash: string, behavior: ScrollBehavior) => {
+      const viewport = internalViewportRef.current;
+      const target = getHashTarget(viewport, hash);
+
+      if (!viewport || !target) {
+        return;
+      }
+
+      window.requestAnimationFrame(() => {
+        const targetRect = target.getBoundingClientRect();
+        const viewportRect = viewport.getBoundingClientRect();
+        const top =
+          viewport.scrollTop +
+          targetRect.top -
+          viewportRect.top -
+          HASH_SCROLL_OFFSET_PX;
+
+        viewport.scrollTo({ behavior, top: Math.max(0, top) });
+      });
+    },
+    [internalViewportRef],
+  );
+
+  React.useEffect(() => {
+    if (!enabled) {
+      return;
+    }
+
+    const scrollCurrentHash = () => {
+      for (const delay of HASH_SCROLL_RETRY_DELAYS_MS) {
+        window.setTimeout(() => {
+          scrollHashIntoView(window.location.hash, "auto");
+        }, delay);
+      }
+    };
+
+    scrollCurrentHash();
+    window.addEventListener("hashchange", scrollCurrentHash);
+
+    return () => {
+      window.removeEventListener("hashchange", scrollCurrentHash);
+    };
+  }, [enabled, scrollHashIntoView]);
+
+  React.useEffect(() => {
+    if (!enabled) {
+      return;
+    }
+
+    const viewport = internalViewportRef.current;
+    if (!viewport) {
+      return;
+    }
+
+    const handleClick = (event: MouseEvent) => {
+      if (!(event.target instanceof Element)) {
+        return;
+      }
+
+      const anchor = event.target.closest<HTMLAnchorElement>("a[href^='#']");
+      const hash = anchor?.getAttribute("href");
+
+      if (!anchor || !hash || hash === "#") {
+        return;
+      }
+
+      const target = getHashTarget(viewport, hash);
+      if (!target) {
+        return;
+      }
+
+      event.preventDefault();
+      window.history.pushState(null, "", hash);
+      scrollHashIntoView(hash, "smooth");
+    };
+
+    viewport.addEventListener("click", handleClick);
+
+    return () => {
+      viewport.removeEventListener("click", handleClick);
+    };
+  }, [enabled, internalViewportRef, scrollHashIntoView]);
+}
+
+/**
+ * Resolves a hash fragment to an element inside the custom viewport.
+ * @param viewport - The scroll viewport that owns the rendered content.
+ * @param hash - The URL hash fragment to resolve.
+ * @returns The matching id or name target, when it exists inside the viewport.
+ */
+function getHashTarget(
+  viewport: HTMLDivElement | null,
+  hash: string,
+): HTMLElement | null {
+  const targetId = decodeHash(hash);
+  if (!viewport || !targetId) {
+    return null;
+  }
+
+  const idTarget = document.getElementById(targetId);
+  if (idTarget instanceof HTMLElement && viewport.contains(idTarget)) {
+    return idTarget;
+  }
+
+  const namedTargets = viewport.querySelectorAll<HTMLElement>("[name]");
+  for (const namedTarget of namedTargets) {
+    if (namedTarget.getAttribute("name") === targetId) {
+      return namedTarget;
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Decodes a URL hash into the target id value used in the document.
+ * @param hash - The raw URL hash, including the leading `#`.
+ * @returns The decoded id, or null for an empty or invalid hash.
+ */
+function decodeHash(hash: string): null | string {
+  if (!hash.startsWith("#") || hash.length === 1) {
+    return null;
+  }
+
+  try {
+    return decodeURIComponent(hash.slice(1));
+  } catch {
+    return hash.slice(1);
+  }
 }
 
 /**
