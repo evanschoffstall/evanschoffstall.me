@@ -14,6 +14,9 @@ export const metadata: Metadata = {
   icons: {
     shortcut: "/favicon.png",
   },
+  other: {
+    "darkreader-lock": "true",
+  },
   openGraph: {
     description:
       "Founder and lead developer of librerss.com, specializing in web, software, and cloud development",

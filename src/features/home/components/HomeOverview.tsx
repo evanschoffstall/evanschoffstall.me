@@ -276,7 +276,8 @@ function HomeFeaturedProjectMeta(props: HomeFeaturedProjectMetaProps) {
         ring-amber-500/20
       "
       >
-        <Star className="size-2.5 fill-current" /> Featured
+        <Star className="size-2.5 fill-current" />
+        Featured
       </span>
       {featuredProject.date && featuredDateTime ? (
         <time className="text-xs text-zinc-600" dateTime={featuredDateTime}>
