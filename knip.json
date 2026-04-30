@@ -8,6 +8,7 @@
     "tests/**/*.test.ts",
     "tests/**/*.e2e.test.ts",
     "scripts/cicd.ts",
+    "scripts/generate-playwright-coverage.ts",
     "contentlayer.config.js",
     "check-suite.config.ts",
     "next-env.test-d.ts"

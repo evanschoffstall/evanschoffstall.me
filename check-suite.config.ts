@@ -1389,6 +1389,8 @@ const junit = createCoverageStep(
   "junit",
   [
     "test",
+    "tests/features",
+    "tests/lib",
     "--timeout={testTimeoutMs}",
     "--coverage",
     "--coverage-reporter=lcov",

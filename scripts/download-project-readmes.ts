@@ -171,7 +171,8 @@ function getSlugFromPath(filePath: string): string {
   // Flat layout: springgate.mdx
   const flatMatch = /^([^/]+)\.mdx$/.exec(filePath);
   if (flatMatch) {
-    return flatMatch[1]!;
+    const slug = flatMatch[1];
+    if (slug) return slug;
   }
   // Folder layout: springgate/content.mdx
   return basename(dirname(filePath));
