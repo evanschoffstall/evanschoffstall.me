@@ -1,11 +1,11 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { useLayoutEffect, useState } from "react";
 
-import { motion } from "framer-motion";
+import type { ProjectIndexData } from "@/features/projects/model";
 
 import { consumeHomeIntroSkip } from "@/features/projects/browser";
-import type { ProjectIndexData } from "@/features/projects/model";
 import { ANIMATION } from "@/shared";
 
 import { HomeContent } from "./HomeContent";
@@ -14,16 +14,16 @@ import { HomeContent } from "./HomeContent";
  * Inputs required to render the hero-and-overview landing state.
  */
 interface HomeSectionProps {
+  projectData: null | ProjectIndexData;
   shouldDisableHomeAnimations: boolean;
   shouldStartHomeSettled: boolean;
-  projectData: ProjectIndexData | null;
 }
 
 /**
  * Project data used by the landing page featured-project preview.
  */
 interface Props {
-  projectData: ProjectIndexData | null;
+  projectData: null | ProjectIndexData;
 }
 
 /**
@@ -54,9 +54,9 @@ export function HomeSections(props: Props) {
     <div className="relative">
       {canRenderHomeContent ? (
         <HomeSection
+          projectData={projectData}
           shouldDisableHomeAnimations={shouldDisableHomeAnimations}
           shouldStartHomeSettled={shouldStartHomeSettled}
-          projectData={projectData}
         />
       ) : null}
     </div>
@@ -83,11 +83,11 @@ function HomeSection(props: HomeSectionProps) {
       }
     >
       <HomeContent
+        disableInitialAnimations={shouldDisableHomeAnimations}
         featuredProject={projectData?.featured}
         featuredViews={
           projectData ? (projectData.views[projectData.featured.slug] ?? 0) : 0
         }
-        disableInitialAnimations={shouldDisableHomeAnimations}
         initiallySettled={shouldStartHomeSettled}
       />
     </motion.section>
