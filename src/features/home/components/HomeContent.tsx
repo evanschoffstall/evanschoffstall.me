@@ -19,6 +19,7 @@ interface CreateHeroScrollItemOptions {
   animateSettledEntry: boolean;
   disableInitialAnimations: boolean;
   handleSettled: () => void;
+  hasReplayedHero: boolean;
   heroRunId: number;
   shouldSkipHeroAnimation: boolean;
 }
@@ -60,15 +61,18 @@ export function HomeContent(props: Props) {
   const {
     handleReplayHero,
     handleSettled,
+    hasReplayedHero,
     heroRunId,
     nameSettled,
     shouldSkipHeroAnimation,
   } = useHomeHeroState(initiallySettled || disableInitialAnimations);
   const scrollItems = useMemo(() => {
     const heroItem = createHeroScrollItem({
-      animateSettledEntry: !disableInitialAnimations && shouldSkipHeroAnimation,
+      animateSettledEntry:
+        initiallySettled && shouldSkipHeroAnimation && !hasReplayedHero,
       disableInitialAnimations,
       handleSettled,
+      hasReplayedHero,
       heroRunId,
       shouldSkipHeroAnimation,
     });
@@ -89,8 +93,10 @@ export function HomeContent(props: Props) {
     disableInitialAnimations,
     featuredProject,
     featuredViews,
+    hasReplayedHero,
     handleSettled,
     heroRunId,
+    initiallySettled,
     nameSettled,
     shouldSkipHeroAnimation,
   ]);
@@ -123,6 +129,7 @@ function createHeroScrollItem(options: CreateHeroScrollItemOptions) {
     animateSettledEntry,
     disableInitialAnimations,
     handleSettled,
+    hasReplayedHero,
     heroRunId,
     shouldSkipHeroAnimation,
   } = options;
@@ -144,7 +151,8 @@ function createHeroScrollItem(options: CreateHeroScrollItemOptions) {
           key={heroRunId}
           onSettled={handleSettled}
           skipInitialAnimation={
-            disableInitialAnimations || shouldSkipHeroAnimation
+            !hasReplayedHero &&
+            (disableInitialAnimations || shouldSkipHeroAnimation)
           }
         />
       </div>
@@ -190,6 +198,7 @@ function createOverviewScrollItem(options: CreateOverviewScrollItemOptions) {
  */
 function useHomeHeroState(shouldStartSettled = false) {
   const [nameSettled, setNameSettled] = useState(shouldStartSettled);
+  const [hasReplayedHero, setHasReplayedHero] = useState(false);
   const [shouldSkipHeroAnimation, setShouldSkipHeroAnimation] =
     useState(shouldStartSettled);
   const [heroRunId, setHeroRunId] = useState(0);
@@ -206,6 +215,7 @@ function useHomeHeroState(shouldStartSettled = false) {
   }, []);
 
   const handleReplayHero = useCallback(() => {
+    setHasReplayedHero(true);
     setNameSettled(false);
     setShouldSkipHeroAnimation(false);
     setHeroRunId((runId) => runId + 1);
@@ -214,6 +224,7 @@ function useHomeHeroState(shouldStartSettled = false) {
   return {
     handleReplayHero,
     handleSettled,
+    hasReplayedHero,
     heroRunId,
     nameSettled,
     shouldSkipHeroAnimation,
