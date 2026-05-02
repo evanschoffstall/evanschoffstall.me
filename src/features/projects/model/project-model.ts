@@ -14,6 +14,7 @@ const FEATURED_PROJECT_SLUGS = {
   second: "example-traefik-multitenant-ssl",
   third: "gitaicmt",
 } as const;
+const PROJECT_PAGEVIEWS_KEY_PREFIX = "pageviews:projects";
 
 /** Safe, normalized external links derived from project content fields. */
 export interface ProjectExternalLinks {
@@ -65,7 +66,9 @@ export async function getProjectView(slug: string): Promise<number> {
   const redis = getRedisClient();
   if (!redis) return 0;
   try {
-    return toSafeViewCount(await redis.get(projectPageviewsKey(slug)));
+    return toSafeViewCount(
+      await redis.get(`${PROJECT_PAGEVIEWS_KEY_PREFIX}:${slug}`),
+    );
   } catch (error) {
     console.error("Failed to fetch project view count:", error);
     return 0;
@@ -85,7 +88,7 @@ export async function getProjectViews(
 
   try {
     const values = await redis.mget<unknown[]>(
-      ...slugs.map((slug) => projectPageviewsKey(slug)),
+      ...slugs.map((slug) => `${PROJECT_PAGEVIEWS_KEY_PREFIX}:${slug}`),
     );
 
     const views: Record<string, number> = {};
@@ -154,7 +157,7 @@ export async function incrementProjectView(
     if (!isNew) return;
   }
 
-  await redis.incr(projectPageviewsKey(slug));
+  await redis.incr(`${PROJECT_PAGEVIEWS_KEY_PREFIX}:${slug}`);
 }
 
 /**
@@ -209,7 +212,7 @@ export function pickFeaturedProjects(projects: Project[]) {
  */
 export async function prepareProjectIndexData(
   projects: Project[],
-): Promise<ProjectIndexData | null> {
+): Promise<null | ProjectIndexData> {
   const views = await getProjectViews(projects.map((project) => project.slug));
   const featuredSelection = pickFeaturedProjects(projects);
 
@@ -298,15 +301,6 @@ function dateToTime(date: null | string | undefined): number {
  */
 function hasBlockedScheme(value: string): boolean {
   return /^(?:javascript|data|vbscript|file):/i.test(value.trim());
-}
-
-/**
- * Builds the Redis key used for a project's pageview counter.
- * @param slug - The validated project slug.
- * @returns The Redis key for the project's pageview counter.
- */
-function projectPageviewsKey(slug: string): string {
-  return ["pageviews", "projects", slug].join(":");
 }
 
 /**

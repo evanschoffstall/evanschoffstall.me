@@ -1,4 +1,3 @@
-const HEADING_PATTERN = /<h([1-6])(\s[^>]*)?>([\s\S]*?)<\/h\1>/gi;
 const ID_ATTRIBUTE_PATTERN = /\sid=(['"])[^'"]*\1|\sid=[^\s>]*/i;
 const HTML_TAG_PATTERN = /<[^>]*>/g;
 const HTML_ENTITY_PATTERN = /&(#x[\da-f]+|#\d+|amp|apos|gt|lt|quot);/gi;
@@ -14,6 +13,18 @@ const NAMED_HTML_ENTITIES: Record<string, string> = {
   quot: '"',
 };
 
+/** A complete heading element discovered by the linear README HTML scanner. */
+interface HeadingMatch {
+  attributes: string;
+  closeEnd: number;
+  closeStart: number;
+  content: string;
+  level: string;
+  openStart: number;
+  openTagEnd: number;
+  source: string;
+}
+
 /**
  * Adds stable fragment IDs to rendered README headings that do not already have one.
  * @param html - The rendered README HTML returned by GitHub's markdown renderer.
@@ -21,29 +32,22 @@ const NAMED_HTML_ENTITIES: Record<string, string> = {
  */
 export function addReadmeHeadingIds(html: string): string {
   const usedSlugs = new Set<string>();
+  let cursor = 0;
+  let rewrittenHtml = "";
 
-  return html.replace(
-    HEADING_PATTERN,
-    (heading: string, level: string, attributes = "", content: string) => {
-      if (ID_ATTRIBUTE_PATTERN.test(attributes)) {
-        const existingId = extractIdAttribute(attributes);
-        if (existingId) {
-          usedSlugs.add(existingId);
-        }
-        return heading;
-      }
+  while (cursor < html.length) {
+    const heading = findNextHeading(html, cursor);
+    if (!heading) {
+      rewrittenHtml += html.slice(cursor);
+      break;
+    }
 
-      const baseSlug = slugifyHeadingText(content);
-      if (!baseSlug) {
-        return heading;
-      }
+    rewrittenHtml += html.slice(cursor, heading.openStart);
+    rewrittenHtml += renderHeadingWithId(heading, usedSlugs);
+    cursor = heading.closeEnd;
+  }
 
-      const slug = dedupeSlug(baseSlug, usedSlugs);
-      usedSlugs.add(slug);
-
-      return `<h${level}${attributes} id="${slug}">${content}</h${level}>`;
-    },
-  );
+  return rewrittenHtml;
 }
 
 /**
@@ -59,6 +63,25 @@ export function slugifyHeadingText(headingHtml: string): string {
     .replace(SLUG_WHITESPACE_PATTERN, "-")
     .replace(SLUG_DASH_PATTERN, "-")
     .replace(/^-|-$/g, "");
+}
+
+/**
+ * Converts a numeric HTML entity body into the represented character.
+ * @param value - The numeric part of the entity.
+ * @param radix - The radix used by the entity.
+ * @returns The decoded character, or the original entity body when invalid.
+ */
+function decodeCodePoint(value: string, radix: number): string {
+  const codePoint = Number.parseInt(value, radix);
+  if (!Number.isFinite(codePoint)) {
+    return `&#${value};`;
+  }
+
+  try {
+    return String.fromCodePoint(codePoint);
+  } catch {
+    return `&#${value};`;
+  }
 }
 
 /**
@@ -80,25 +103,6 @@ function decodeHtmlEntities(value: string): string {
 
     return NAMED_HTML_ENTITIES[normalizedEntity] ?? _entity;
   });
-}
-
-/**
- * Converts a numeric HTML entity body into the represented character.
- * @param value - The numeric part of the entity.
- * @param radix - The radix used by the entity.
- * @returns The decoded character, or the original entity body when invalid.
- */
-function decodeCodePoint(value: string, radix: number): string {
-  const codePoint = Number.parseInt(value, radix);
-  if (!Number.isFinite(codePoint)) {
-    return `&#${value};`;
-  }
-
-  try {
-    return String.fromCodePoint(codePoint);
-  } catch {
-    return `&#${value};`;
-  }
 }
 
 /**
@@ -131,4 +135,81 @@ function dedupeSlug(baseSlug: string, usedSlugs: Set<string>): string {
 function extractIdAttribute(attributes: string): null | string {
   const match = /\sid=(?:['"]([^'"]*)['"]|([^\s>]*))/i.exec(attributes);
   return match?.[1] ?? match?.[2] ?? null;
+}
+
+/**
+ * Finds the next complete h1-h6 element without using a backtracking HTML regex.
+ * @param html - The rendered README HTML to scan.
+ * @param startIndex - The index where scanning should begin.
+ * @returns The next complete heading match, or `null` when no heading remains.
+ */
+function findNextHeading(
+  html: string,
+  startIndex: number,
+): HeadingMatch | null {
+  const lowerHtml = html.toLowerCase();
+  let openStart = lowerHtml.indexOf("<h", startIndex);
+
+  while (openStart !== -1) {
+    const level = html[openStart + 2];
+    const afterLevel = html[openStart + 3];
+
+    if (
+      /[1-6]/u.test(level) &&
+      (afterLevel === ">" || /\s/u.test(afterLevel))
+    ) {
+      const openTagEnd = html.indexOf(">", openStart + 3);
+      if (openTagEnd === -1) return null;
+
+      const closeTag = `</h${level}>`;
+      const closeStart = lowerHtml.indexOf(closeTag, openTagEnd + 1);
+      if (closeStart === -1) return null;
+
+      const closeEnd = closeStart + closeTag.length;
+
+      return {
+        attributes: html.slice(openStart + 3, openTagEnd),
+        closeEnd,
+        closeStart,
+        content: html.slice(openTagEnd + 1, closeStart),
+        level,
+        openStart,
+        openTagEnd,
+        source: html.slice(openStart, closeEnd),
+      };
+    }
+
+    openStart = lowerHtml.indexOf("<h", openStart + 2);
+  }
+
+  return null;
+}
+
+/**
+ * Preserves headings that already have IDs and assigns de-duplicated IDs to plain headings.
+ * @param heading - The scanned heading element to render.
+ * @param usedSlugs - Heading IDs already observed earlier in the document.
+ * @returns The original or rewritten heading HTML.
+ */
+function renderHeadingWithId(
+  heading: HeadingMatch,
+  usedSlugs: Set<string>,
+): string {
+  if (ID_ATTRIBUTE_PATTERN.test(heading.attributes)) {
+    const existingId = extractIdAttribute(heading.attributes);
+    if (existingId) {
+      usedSlugs.add(existingId);
+    }
+    return heading.source;
+  }
+
+  const baseSlug = slugifyHeadingText(heading.content);
+  if (!baseSlug) {
+    return heading.source;
+  }
+
+  const slug = dedupeSlug(baseSlug, usedSlugs);
+  usedSlugs.add(slug);
+
+  return `<h${heading.level}${heading.attributes} id="${slug}">${heading.content}</h${heading.level}>`;
 }

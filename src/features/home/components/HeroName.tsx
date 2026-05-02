@@ -4,7 +4,6 @@ import { motion, useAnimationControls } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
 import { fadeInUp } from "@/shared";
-
 /**
  * Animation controls for the fixed-position intro heading shown during the hero sequence.
  */
@@ -66,9 +65,15 @@ export function HeroName(props: HeroNameProps) {
       };
     }
 
+    /**
+     * Reports whether the current animation sequence has been superseded or unmounted.
+     * @returns `true` when the pending sequence should stop before committing UI state.
+     */
+    const isHeroSequenceCancelled = (): boolean => isCancelled;
+
     void runHomeHeroSequence({
       controls,
-      isCancelled: () => isCancelled,
+      isCancelled: isHeroSequenceCancelled,
       onSettled,
       placeholder: placeholderRef.current,
       setSettled,

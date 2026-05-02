@@ -21,6 +21,12 @@ type ScrollBarProps = React.ComponentPropsWithoutRef<
   typeof ScrollAreaPrimitive.ScrollAreaScrollbar
 > & { orientation?: "horizontal" | "vertical" };
 
+/** Coordinates URL hash jumps with the custom scroll viewport. */
+interface UseHashNavigationOptions {
+  enabled: boolean;
+  internalViewportRef: React.RefObject<HTMLDivElement | null>;
+}
+
 /** Variable-height item rendered inside the TanStack-backed scroll surface. */
 interface VirtualScrollAreaItem {
   className?: string;
@@ -118,102 +124,72 @@ export function VirtualScrollArea(props: VirtualScrollAreaProps) {
   );
 }
 
-/** Coordinates URL hash jumps with the custom scroll viewport. */
-interface UseHashNavigationOptions {
-  enabled: boolean;
-  internalViewportRef: React.RefObject<HTMLDivElement | null>;
+/**
+ * Assigns a value to either a callback ref or a mutable ref object.
+ * @param ref - The ref to update.
+ * @param value - The value to assign to the ref.
+ */
+function assignRef<T>(ref: React.Ref<T> | undefined, value: T): void {
+  if (!ref) {
+    return;
+  }
+
+  if (typeof ref === "function") {
+    ref(value);
+    return;
+  }
+
+  ref.current = value;
 }
 
 /**
- * Handles fragment navigation inside the virtualized Radix viewport.
- * @param options - The viewport ref and feature flag controlling hash navigation.
+ * Creates the delegated click handler that turns same-viewport hash anchors into smooth scrolls.
+ * @param viewport - The viewport that owns hash-scrollable content.
+ * @param scrollHashIntoView - Callback that performs the measured viewport scroll.
+ * @returns A click handler bound to the current viewport.
  */
-function useHashNavigation(options: UseHashNavigationOptions): void {
-  const { enabled, internalViewportRef } = options;
-
-  const scrollHashIntoView = React.useCallback(
-    (hash: string, behavior: ScrollBehavior) => {
-      const viewport = internalViewportRef.current;
-      const target = getHashTarget(viewport, hash);
-
-      if (!viewport || !target) {
-        return;
-      }
-
-      window.requestAnimationFrame(() => {
-        const targetRect = target.getBoundingClientRect();
-        const viewportRect = viewport.getBoundingClientRect();
-        const top =
-          viewport.scrollTop +
-          targetRect.top -
-          viewportRect.top -
-          HASH_SCROLL_OFFSET_PX;
-
-        viewport.scrollTo({ behavior, top: Math.max(0, top) });
-      });
-    },
-    [internalViewportRef],
-  );
-
-  React.useEffect(() => {
-    if (!enabled) {
+function createHashAnchorClickHandler(
+  viewport: HTMLDivElement,
+  scrollHashIntoView: (hash: string, behavior: ScrollBehavior) => void,
+): (event: MouseEvent) => void {
+  return (event) => {
+    if (!(event.target instanceof Element)) {
       return;
     }
 
-    const scrollCurrentHash = () => {
-      for (const delay of HASH_SCROLL_RETRY_DELAYS_MS) {
-        window.setTimeout(() => {
-          scrollHashIntoView(window.location.hash, "auto");
-        }, delay);
-      }
-    };
+    const anchor = event.target.closest<HTMLAnchorElement>("a[href^='#']");
+    const hash = anchor?.getAttribute("href");
 
-    scrollCurrentHash();
-    window.addEventListener("hashchange", scrollCurrentHash);
-
-    return () => {
-      window.removeEventListener("hashchange", scrollCurrentHash);
-    };
-  }, [enabled, scrollHashIntoView]);
-
-  React.useEffect(() => {
-    if (!enabled) {
+    if (!anchor || !hash || hash === "#") {
       return;
     }
 
-    const viewport = internalViewportRef.current;
-    if (!viewport) {
+    const target = getHashTarget(viewport, hash);
+    if (!target) {
       return;
     }
 
-    const handleClick = (event: MouseEvent) => {
-      if (!(event.target instanceof Element)) {
-        return;
-      }
+    event.preventDefault();
+    window.history.pushState(null, "", hash);
+    scrollHashIntoView(hash, "smooth");
+  };
+}
 
-      const anchor = event.target.closest<HTMLAnchorElement>("a[href^='#']");
-      const hash = anchor?.getAttribute("href");
+/**
+ * Decodes a URL hash into the target id value used in the document.
+ * @param hash - The raw URL hash, including the leading `#`.
+ * @returns The decoded id, or null for an empty or invalid hash.
+ */
+function decodeHash(hash: string): null | string {
+  if (!hash.startsWith("#") || hash.length === 1) {
+    return null;
+  }
 
-      if (!anchor || !hash || hash === "#") {
-        return;
-      }
-
-      const target = getHashTarget(viewport, hash);
-      if (!target) {
-        return;
-      }
-
-      event.preventDefault();
-      window.history.pushState(null, "", hash);
-      scrollHashIntoView(hash, "smooth");
-    };
-
-    viewport.addEventListener("click", handleClick);
-
-    return () => {
-      viewport.removeEventListener("click", handleClick);
-    };
-  }, [enabled, internalViewportRef, scrollHashIntoView]);
+  try {
+    return decodeURIComponent(hash.slice(1));
+  } catch {
+    return hash.slice(1);
+  }
 }
 
 /**
@@ -244,41 +220,6 @@ function getHashTarget(
   }
 
   return null;
-}
-
-/**
- * Decodes a URL hash into the target id value used in the document.
- * @param hash - The raw URL hash, including the leading `#`.
- * @returns The decoded id, or null for an empty or invalid hash.
- */
-function decodeHash(hash: string): null | string {
-  if (!hash.startsWith("#") || hash.length === 1) {
-    return null;
-  }
-
-  try {
-    return decodeURIComponent(hash.slice(1));
-  } catch {
-    return hash.slice(1);
-  }
-}
-
-/**
- * Assigns a value to either a callback ref or a mutable ref object.
- * @param ref - The ref to update.
- * @param value - The value to assign to the ref.
- */
-function assignRef<T>(ref: React.Ref<T> | undefined, value: T): void {
-  if (!ref) {
-    return;
-  }
-
-  if (typeof ref === "function") {
-    ref(value);
-    return;
-  }
-
-  ref.current = value;
 }
 
 /**
@@ -342,4 +283,90 @@ function ScrollBar(props: ScrollBarProps) {
       />
     </ScrollAreaPrimitive.Scrollbar>
   );
+}
+
+/**
+ * Retries the current URL hash while virtualized content and browser layout settle.
+ * @param scrollHashIntoView - Callback that performs the measured viewport scroll.
+ */
+function scrollCurrentHashWithRetries(
+  scrollHashIntoView: (hash: string, behavior: ScrollBehavior) => void,
+): void {
+  for (const delay of HASH_SCROLL_RETRY_DELAYS_MS) {
+    window.setTimeout(() => {
+      scrollHashIntoView(window.location.hash, "auto");
+    }, delay);
+  }
+}
+
+/**
+ * Handles fragment navigation inside the virtualized Radix viewport.
+ * @param options - The viewport ref and feature flag controlling hash navigation.
+ */
+function useHashNavigation(options: UseHashNavigationOptions): void {
+  const { enabled, internalViewportRef } = options;
+
+  const scrollHashIntoView = React.useCallback(
+    (hash: string, behavior: ScrollBehavior) => {
+      const viewport = internalViewportRef.current;
+      const target = getHashTarget(viewport, hash);
+
+      if (!viewport || !target) {
+        return;
+      }
+
+      window.requestAnimationFrame(() => {
+        const targetRect = target.getBoundingClientRect();
+        const viewportRect = viewport.getBoundingClientRect();
+        const top =
+          viewport.scrollTop +
+          targetRect.top -
+          viewportRect.top -
+          HASH_SCROLL_OFFSET_PX;
+
+        viewport.scrollTo({ behavior, top: Math.max(0, top) });
+      });
+    },
+    [internalViewportRef],
+  );
+
+  React.useEffect(() => {
+    if (!enabled) {
+      return;
+    }
+
+    /** Replays hash scrolling after the viewport mounts and whenever the hash changes. */
+    const scrollCurrentHash = (): void => {
+      scrollCurrentHashWithRetries(scrollHashIntoView);
+    };
+
+    scrollCurrentHash();
+    window.addEventListener("hashchange", scrollCurrentHash);
+
+    return () => {
+      window.removeEventListener("hashchange", scrollCurrentHash);
+    };
+  }, [enabled, scrollHashIntoView]);
+
+  React.useEffect(() => {
+    if (!enabled) {
+      return;
+    }
+
+    const viewport = internalViewportRef.current;
+    if (!viewport) {
+      return;
+    }
+
+    const handleClick = createHashAnchorClickHandler(
+      viewport,
+      scrollHashIntoView,
+    );
+
+    viewport.addEventListener("click", handleClick);
+
+    return () => {
+      viewport.removeEventListener("click", handleClick);
+    };
+  }, [enabled, internalViewportRef, scrollHashIntoView]);
 }

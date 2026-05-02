@@ -84,7 +84,7 @@ export default defineConfig({
   reporter: playwrightReporter,
   retries: isCi ? 2 : 0,
   testDir: "./tests",
-  testMatch: ["**/*.e2e.ts"],
+  testMatch: ["**/*.e2e.test.ts"],
   timeout: isCoverageRun ? 60_000 : 30_000,
   use: {
     actionTimeout: isCoverageRun ? 15_000 : 0,

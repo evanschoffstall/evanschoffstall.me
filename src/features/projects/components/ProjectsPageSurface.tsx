@@ -2,19 +2,20 @@
 
 import { useCallback, useEffect, useMemo, useRef } from "react";
 
+import type { ProjectIndexData } from "@/features/projects/model";
+
 import { Navigation, VirtualScrollArea } from "@/components";
 import {
   consumeProjectsScrollPosition,
   registerProjectsViewport,
   requestHomeIntroSkip,
 } from "@/features/projects/browser";
-import type { ProjectIndexData } from "@/features/projects/model";
 
 import { ProjectsContent } from "./ProjectsContent";
 
 /** Project index route data and fallback state rendered inside the shared app shell. */
 interface ProjectsPageSurfaceProps {
-  projectData: ProjectIndexData | null;
+  projectData: null | ProjectIndexData;
 }
 
 /**

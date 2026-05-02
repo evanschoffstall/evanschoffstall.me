@@ -190,7 +190,7 @@ function ProjectHeaderContent(props: ProjectHeaderContentProps) {
   return (
     <motion.div
       animate={{ filter: "blur(0px)", opacity: 1, y: 0 }}
-      className="container relative isolate mx-auto overflow-hidden pb-4 pt-24"
+      className="container relative isolate mx-auto overflow-hidden pb-4 pt-[5.75rem]"
       initial={{ filter: "blur(10px)", opacity: 0, y: 24 }}
       style={{ willChange: "opacity, transform, filter" }}
       transition={headerContentTransition}

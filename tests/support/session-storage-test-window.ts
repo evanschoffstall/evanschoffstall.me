@@ -3,6 +3,12 @@ const originalWindowDescriptor = Object.getOwnPropertyDescriptor(
   "window",
 );
 
+interface ReplaceStateCall {
+  state: unknown;
+  title: string;
+  url?: null | string | URL;
+}
+
 interface SessionStorageTestWindowOptions {
   hash?: string;
   pathname?: string;
@@ -11,12 +17,6 @@ interface SessionStorageTestWindowOptions {
   throwOnGet?: boolean;
   throwOnRemove?: boolean;
   throwOnSet?: boolean;
-}
-
-interface ReplaceStateCall {
-  state: unknown;
-  title: string;
-  url?: string | URL | null;
 }
 
 /**
@@ -37,7 +37,7 @@ export function installSessionStorageTestWindow(
   };
   const historyStub = {
     /** Records and applies same-origin replaceState calls for location tests. */
-    replaceState(state: unknown, title: string, url?: string | URL | null) {
+    replaceState(state: unknown, title: string, url?: null | string | URL) {
       replaceStateCalls.push({ state, title, url });
 
       if (url === undefined || url === null) return;

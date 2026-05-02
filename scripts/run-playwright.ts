@@ -1,30 +1,36 @@
-import type { Dirent } from "node:fs";
-
 import { type ChildProcess, spawn } from "node:child_process";
 import { rmSync } from "node:fs";
-import { access, readdir, readFile, rm, writeFile } from "node:fs/promises";
+import {
+  access,
+  copyFile,
+  mkdir,
+  readdir,
+  readFile,
+  rm,
+  writeFile,
+} from "node:fs/promises";
 import { createServer } from "node:net";
-import { join, relative } from "node:path";
+import { availableParallelism } from "node:os";
+import { join } from "node:path";
 
-if (typeof globalThis.gc !== "function") {
-  /**
-   * Provides a no-op garbage-collection hook when Node was not started with gc exposed.
-   */
-  globalThis.gc = async () => {};
-}
-
-const DEFAULT_PLAYWRIGHT_HOST = "127.0.0.1";
-const DEFAULT_PLAYWRIGHT_PORT = 3100;
+import {
+  buildPlaywrightBaseUrl,
+  DEFAULT_PLAYWRIGHT_HOST,
+  DEFAULT_PLAYWRIGHT_PORT,
+} from "./playwright-base-url";
 
 const PLAYWRIGHT_COVERAGE_ENABLED =
   process.env.PLAYWRIGHT_COVERAGE_ENABLED === "1";
+const PLAYWRIGHT_COVERAGE_FILE_PREFIX =
+  process.env.PLAYWRIGHT_COVERAGE_FILE_PREFIX?.trim() ?? "";
 const PLAYWRIGHT_COVERAGE_OUTPUT_DIR =
   process.env.PLAYWRIGHT_COVERAGE_OUTPUT_DIR ?? "coverage/playwright-raw";
-const PLAYWRIGHT_COVERAGE_REPORT_DIR =
-  process.env.PLAYWRIGHT_COVERAGE_REPORT_DIR ?? "coverage/playwright";
-const PLAYWRIGHT_JUNIT_OUTPUT_FILE =
-  process.env.PLAYWRIGHT_JUNIT_OUTPUT_FILE ?? "coverage/playwright-junit.xml";
 const PLAYWRIGHT_HOST = DEFAULT_PLAYWRIGHT_HOST;
+const PLAYWRIGHT_COVERAGE_GENERATOR_SOURCE_PATH = join(
+  process.cwd(),
+  "scripts",
+  "generate-playwright-coverage.ts",
+);
 const PLAYWRIGHT_PORT_START = Number.parseInt(
   process.env.PLAYWRIGHT_PORT_START ?? String(DEFAULT_PLAYWRIGHT_PORT),
   10,
@@ -39,16 +45,29 @@ const PLAYWRIGHT_SHUTDOWN_TIMEOUT_MS = Number.parseInt(
 );
 const PLAYWRIGHT_DIST_DIR_PREFIX = ".next-playwright";
 const PLAYWRIGHT_LOG_LINE_LIMIT = 120;
-const PLAYWRIGHT_READINESS_PATH = process.env.PLAYWRIGHT_READINESS_PATH ?? "/";
-const PLAYWRIGHT_TSCONFIG_PREFIX = "tsconfig.playwright";
-const PROJECT_SOURCE_DIRECTORY_PATH = `${process.cwd().replaceAll("\\", "/")}/src/`;
-const SUMMARY_METRIC_KEYS = [
-  "lines",
-  "statements",
-  "functions",
-  "branches",
-  "branchesTrue",
+const PLAYWRIGHT_READINESS_PATH = "/";
+const PLAYWRIGHT_PREWARM_PATHS = [
+  "/",
+  "/projects",
+  "/projects/librerss",
+  "/projects/springgate-ecommerce",
+  "/api/views",
 ] as const;
+const PLAYWRIGHT_TSCONFIG_PREFIX = "tsconfig.playwright";
+const PLAYWRIGHT_RUN_ID_OVERRIDE = process.env.PLAYWRIGHT_RUN_ID?.trim();
+const PLAYWRIGHT_SHARD_COUNT = Number.parseInt(
+  process.env.PLAYWRIGHT_SHARD_COUNT ?? "1",
+  10,
+);
+const PLAYWRIGHT_INTERNAL_SHARD = process.env.PLAYWRIGHT_INTERNAL_SHARD?.trim();
+const PLAYWRIGHT_SKIP_COVERAGE_GENERATION =
+  process.env.PLAYWRIGHT_SKIP_COVERAGE_GENERATION === "1";
+const PLAYWRIGHT_PRESERVE_RAW_COVERAGE =
+  process.env.PLAYWRIGHT_PRESERVE_RAW_COVERAGE === "1";
+const PLAYWRIGHT_CHILD_PORT_STRIDE = Number.parseInt(
+  process.env.PLAYWRIGHT_CHILD_PORT_STRIDE ?? "1000",
+  10,
+);
 const PYTHON_PARENT_DEATHSIG_LAUNCHER = [
   "import ctypes",
   "import os",
@@ -63,37 +82,7 @@ const PYTHON_PARENT_DEATHSIG_LAUNCHER = [
 ].join("\n");
 
 /**
- * Metric totals for a single coverage dimension in the generated summary.
- */
-interface CoverageMetric {
-  covered: number;
-  pct: number;
-  skipped: number;
-  total: number;
-}
-/**
- * Valid keys that can appear in the normalized coverage summary entries.
- */
-type CoverageMetricKey = (typeof SUMMARY_METRIC_KEYS)[number];
-/**
- * Additional source-mapping metadata recorded for a covered output file.
- */
-interface CoverageSourceInfo {
-  distFile?: string;
-}
-
-/**
- * Raw summary object loaded from the generated monocart coverage report.
- */
-type CoverageSummary = Record<string, unknown>;
-/**
- * Summary entry containing whichever metric groups were emitted for one file.
- */
-type CoverageSummaryEntry = Partial<Record<CoverageMetricKey, CoverageMetric>>;
-
-/**
- * Running Playwright app-server process plus the helpers needed to monitor and
- * stream its output while the test run is active.
+ * Describes the dev server handle.
  */
 interface DevServerHandle {
   baseURL: string;
@@ -104,94 +93,17 @@ interface DevServerHandle {
 }
 
 /**
- * Narrow runtime surface used from `monocart-coverage-reports` without pulling
- * its full type declarations into this script.
+ * Describes the sharded child execution settings.
  */
-interface MonocartCoverageReport {
-  add: (coverageData: RawCoverageData) => Promise<void>;
-  generate: () => Promise<unknown>;
+interface ShardRunSettings {
+  runId: string;
+  shard: string;
 }
 
 /**
- * Factory signature returned by the dynamically imported monocart module.
- */
-type MonocartCoverageReportFactory = (
-  options: Record<string, unknown>,
-) => MonocartCoverageReport;
-
-/**
- * Shape of the V8 coverage JSON payload emitted by Node during coverage collection.
- */
-interface NodeV8CoveragePayload {
-  result: V8CoverageEntry[];
-}
-
-/**
- * Coverage payload variants accepted by monocart when aggregating browser and V8 data.
- */
-type RawCoverageData = Record<string, unknown> | V8CoverageEntry[];
-
-/**
- * Minimal V8 coverage entry surface needed by the coverage aggregation helpers.
- */
-interface V8CoverageEntry {
-  url: string;
-}
-
-/**
- * Ensures the generated summary still points at repository source files under src/.
- * @param reportDirectoryPath - The coverage report directory that contains the summary output.
- * @param projectSourceFilePathSet - The normalized repository source file paths that should appear in coverage.
- */
-async function assertSourceMappedCoverage(
-  reportDirectoryPath: string,
-  projectSourceFilePathSet: ReadonlySet<string>,
-): Promise<void> {
-  const summaryFilePath = join(reportDirectoryPath, "summary.json");
-  const summary = JSON.parse(
-    await readFile(summaryFilePath, "utf8"),
-  ) as CoverageSummary;
-  const sourceEntries = Object.keys(summary).filter((key) => key !== "total");
-
-  if (
-    sourceEntries.some((key) =>
-      isTrackedProjectSourceFile(key, projectSourceFilePathSet),
-    )
-  ) {
-    return;
-  }
-
-  throw new Error(
-    "Playwright coverage did not map to project source files under src/. The generated report still points at bundle artifacts.",
-  );
-}
-
-/**
- * Builds the canonical Playwright base URL from validated host and port inputs.
- * @param host - The hostname that Playwright should target.
- * @param port - The TCP port that hosts the Playwright app server.
- * @returns The normalized base URL for Playwright requests.
- */
-function buildPlaywrightBaseUrl(host: string, port: number) {
-  const normalizedHost = host.trim();
-
-  if (!normalizedHost) {
-    throw new Error("PLAYWRIGHT_HOST must not be empty.");
-  }
-
-  if (!Number.isInteger(port) || port < 1 || port > 65_535) {
-    throw new Error(
-      `PLAYWRIGHT_PORT must be a valid TCP port. Received: ${port}`,
-    );
-  }
-
-  return `http://${normalizedHost}:${port}`;
-}
-
-/**
- * Tracks recent child-process output while forwarding it to the parent streams.
- * @param child - The child process whose stdout and stderr should be mirrored.
- * @returns Helpers for reading buffered output and starting live forwarding.
+ * Create the output mirror.
+ * @param child - The child.
+ * @returns The output mirror.
  */
 function createOutputMirror(child: ChildProcess) {
   const bufferedChunks: { stream: NodeJS.WriteStream; text: string }[] = [];
@@ -199,9 +111,9 @@ function createOutputMirror(child: ChildProcess) {
   let isForwarding = false;
 
   /**
-   * Buffers child-process output until the caller starts forwarding it.
-   * @param stream - The parent stream that should eventually receive the output.
-   * @param chunk - The output chunk emitted by the child process.
+   * Append the chunk.
+   * @param stream - The stream.
+   * @param chunk - The chunk.
    */
   const appendChunk = (stream: NodeJS.WriteStream, chunk: Buffer | string) => {
     const text = chunk.toString();
@@ -224,54 +136,56 @@ function createOutputMirror(child: ChildProcess) {
     }
   };
 
-  child.stdout?.on("data", (chunk: Buffer | string) => {
+  child.stdout?.on("data", (chunk) => {
     appendChunk(process.stdout, chunk);
   });
-  child.stderr?.on("data", (chunk: Buffer | string) => {
+  child.stderr?.on("data", (chunk) => {
     appendChunk(process.stderr, chunk);
   });
 
-  /**
-   * Returns the recent child-process output as newline-delimited text.
-   * @returns The most recent buffered output lines.
-   */
-  const getRecentOutput = () => recentLines.join("\n");
-
-  /**
-   * Flushes buffered output and starts forwarding future child-process output.
-   */
-  const startForwarding = () => {
-    if (isForwarding) {
-      return;
-    }
-
-    isForwarding = true;
-
-    for (const chunk of bufferedChunks) {
-      chunk.stream.write(chunk.text);
-    }
-
-    bufferedChunks.length = 0;
-  };
-
   return {
-    getRecentOutput,
-    startForwarding,
+    /**
+     * Return the recent output.
+     * @returns The recent output.
+     */
+    getRecentOutput() {
+      return recentLines.join("\n");
+    },
+    /**
+     * Process the start forwarding.
+     */
+    startForwarding() {
+      if (isForwarding) {
+        return;
+      }
+
+      isForwarding = true;
+
+      for (const chunk of bufferedChunks) {
+        chunk.stream.write(chunk.text);
+      }
+
+      bufferedChunks.length = 0;
+    },
   };
 }
 
 /**
- * Creates a filesystem-safe run identifier for per-run Playwright artifacts.
- * @returns The unique run identifier for the current Playwright execution.
+ * Create the playwright run id.
+ * @returns The playwright run id.
  */
 function createPlaywrightRunId() {
+  if (PLAYWRIGHT_RUN_ID_OVERRIDE) {
+    return PLAYWRIGHT_RUN_ID_OVERRIDE;
+  }
+
   return `${Date.now()}-${process.pid}`;
 }
 
 /**
- * Creates a disposable root tsconfig so Next never mutates the repo file.
- * @param runId - The unique identifier for the current Playwright run.
- * @returns The temporary tsconfig path created for the run.
+ * Create the playwright tsconfig.
+ * @param runId - The run id.
+ * @returns The playwright tsconfig.
  */
 async function createPlaywrightTsconfig(runId: string) {
   const tsconfigPath = `${PLAYWRIGHT_TSCONFIG_PREFIX}.${runId}.json`;
@@ -286,10 +200,26 @@ async function createPlaywrightTsconfig(runId: string) {
 }
 
 /**
- * Formats a startup failure with recent server output for fast diagnosis.
- * @param message - The primary startup failure message.
- * @param recentOutput - The recent server output captured before the failure.
- * @returns The enriched startup error.
+ * Builds deterministic shard settings for internal child executions.
+ * @param parentRunId - Base run id for the coordinator run.
+ * @returns Child shard descriptors.
+ */
+function createShardRunSettings(parentRunId: string): ShardRunSettings[] {
+  return Array.from({ length: PLAYWRIGHT_SHARD_COUNT }, (_, index) => {
+    const shardNumber = index + 1;
+
+    return {
+      runId: `${parentRunId}-shard-${shardNumber}`,
+      shard: `${shardNumber}/${PLAYWRIGHT_SHARD_COUNT}`,
+    };
+  });
+}
+
+/**
+ * Create the startup error.
+ * @param message - The message.
+ * @param recentOutput - The recent output.
+ * @returns The startup error.
  */
 function createStartupError(message: string, recentOutput: string) {
   return new Error(
@@ -300,9 +230,9 @@ function createStartupError(message: string, recentOutput: string) {
 }
 
 /**
- * Generates the aggregated Playwright coverage reports after a coverage run.
- * @param rawCoverageOutputDir - The directory that stores raw V8 coverage output for the run.
- * @returns The process exit code for coverage generation.
+ * Process the generate playwright coverage report.
+ * @param rawCoverageOutputDir - The raw coverage output dir.
+ * @returns The generate playwright coverage report.
  */
 async function generatePlaywrightCoverageReport(rawCoverageOutputDir: string) {
   try {
@@ -311,147 +241,50 @@ async function generatePlaywrightCoverageReport(rawCoverageOutputDir: string) {
     return 0;
   }
 
-  try {
-    const monocartModule = (await import("monocart-coverage-reports")) as {
-      default: MonocartCoverageReportFactory;
-    };
-    const reportDirectoryPath = join(
-      process.cwd(),
-      PLAYWRIGHT_COVERAGE_REPORT_DIR,
+  const generatorProcess = spawn(
+    "tsx",
+    [PLAYWRIGHT_COVERAGE_GENERATOR_SOURCE_PATH],
+    {
+      cwd: process.cwd(),
+      env: {
+        ...process.env,
+        PLAYWRIGHT_COVERAGE_OUTPUT_DIR: rawCoverageOutputDir,
+      },
+      stdio: "inherit",
+    },
+  );
+
+  const { code, signal } = await waitForChildExit(generatorProcess);
+
+  if (signal) {
+    console.error(
+      `Playwright coverage generation exited from signal ${signal}.`,
     );
-    const projectSourceFilePathSet = new Set(
-      (await listFilesRecursively(join(process.cwd(), "src"))).map((filePath) =>
-        normalizeCoveragePath(filePath),
-      ),
-    );
-    const rawCoverageFilePaths = (
-      await listFilesRecursively(join(process.cwd(), rawCoverageOutputDir))
-    )
-      .filter((filePath) => filePath.endsWith(".json"))
-      .sort((leftPath, rightPath) => leftPath.localeCompare(rightPath));
-
-    if (rawCoverageFilePaths.length === 0) {
-      throw new Error(
-        `No Playwright coverage JSON files were found in ${join(process.cwd(), rawCoverageOutputDir)}.`,
-      );
-    }
-
-    const coverageReport = monocartModule.default({
-      clean: true,
-      cleanCache: true,
-      logging: "error",
-      name: "playwright-e2e",
-      outputDir: reportDirectoryPath,
-      reports: [
-        ["html", { subdir: "html" }],
-        ["json-summary", { file: "summary.json" }],
-        ["lcovonly", { file: "lcov.info" }],
-      ],
-      /**
-       * Filters coverage rows down to tracked repository source files.
-       * @param sourcePath - The source path emitted by the coverage report.
-       * @returns Whether the source path belongs to a tracked repository file.
-       */
-      sourceFilter: (sourcePath: string) =>
-        isTrackedProjectSourceFile(sourcePath, projectSourceFilePathSet),
-      /**
-       * Rewrites coverage source paths back to stable repository-relative paths.
-       * @param sourcePath - The source path emitted by the coverage report.
-       * @param sourceInfo - Additional coverage metadata supplied by Monocart.
-       * @returns The normalized repository-relative coverage path.
-       */
-      sourcePath: (sourcePath: string, sourceInfo: CoverageSourceInfo) =>
-        normalizeCoveragePath(sourcePath, sourceInfo.distFile),
-    });
-
-    for (const rawCoverageFilePath of rawCoverageFilePaths) {
-      const rawCoverageJson = await readFile(rawCoverageFilePath, "utf8");
-      await coverageReport.add(
-        parseRawCoverageData(rawCoverageJson, rawCoverageFilePath),
-      );
-    }
-
-    const coverageResults = await coverageReport.generate();
-
-    if (!coverageResults) {
-      throw new Error(
-        "Playwright coverage generation did not produce results.",
-      );
-    }
-
-    await rewriteCoverageArtifacts(
-      reportDirectoryPath,
-      projectSourceFilePathSet,
-    );
-    await assertSourceMappedCoverage(
-      reportDirectoryPath,
-      projectSourceFilePathSet,
-    );
-
-    console.log(
-      `Generated Playwright coverage from ${rawCoverageFilePaths.length} raw file(s) into ${relative(process.cwd(), reportDirectoryPath) || "."}.`,
-    );
-
-    return 0;
-  } catch (error) {
-    console.error(error);
     return 1;
   }
+
+  return code ?? 1;
 }
 
 /**
- * Returns the requested metric entry when present in a coverage summary row.
- * @param summaryEntry - The coverage summary row to inspect.
- * @param metricKey - The metric key to extract from the summary row.
- * @returns The requested metric entry when it exists.
- */
-function getSummaryMetric(
-  summaryEntry: CoverageSummaryEntry,
-  metricKey: CoverageMetricKey,
-): CoverageMetric | null {
-  return summaryEntry[metricKey] ?? null;
-}
-
-/**
- * Narrows Node's NODE_V8_COVERAGE payload shape to its result array.
- * @param value - The unknown JSON payload to validate.
- * @returns Whether the payload matches Node's V8 coverage wrapper shape.
- */
-function isNodeV8CoveragePayload(
-  value: unknown,
-): value is NodeV8CoveragePayload {
-  return (
-    isRecord(value) &&
-    Array.isArray(value.result) &&
-    value.result.every(isV8CoverageEntry)
-  );
-}
-
-/**
- * Quickly probes whether a TCP port can be bound without spawning a full
- * Next.js process.  Returns in ~1 ms per port, letting the scan skip
- * obviously-taken ports before paying the cost of a child process.
- * @param port - The TCP port to probe.
- * @returns Whether the port can currently be bound.
+ * Return whether is port available.
+ * @param port - The port.
+ * @returns Whether is port available.
  */
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise((resolve) => {
     const probe = createServer();
-    probe.once("error", () => {
-      resolve(false);
-    });
+    probe.once("error", () => resolve(false));
     probe.listen(port, PLAYWRIGHT_HOST, () => {
-      probe.close(() => {
-        resolve(true);
-      });
+      probe.close(() => resolve(true));
     });
   });
 }
 
 /**
- * Detects startup failures that should retry the next port immediately.
- * @param output - The recent dev-server output to inspect.
- * @returns Whether the output indicates that the port is already unavailable.
+ * Return whether is port unavailable output.
+ * @param output - The output.
+ * @returns Whether is port unavailable output.
  */
 function isPortUnavailableOutput(output: string) {
   return /(EADDRINUSE|address already in use|port\s+\d+\s+is in use)/iu.test(
@@ -460,66 +293,43 @@ function isPortUnavailableOutput(output: string) {
 }
 
 /**
- * Narrows unknown JSON payloads before coverage processing consumes them.
- * @param value - The unknown value to validate.
- * @returns Whether the value is a non-null object record.
+ * Recursively lists every file inside the requested directory.
+ * @param directoryPath - Directory to scan.
+ * @returns Absolute file paths for every nested file.
  */
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
-}
+async function listDirectoryFiles(directoryPath: string): Promise<string[]> {
+  const entries = await readdir(directoryPath, { withFileTypes: true });
+  const nestedFileSets = await Promise.all(
+    entries.map(async (entry) => {
+      const entryPath = join(directoryPath, entry.name);
 
-/**
- * Checks whether a source-path entry maps to a tracked repository file under src/.
- * @param sourcePath - The source path emitted by coverage tooling.
- * @param projectSourceFilePathSet - The normalized repository source file paths that should be retained.
- * @returns Whether the source path belongs to a tracked repository file.
- */
-function isTrackedProjectSourceFile(
-  sourcePath: string,
-  projectSourceFilePathSet: ReadonlySet<string>,
-): boolean {
-  return projectSourceFilePathSet.has(normalizeCoveragePath(sourcePath));
-}
-
-/**
- * Checks the minimal V8 entry shape expected by Monocart coverage ingestion.
- * @param value - The unknown coverage entry to validate.
- * @returns Whether the value matches the minimal V8 coverage entry shape.
- */
-function isV8CoverageEntry(value: unknown): value is V8CoverageEntry {
-  return isRecord(value) && typeof value.url === "string";
-}
-
-/**
- * Recursively lists files under a directory without relying on shell utilities.
- * @param directoryPath - The directory whose files should be listed recursively.
- * @returns Every file path found under the directory.
- */
-async function listFilesRecursively(directoryPath: string): Promise<string[]> {
-  const directoryEntries = await readdir(directoryPath, {
-    withFileTypes: true,
-  });
-  const nestedFiles = await Promise.all(
-    directoryEntries.map(async (directoryEntry: Dirent) => {
-      const entryPath = join(directoryPath, directoryEntry.name);
-      if (directoryEntry.isDirectory()) {
-        return await listFilesRecursively(entryPath);
+      if (entry.isDirectory()) {
+        return await listDirectoryFiles(entryPath);
       }
 
       return [entryPath];
     }),
   );
 
-  return nestedFiles.flat();
+  return nestedFileSets.flat();
 }
 
 /**
- * Runs the Playwright wrapper end to end, including server lifecycle and optional coverage generation.
- * @returns A promise that resolves after the wrapper exits the process.
+ * Process the main.
  */
 async function main() {
   const forwardedArguments = process.argv.slice(2);
   const runId = createPlaywrightRunId();
+
+  if (
+    PLAYWRIGHT_SHARD_COUNT > 1 &&
+    !PLAYWRIGHT_INTERNAL_SHARD &&
+    !forwardedArguments.some((argument) => argument.startsWith("--shard="))
+  ) {
+    process.exit(await runPlaywrightShards(forwardedArguments, runId));
+    return;
+  }
+
   const rawCoverageOutputDir = PLAYWRIGHT_COVERAGE_ENABLED
     ? `${PLAYWRIGHT_COVERAGE_OUTPUT_DIR}.${runId}`
     : PLAYWRIGHT_COVERAGE_OUTPUT_DIR;
@@ -534,11 +344,13 @@ async function main() {
   const temporaryPaths = [
     distDir,
     tsconfigPath,
-    ...(PLAYWRIGHT_COVERAGE_ENABLED ? [rawCoverageOutputDir] : []),
+    ...(PLAYWRIGHT_COVERAGE_ENABLED && !PLAYWRIGHT_PRESERVE_RAW_COVERAGE
+      ? [rawCoverageOutputDir]
+      : []),
   ];
 
   /**
-   * Removes temporary Playwright processes and runtime directories.
+   * Process the cleanup.
    */
   const cleanup = async () => {
     if (cleaningUp) {
@@ -557,7 +369,9 @@ async function main() {
     );
   };
 
-  /** Best-effort synchronous fallback that kills processes and removes temp files. */
+  /**
+   * Process the cleanup sync.
+   */
   const cleanupSync = () => {
     stopProcessNow(testProcess);
     stopProcessNow(serverProcess);
@@ -572,8 +386,9 @@ async function main() {
   };
 
   /**
-   * Exits the process after attempting asynchronous cleanup.
-   * @param exitCode - The process exit code to report.
+   * Process the exit with cleanup.
+   * @param exitCode - The exit code.
+   * @returns The exit with cleanup.
    */
   const exitWithCleanup = async (exitCode: number) => {
     const forceExitTimer = setTimeout(() => {
@@ -648,16 +463,13 @@ async function main() {
       await removePlaywrightRuntimeDirectory(rawCoverageOutputDir);
     }
     await removePlaywrightRuntimeDirectory(distDir);
-    const server = await startFirstAvailableDevServer(
-      distDir,
-      rawCoverageOutputDir,
-      tsconfigPath,
-    );
+    const server = await startFirstAvailableDevServer(distDir, tsconfigPath);
     serverProcess = server.process;
 
     console.log(`Playwright dev server port: ${server.port}`);
     console.log(`Playwright dist dir: ${distDir}`);
     console.log(`Playwright tsconfig: ${tsconfigPath}`);
+    await prewarmServerRoutes(server);
 
     testProcess = startPlaywrightTestRun(
       server.baseURL,
@@ -674,9 +486,10 @@ async function main() {
       return;
     }
 
-    const coverageExitCode = PLAYWRIGHT_COVERAGE_ENABLED
-      ? await generatePlaywrightCoverageReport(rawCoverageOutputDir)
-      : 0;
+    const coverageExitCode =
+      PLAYWRIGHT_COVERAGE_ENABLED && !PLAYWRIGHT_SKIP_COVERAGE_GENERATION
+        ? await generatePlaywrightCoverageReport(rawCoverageOutputDir)
+        : 0;
     const exitCode = code === 0 ? coverageExitCode : (code ?? 1);
 
     await exitWithCleanup(exitCode);
@@ -687,118 +500,67 @@ async function main() {
 }
 
 /**
- * Merges coverage metrics across all filtered source entries into a total row.
- * @param summaryEntries - The filtered coverage summary rows to merge.
- * @param metricKey - The metric key to aggregate across rows.
- * @returns The aggregated coverage metric.
+ * Copies per-shard raw coverage files into one merged directory for the final
+ * coverage report generation pass.
+ * @param shardRunSettings - Child shard settings used during execution.
+ * @param mergedRawCoverageDir - Destination merged raw coverage directory.
  */
-function mergeCoverageMetric(
-  summaryEntries: CoverageSummaryEntry[],
-  metricKey: CoverageMetricKey,
-): CoverageMetric {
-  const total = summaryEntries.reduce(
-    (sum, entry) => sum + (getSummaryMetric(entry, metricKey)?.total ?? 0),
-    0,
-  );
-  const covered = summaryEntries.reduce(
-    (sum, entry) => sum + (getSummaryMetric(entry, metricKey)?.covered ?? 0),
-    0,
-  );
-  const skipped = summaryEntries.reduce(
-    (sum, entry) => sum + (getSummaryMetric(entry, metricKey)?.skipped ?? 0),
-    0,
-  );
+async function mergeShardRawCoverage(
+  shardRunSettings: ShardRunSettings[],
+  mergedRawCoverageDir: string,
+) {
+  await removePlaywrightRuntimeDirectory(mergedRawCoverageDir);
+  await mkdir(join(process.cwd(), mergedRawCoverageDir), { recursive: true });
 
-  return {
-    covered,
-    pct: total === 0 ? 100 : Number(((covered / total) * 100).toFixed(2)),
-    skipped,
-    total,
-  };
-}
+  for (const shardSetting of shardRunSettings) {
+    const shardRawCoverageDir = `${PLAYWRIGHT_COVERAGE_OUTPUT_DIR}.${shardSetting.runId}`;
+    const shardRawCoveragePath = join(process.cwd(), shardRawCoverageDir);
 
-/**
- * Normalizes Monocart source paths back to repository-relative src/ paths.
- * @param sourcePath - The source path emitted by coverage tooling.
- * @param distFilePath - The optional bundled file path associated with the source path.
- * @returns The normalized repository-relative coverage path.
- */
-function normalizeCoveragePath(
-  sourcePath: string,
-  distFilePath?: string,
-): string {
-  const normalizedSourcePath = sourcePath.replaceAll("\\", "/");
-  const normalizedDistFilePath = normalizeDistFilePath(distFilePath);
-
-  if (normalizedSourcePath.startsWith(PROJECT_SOURCE_DIRECTORY_PATH)) {
-    return normalizedSourcePath.slice(
-      process.cwd().replaceAll("\\", "/").length + 1,
-    );
-  }
-
-  if (normalizedSourcePath.startsWith("src/")) {
-    if (normalizedDistFilePath.includes("/node_modules/")) {
-      return `${normalizedDistFilePath}::${normalizedSourcePath}`;
+    try {
+      await access(shardRawCoveragePath);
+    } catch {
+      continue;
     }
 
-    return normalizedSourcePath;
-  }
-
-  const srcDirectoryIndex = normalizedSourcePath.lastIndexOf("/src/");
-  if (srcDirectoryIndex >= 0 && !normalizedSourcePath.startsWith("/")) {
-    return normalizedSourcePath.slice(srcDirectoryIndex + 1);
-  }
-
-  return normalizedSourcePath;
-}
-
-/**
- * Normalizes dist-file paths so rewritten coverage artifacts stay stable.
- * @param distFilePath - The optional dist-file path to normalize.
- * @returns The normalized dist-file path.
- */
-function normalizeDistFilePath(distFilePath?: string): string {
-  return distFilePath?.replaceAll("\\", "/") ?? "";
-}
-
-/**
- * Validates a raw coverage JSON payload before handing it to Monocart.
- * @param rawCoverageJson - The raw JSON payload read from disk.
- * @param rawCoverageFilePath - The file path that supplied the raw coverage JSON.
- * @returns The parsed coverage payload in a shape Monocart accepts.
- */
-function parseRawCoverageData(
-  rawCoverageJson: string,
-  rawCoverageFilePath: string,
-): RawCoverageData {
-  const parsedCoverageData: unknown = JSON.parse(rawCoverageJson) as unknown;
-
-  if (Array.isArray(parsedCoverageData)) {
-    if (parsedCoverageData.every(isV8CoverageEntry)) {
-      return parsedCoverageData;
-    }
-
-    throw new Error(
-      `Expected ${rawCoverageFilePath} to contain an array of V8 coverage entries with string urls.`,
+    const shardFiles = (await listDirectoryFiles(shardRawCoveragePath)).filter(
+      (filePath) => filePath.endsWith(".json"),
     );
-  }
 
-  if (isNodeV8CoveragePayload(parsedCoverageData)) {
-    return parsedCoverageData.result;
+    for (const shardFile of shardFiles) {
+      const targetFileName = `${shardSetting.runId}-${shardFile
+        .split("/")
+        .at(-1)}`;
+      await copyFile(
+        shardFile,
+        join(process.cwd(), mergedRawCoverageDir, targetFileName),
+      );
+    }
   }
-
-  if (isRecord(parsedCoverageData)) {
-    return parsedCoverageData;
-  }
-
-  throw new Error(
-    `Expected ${rawCoverageFilePath} to contain a JSON object or an array of V8 coverage entries.`,
-  );
 }
 
 /**
- * Removes a Playwright runtime directory when the run exits.
- * @param directoryName - The runtime directory name relative to the repository root.
+ * Prewarms the routes and endpoints that the Playwright suite commonly hits
+ * first so the run does not pay cold-compilation costs mid-test.
+ * @param server - The started Playwright dev server.
+ */
+async function prewarmServerRoutes(server: DevServerHandle) {
+  for (const path of PLAYWRIGHT_PREWARM_PATHS) {
+    const response = await fetch(`${server.baseURL}${path}`, {
+      signal: AbortSignal.timeout(10_000),
+    });
+
+    if (response.status >= 500) {
+      throw createStartupError(
+        `Playwright dev server returned ${response.status} while prewarming ${path}.`,
+        server.getRecentOutput(),
+      );
+    }
+  }
+}
+
+/**
+ * Process the remove playwright runtime directory.
+ * @param directoryName - The directory name.
  */
 async function removePlaywrightRuntimeDirectory(directoryName: string) {
   await rm(join(process.cwd(), directoryName), {
@@ -808,123 +570,125 @@ async function removePlaywrightRuntimeDirectory(directoryName: string) {
 }
 
 /**
- * Rewrites the generated summary and LCOV files to tracked repository paths only.
- * @param reportDirectoryPath - The coverage report directory to rewrite.
- * @param projectSourceFilePathSet - The normalized repository source file paths that should be retained.
+ * Computes the per-shard worker budget so concurrent shard runners do not
+ * oversubscribe the local machine.
+ * @returns Worker count to inject into each internal shard run.
  */
-async function rewriteCoverageArtifacts(
-  reportDirectoryPath: string,
-  projectSourceFilePathSet: ReadonlySet<string>,
-): Promise<void> {
-  await Promise.all([
-    rewriteSummaryFile(reportDirectoryPath, projectSourceFilePathSet),
-    rewriteLcovFile(reportDirectoryPath, projectSourceFilePathSet),
-  ]);
-}
+function resolveShardWorkerBudget() {
+  const configuredWorkers = process.env.PLAYWRIGHT_WORKERS?.trim();
 
-/**
- * Filters LCOV output down to repository-owned source files and rewrites their paths.
- * @param reportDirectoryPath - The coverage report directory that contains the LCOV file.
- * @param projectSourceFilePathSet - The normalized repository source file paths that should be retained.
- */
-async function rewriteLcovFile(
-  reportDirectoryPath: string,
-  projectSourceFilePathSet: ReadonlySet<string>,
-): Promise<void> {
-  const lcovFilePath = join(reportDirectoryPath, "lcov.info");
-  const lcovBlocks = (await readFile(lcovFilePath, "utf8"))
-    .split("end_of_record\n")
-    .map((block) => block.trim())
-    .filter(Boolean);
-  const filteredBlocks = lcovBlocks.flatMap((block) => {
-    const lines = block.split(/\r?\n/u);
-    const sourceFileLine = lines.find((line) => line.startsWith("SF:"));
-    if (!sourceFileLine) {
-      return [];
-    }
-
-    const sourcePath = sourceFileLine.slice(3);
-    if (!isTrackedProjectSourceFile(sourcePath, projectSourceFilePathSet)) {
-      return [];
-    }
-
-    lines[lines.indexOf(sourceFileLine)] =
-      `SF:${normalizeCoveragePath(sourcePath)}`;
-    return [`${lines.join("\n")}\nend_of_record\n`];
-  });
-
-  await writeFile(lcovFilePath, filteredBlocks.join(""));
-}
-
-/**
- * Filters summary output to repository-owned files and recomputes the total row.
- * @param reportDirectoryPath - The coverage report directory that contains the summary file.
- * @param projectSourceFilePathSet - The normalized repository source file paths that should be retained.
- */
-async function rewriteSummaryFile(
-  reportDirectoryPath: string,
-  projectSourceFilePathSet: ReadonlySet<string>,
-): Promise<void> {
-  const summaryFilePath = join(reportDirectoryPath, "summary.json");
-  const summary = JSON.parse(
-    await readFile(summaryFilePath, "utf8"),
-  ) as CoverageSummary;
-  const filteredEntries = Object.entries(summary)
-    .filter(
-      ([sourcePath]) =>
-        sourcePath !== "total" &&
-        isTrackedProjectSourceFile(sourcePath, projectSourceFilePathSet),
-    )
-    .map(
-      ([sourcePath, summaryEntry]) =>
-        [
-          normalizeCoveragePath(sourcePath),
-          summaryEntry as CoverageSummaryEntry,
-        ] as const,
-    );
-  const totalEntry = Object.fromEntries(
-    SUMMARY_METRIC_KEYS.map((metricKey) => [
-      metricKey,
-      mergeCoverageMetric(
-        filteredEntries.map(([, summaryEntry]) => summaryEntry),
-        metricKey,
+  if (configuredWorkers && /^\d+$/u.test(configuredWorkers)) {
+    return Math.max(
+      1,
+      Math.floor(
+        Number.parseInt(configuredWorkers, 10) / PLAYWRIGHT_SHARD_COUNT,
       ),
-    ]),
-  );
+    );
+  }
 
-  await writeFile(
-    summaryFilePath,
-    JSON.stringify({
-      total: totalEntry,
-      ...Object.fromEntries(filteredEntries),
-    }),
-  );
+  const localWorkerCap = Math.min(10, availableParallelism());
+
+  return Math.max(1, Math.floor(localWorkerCap / PLAYWRIGHT_SHARD_COUNT));
 }
 
 /**
- * Sleeps without depending on Bun runtime globals.
+ * Launches N internal shard child processes in parallel, each with its own
+ * cold Playwright server lifecycle.
+ * @param forwardedArguments - CLI args originally passed to this script.
+ * @param parentRunId - Coordinator run id used to derive child run ids.
+ * @returns Exit code representing the aggregate shard execution outcome.
+ */
+async function runPlaywrightShards(
+  forwardedArguments: string[],
+  parentRunId: string,
+) {
+  const shardRunSettings = createShardRunSettings(parentRunId);
+  const shardWorkerBudget = resolveShardWorkerBudget();
+  const tsxExecutablePath = "tsx";
+  const childProcesses: ChildProcess[] = [];
+
+  for (const [index, shardSetting] of shardRunSettings.entries()) {
+    const shardPortStart =
+      PLAYWRIGHT_PORT_START + index * PLAYWRIGHT_CHILD_PORT_STRIDE;
+    const shardCommandArgs = [
+      "scripts/run-playwright.ts",
+      ...forwardedArguments,
+      `--shard=${shardSetting.shard}`,
+    ];
+    const child = spawn(tsxExecutablePath, shardCommandArgs, {
+      cwd: process.cwd(),
+      env: {
+        ...process.env,
+        PLAYWRIGHT_COVERAGE_FILE_PREFIX: `${PLAYWRIGHT_COVERAGE_FILE_PREFIX}${PLAYWRIGHT_COVERAGE_FILE_PREFIX ? "-" : ""}${shardSetting.runId}`,
+        PLAYWRIGHT_INTERNAL_SHARD: shardSetting.shard,
+        PLAYWRIGHT_PORT_START: String(shardPortStart),
+        PLAYWRIGHT_PRESERVE_RAW_COVERAGE: PLAYWRIGHT_COVERAGE_ENABLED
+          ? "1"
+          : "0",
+        PLAYWRIGHT_RUN_ID: shardSetting.runId,
+        PLAYWRIGHT_SHARD_COUNT: "1",
+        PLAYWRIGHT_SKIP_COVERAGE_GENERATION: PLAYWRIGHT_COVERAGE_ENABLED
+          ? "1"
+          : "0",
+        PLAYWRIGHT_WORKERS: String(shardWorkerBudget),
+      },
+      stdio: "inherit",
+    });
+
+    childProcesses.push(child);
+  }
+
+  const shardResults = await Promise.all(childProcesses.map(waitForChildExit));
+  const failedShard = shardResults.find(
+    (result) => result.signal !== null || (result.code ?? 1) !== 0,
+  );
+
+  if (failedShard) {
+    return 1;
+  }
+
+  if (PLAYWRIGHT_COVERAGE_ENABLED) {
+    const mergedRawCoverageDir = `${PLAYWRIGHT_COVERAGE_OUTPUT_DIR}.${parentRunId}`;
+
+    await mergeShardRawCoverage(shardRunSettings, mergedRawCoverageDir);
+
+    const coverageExitCode =
+      await generatePlaywrightCoverageReport(mergedRawCoverageDir);
+
+    await Promise.allSettled(
+      shardRunSettings.map((shardSetting) =>
+        removePlaywrightRuntimeDirectory(
+          `${PLAYWRIGHT_COVERAGE_OUTPUT_DIR}.${shardSetting.runId}`,
+        ),
+      ),
+    );
+    await removePlaywrightRuntimeDirectory(mergedRawCoverageDir);
+
+    return coverageExitCode;
+  }
+
+  return 0;
+}
+
+/**
+ * Sleeps without depending on Bun runtime globals because this wrapper runs through tsx.
  * @param milliseconds - The number of milliseconds to wait.
  * @returns A promise that resolves after the requested delay.
  */
-function sleep(milliseconds: number) {
-  return new Promise<void>((resolve) => {
+function sleep(milliseconds: number): Promise<void> {
+  return new Promise((resolve) => {
     setTimeout(resolve, milliseconds);
   });
 }
 
 /**
- * Starts Next on the first available port.  Randomises the starting port so
- * hundreds of concurrent runs spread across the range instead of all piling
- * up on port 3100.  A fast TCP probe skips obviously-taken ports before
- * spawning a child process.
- * @param distDir - The temporary Next.js dist directory for the run.
- * @param rawCoverageOutputDir - The raw coverage output directory for the run.
- * @param tsconfigPath - The temporary tsconfig path for the run.
- * @returns The first dev server that starts successfully.
+ * Process the start first available dev server.
+ * @param distDir - The dist dir.
+ * @param tsconfigPath - The tsconfig path.
+ * @returns The start first available dev server.
  */
 async function startFirstAvailableDevServer(
   distDir: string,
-  rawCoverageOutputDir: string,
   tsconfigPath: string,
 ) {
   const portRangeSize = 65_535 - PLAYWRIGHT_PORT_START + 1;
@@ -939,12 +703,7 @@ async function startFirstAvailableDevServer(
       continue;
     }
 
-    const server = startPlaywrightDevServer(
-      port,
-      distDir,
-      rawCoverageOutputDir,
-      tsconfigPath,
-    );
+    const server = startPlaywrightDevServer(port, distDir, tsconfigPath);
 
     try {
       await waitForServerStartup(server.process, server.getRecentOutput);
@@ -975,17 +734,15 @@ async function startFirstAvailableDevServer(
 }
 
 /**
- * Starts the dedicated Next.js Playwright dev server on the chosen port.
- * @param port - The TCP port the dev server should bind to.
- * @param distDir - The temporary Next.js dist directory for the run.
- * @param rawCoverageOutputDir - The raw coverage output directory for the run.
- * @param tsconfigPath - The temporary tsconfig path for the run.
- * @returns The dev server handle used by the wrapper.
+ * Process the start playwright dev server.
+ * @param port - The port.
+ * @param distDir - The dist dir.
+ * @param tsconfigPath - The tsconfig path.
+ * @returns The start playwright dev server.
  */
 function startPlaywrightDevServer(
   port: number,
   distDir: string,
-  rawCoverageOutputDir: string,
   tsconfigPath: string,
 ) {
   const child = spawn(
@@ -1007,12 +764,6 @@ function startPlaywrightDevServer(
         ...process.env,
         NEXT_PUBLIC_PLAYWRIGHT_SKIP_ANIMATIONS: "1",
         NEXT_TYPESCRIPT_CONFIG_PATH: tsconfigPath,
-        ...(PLAYWRIGHT_COVERAGE_ENABLED
-          ? {
-              // Capture Next.js server execution into the same raw coverage pool.
-              NODE_V8_COVERAGE: join(process.cwd(), rawCoverageOutputDir),
-            }
-          : {}),
         PLAYWRIGHT_NEXT_DIST_DIR: distDir,
         PLAYWRIGHT_PORT: String(port),
       },
@@ -1032,13 +783,13 @@ function startPlaywrightDevServer(
 }
 
 /**
- * Runs the Playwright CLI with the dynamically selected base URL.
- * @param baseURL - The base URL that Playwright should target.
- * @param port - The TCP port used by the dev server.
- * @param forwardedArguments - The CLI arguments forwarded to Playwright.
- * @param rawCoverageOutputDir - The raw coverage output directory for the run.
- * @param runId - The unique identifier for the current Playwright run.
- * @returns The spawned Playwright CLI child process.
+ * Process the start playwright test run.
+ * @param baseURL - The base url.
+ * @param port - The port.
+ * @param forwardedArguments - The forwarded arguments.
+ * @param rawCoverageOutputDir - The raw coverage output dir.
+ * @param runId - The run id.
+ * @returns The start playwright test run.
  */
 function startPlaywrightTestRun(
   baseURL: string,
@@ -1057,7 +808,6 @@ function startPlaywrightTestRun(
       PLAYWRIGHT_HOST,
       PLAYWRIGHT_HTML_REPORT_DIR:
         process.env.PLAYWRIGHT_HTML_REPORT_DIR ?? `playwright-report/${runId}`,
-      PLAYWRIGHT_JUNIT_OUTPUT_FILE: PLAYWRIGHT_JUNIT_OUTPUT_FILE,
       PLAYWRIGHT_OUTPUT_DIR:
         process.env.PLAYWRIGHT_OUTPUT_DIR ?? `test-results/playwright/${runId}`,
       PLAYWRIGHT_PORT: String(port),
@@ -1067,11 +817,11 @@ function startPlaywrightTestRun(
 }
 
 /**
- * Stops the foreground Playwright CLI process if the wrapper is interrupted.
- * @param child - The child process to stop.
+ * Process the stop process.
+ * @param child - The child.
  */
 async function stopProcess(child: ChildProcess | null) {
-  if (child?.exitCode !== null || child.signalCode !== null) {
+  if (!child || child.exitCode !== null || child.signalCode !== null) {
     return;
   }
 
@@ -1089,11 +839,11 @@ async function stopProcess(child: ChildProcess | null) {
 }
 
 /**
- * Performs a best-effort synchronous kill of the Playwright CLI process.
- * @param child - The child process to kill synchronously.
+ * Process the stop process now.
+ * @param child - The child.
  */
 function stopProcessNow(child: ChildProcess | null) {
-  if (child?.exitCode !== null || child.signalCode !== null) {
+  if (!child || child.exitCode !== null || child.signalCode !== null) {
     return;
   }
 
@@ -1101,9 +851,9 @@ function stopProcessNow(child: ChildProcess | null) {
 }
 
 /**
- * Waits for a child process to exit and resolves with its exit status.
- * @param child - The child process to observe.
- * @returns The child's exit code and terminating signal.
+ * Process the wait for child exit.
+ * @param child - The child.
+ * @returns The wait for child exit.
  */
 async function waitForChildExit(child: ChildProcess) {
   return await new Promise<{
@@ -1118,9 +868,9 @@ async function waitForChildExit(child: ChildProcess) {
 }
 
 /**
- * Waits for the configured app route to be reachable before tests start.
- * @param server - The dev server handle to poll for readiness.
- * @param timeoutMs - The maximum time to wait for readiness.
+ * Process the wait for server readiness.
+ * @param server - The server.
+ * @param timeoutMs - The timeout ms value.
  */
 async function waitForServerReadiness(
   server: DevServerHandle,
@@ -1173,12 +923,9 @@ async function waitForServerReadiness(
 }
 
 /**
- * Detects whether the dev server has claimed its port by watching child-process
- * output for the "- Local:" line that Next.js emits once its HTTP server is
- * listening.  Falls back to EADDRINUSE detection and process-exit checks so
- * the port-scan loop can advance without the old two-second blind timer.
- * @param child - The spawned dev-server process to observe.
- * @param getRecentOutput - The callback that returns the recent server output.
+ * Process the wait for server startup.
+ * @param child - The child.
+ * @param getRecentOutput - The callback that recent output.
  */
 async function waitForServerStartup(
   child: ChildProcess,
