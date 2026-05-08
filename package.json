@@ -87,7 +87,6 @@
     "contentlayer:dev": "bunx --bun contentlayer dev",
     "dev": "node ./scripts/contentlayer-build.mjs && next dev --turbopack",
     "dev:playwright": "env NEXT_DIST_DIR=.next-playwright node ./scripts/contentlayer-build.mjs && env NEXT_DIST_DIR=.next-playwright next dev --webpack -H 127.0.0.1 -p 3100",
-    "dev:local": "node ./scripts/contentlayer-build.mjs && next dev --turbopack -H 0.0.0.0 -p 3000",
     "readmes:download": "tsx ./scripts/download-project-readmes.ts",
     "start:playwright": "NEXT_DIST_DIR=.next-playwright next start -p 3100",
     "start": "next start",
