@@ -1,5 +1,5 @@
 import { Redis } from "@upstash/redis";
-import { beforeAll, describe, expect, mock, spyOn, test } from "bun:test";
+import { afterAll, beforeAll, describe, expect, mock, spyOn, test } from "bun:test";
 
 import {
   getProjectView,
@@ -20,11 +20,19 @@ const redisClient = {
 } as unknown as ReturnType<typeof Redis.fromEnv>;
 
 describe("project views", () => {
+  const originalRedisToken = process.env.UPSTASH_REDIS_REST_TOKEN;
+  const originalRedisUrl = process.env.UPSTASH_REDIS_REST_URL;
+
   beforeAll(() => {
     process.env.UPSTASH_REDIS_REST_TOKEN = "test-token";
     process.env.UPSTASH_REDIS_REST_URL = "https://redis.example.com";
 
     spyOn(Redis, "fromEnv").mockReturnValue(redisClient);
+  });
+
+  afterAll(() => {
+    process.env.UPSTASH_REDIS_REST_TOKEN = originalRedisToken;
+    process.env.UPSTASH_REDIS_REST_URL = originalRedisUrl;
   });
 
   test("reads a single project view count from Redis", async () => {

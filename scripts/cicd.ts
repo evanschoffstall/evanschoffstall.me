@@ -662,6 +662,9 @@ const ensureNoStagedChangesRemain = async (): Promise<void> => {
     );
 };
 
+const bunExecutable = process.platform === "win32" ? "bun.exe" : "bun";
+const bunxExecutable = process.platform === "win32" ? "bunx.cmd" : "bunx";
+
 /**
  * Runs the full check suite against the staged index snapshot.
  */
@@ -681,7 +684,7 @@ const runBunCheckAgainstIndexSnapshot = async (): Promise<void> => {
       logRelease(`Running bun check in staged snapshot ${path}`);
       await runStepOrExit(
         {
-          command: ["bun", "check"],
+          command: [bunExecutable, "check"],
           label: "Run bun check for the staged snapshot",
         },
         path,
@@ -741,7 +744,7 @@ async function main(): Promise<void> {
 /** Run semantic-release with captured output so known git tag collisions can be surfaced clearly. */
 async function runSemanticReleaseOrExit(): Promise<void> {
   const step: ReleaseStep = {
-    command: ["bunx", "semantic-release", "--no-ci"],
+    command: [bunxExecutable, "semantic-release", "--no-ci"],
     label: "Run semantic-release",
   };
   logRelease(`Starting: ${step.label}`);

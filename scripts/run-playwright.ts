@@ -798,7 +798,9 @@ function startPlaywrightTestRun(
   rawCoverageOutputDir: string,
   runId: string,
 ) {
-  return spawn("bunx", ["playwright", "test", ...forwardedArguments], {
+  const bunxExecutable = process.platform === "win32" ? "bunx.cmd" : "bunx";
+
+  return spawn(bunxExecutable, ["playwright", "test", ...forwardedArguments], {
     cwd: process.cwd(),
     env: {
       ...process.env,

@@ -20,7 +20,7 @@ interface SessionStorageTestWindowOptions {
 }
 
 /**
- * Installs a minimal window/sessionStorage pair for Bun browser-storage tests.
+ * Installs a minimal window/sessionStorage pair for browser-storage tests.
  * @param options - Storage behavior overrides for the installed window stub.
  * @returns The backing store used by the installed sessionStorage stub.
  */
