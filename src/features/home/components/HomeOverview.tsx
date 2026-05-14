@@ -68,7 +68,7 @@ interface HomeStackItem {
 type HomeStackTier = "data" | "infra" | "lang" | "web";
 
 const homeContextRows = [
-  { label: "Experience", value: "15+ yrs · gov, enterprise, startup" },
+  { label: "Experience", value: "gov, enterprise, startup" },
   { label: "Current", value: "State-level procurement" },
   { label: "Past", value: "Winery: zero → multimillion revenue" },
   { label: "Style", value: "IC through executive; hands-on throughout" },
@@ -188,7 +188,7 @@ function HomeBioPanel() {
         </span>
       </p>
       <p className="text-sm leading-7 text-zinc-500">
-        15+ years across public sector, enterprise, and startups. Currently
+        Experience across public sector, enterprise, and startups. Currently
         involved in state-level procurement; previously led a winery from
         inception to multimillion-dollar annual revenue.
       </p>
