@@ -27,18 +27,18 @@ const rootConfigFiles = [
   "check-suite.config.ts",
   "drizzle.config.ts",
   "eslint.config.mjs",
-  "next.config.ts",
+  "next.config.mjs",
   "playwright.config.ts",
-  "tailwind.config.ts",
+  "tailwind.config.mjs",
 ];
 const documentationFiles = [
   "src/**/*.{ts,tsx}",
   "scripts/**/*.ts",
   "check-suite.config.ts",
   "drizzle.config.ts",
-  "next.config.ts",
+  "next.config.mjs",
   "playwright.config.ts",
-  "tailwind.config.ts",
+  "tailwind.config.mjs",
 ];
 const nonSourceProjectFiles = [
   ...testFiles,
@@ -88,7 +88,7 @@ const banTypeScriptCommentRule = [
 ];
 const sourceTailwindSettings = {
   "better-tailwindcss": {
-    tailwindConfig: `${import.meta.dirname}/tailwind.config.mjs`,
+    entryPoint: `${import.meta.dirname}/src/app/globals.css`,
     tsconfig: `${import.meta.dirname}/tsconfig.json`,
   },
 };
