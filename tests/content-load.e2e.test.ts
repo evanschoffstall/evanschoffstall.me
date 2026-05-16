@@ -59,7 +59,7 @@ test.describe("content loads", () => {
       page.getByRole("heading", { name: "evanschoffstall.me" }),
     ).toBeVisible();
     await expect(
-      page.getByText("Portfolio. Projects. Built in the open."),
+      page.getByText("Personal portfolio and project showcase."),
     ).toBeVisible();
     await expect(
       page.getByRole("heading", { name: "Quick Start" }),
