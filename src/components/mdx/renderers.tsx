@@ -203,8 +203,8 @@ function renderBlockquote(props: BlockquoteProps) {
     <blockquote
       className={cn(
         `
-      mt-6 border-l-2 border-zinc-300 pl-6 italic text-zinc-800
-      [&>*]:text-zinc-600
+      mt-6 border-l-2 border-zinc-300 pl-6 text-zinc-800 italic
+      *:text-zinc-600
     `,
         className,
       )}
@@ -225,7 +225,7 @@ function renderCode(props: CodeProps) {
     <code
       className={cn(
         `
-      relative rounded border bg-zinc-300 bg-opacity-25 px-[0.3rem] py-[0.2rem]
+      relative rounded-sm border bg-zinc-300/25 px-[0.3rem] py-[0.2rem]
       font-mono text-sm text-zinc-600
     `,
         className,
@@ -293,7 +293,7 @@ function renderParagraph(props: ParagraphProps) {
       className={cn(
         `
      leading-7
-     [&:not(:first-child)]:mt-6
+     not-first:mt-6
    `,
         className,
       )}
@@ -313,7 +313,7 @@ function renderPre(props: PreProps) {
   return (
     <pre
       className={cn(
-        "mb-4 mt-6 overflow-x-auto rounded-lg bg-zinc-900 py-4",
+        "mt-6 mb-4 overflow-x-auto rounded-lg bg-zinc-900 py-4",
         className,
       )}
       {...preProps}
@@ -349,8 +349,8 @@ function renderTableCell(props: TdProps) {
       className={cn(
         `
       border border-zinc-200 px-4 py-2 text-left
-      [&[align=center]]:text-center
-      [&[align=right]]:text-right
+      [[align=center]]:text-center
+      [[align=right]]:text-right
     `,
         className,
       )}
@@ -372,8 +372,8 @@ function renderTableHeaderCell(props: ThProps) {
       className={cn(
         `
       border border-zinc-200 px-4 py-2 text-left font-bold
-      [&[align=center]]:text-center
-      [&[align=right]]:text-right
+      [[align=center]]:text-center
+      [[align=right]]:text-right
     `,
         className,
       )}
