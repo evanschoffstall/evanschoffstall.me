@@ -157,7 +157,7 @@ function StatusPageContent(props: StatusPageProps) {
 
       <div
         className="
-        mt-3 h-px w-40 bg-gradient-to-r from-transparent via-zinc-600
+        mt-3 h-px w-40 bg-linear-to-r from-transparent via-zinc-600
         to-transparent
       "
       />
@@ -200,14 +200,14 @@ function StatusPageTopBar() {
   return (
     <motion.div
       animate="visible"
-      className="absolute left-0 right-0 top-0 z-20"
+      className="absolute inset-x-0 top-0  z-20"
       initial="hidden"
       variants={fadeIn}
     >
       <div
         aria-hidden
         className="
-          pointer-events-none absolute inset-0 bg-gradient-to-b from-black/50
+          pointer-events-none absolute inset-0 bg-linear-to-b from-black/50
           to-transparent
         "
       />

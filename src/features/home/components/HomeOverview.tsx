@@ -169,16 +169,16 @@ function HomeBioPanel() {
     <div className="space-y-3">
       <p
         className="
-        text-[10px] font-semibold uppercase tracking-[0.3em] text-zinc-600
+        text-[10px] font-semibold tracking-[0.3em] text-zinc-600 uppercase
       "
       >
         Technologist &middot; Engineer &middot; Business Officer
       </p>
       <p
         className="
-        text-lg font-medium leading-7 text-zinc-200
-        sm:text-xl sm:leading-8
-        lg:text-2xl lg:leading-9
+        text-lg/7  font-medium text-zinc-200
+        sm:text-xl/8 
+        lg:text-2xl/9 
       "
       >
         I close the gap between engineering and outcome &mdash;{" "}
@@ -187,7 +187,7 @@ function HomeBioPanel() {
           that compound on both.
         </span>
       </p>
-      <p className="text-sm leading-7 text-zinc-500">
+      <p className="text-sm/7  text-zinc-500">
         Experience across public sector, enterprise, and startups. Currently
         involved in state-level procurement; previously led a winery from
         inception to multimillion-dollar annual revenue.
@@ -205,7 +205,7 @@ function HomeContextSection() {
     <div className="space-y-4">
       <p
         className="
-        text-[10px] font-semibold uppercase tracking-[0.3em] text-zinc-600
+        text-[10px] font-semibold tracking-[0.3em] text-zinc-600 uppercase
       "
       >
         Context
@@ -267,8 +267,8 @@ function HomeFeaturedProjectMeta(props: HomeFeaturedProjectMetaProps) {
       <span
         className="
         inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 px-2.5
-        py-1 text-[11px] font-semibold text-amber-400 ring-1 ring-inset
-        ring-amber-500/20
+        py-1 text-[11px] font-semibold text-amber-400 ring-1 ring-amber-500/20
+        ring-inset
       "
       >
         <Star className="size-2.5 fill-current" />
@@ -281,7 +281,7 @@ function HomeFeaturedProjectMeta(props: HomeFeaturedProjectMetaProps) {
       ) : null}
       {featuredViews > 0 ? (
         <>
-          <span aria-hidden className="select-none text-xs text-zinc-700">
+          <span aria-hidden className="text-xs text-zinc-700 select-none">
             &middot;
           </span>
           <span className="text-xs text-zinc-600">
@@ -329,7 +329,7 @@ function HomeFeaturedProjectPanel(props: HomeFeaturedProjectPanelProps) {
       <HomeFeaturedProjectTitle featuredProject={featuredProject} />
       <p
         className="
-        text-sm leading-7 text-zinc-400
+        text-sm/7  text-zinc-400
         sm:text-[15px] sm:leading-relaxed
       "
       >
@@ -391,7 +391,7 @@ function HomeGradientRule() {
     <div
       aria-hidden
       className="
-        h-px w-full bg-gradient-to-r from-transparent via-zinc-700/60
+        h-px w-full bg-linear-to-r from-transparent via-zinc-700/60
         to-transparent
       "
     />
@@ -443,7 +443,7 @@ function HomeStackSection() {
     <div className="space-y-4">
       <p
         className="
-        text-[10px] font-semibold uppercase tracking-[0.3em] text-zinc-600
+        text-[10px] font-semibold tracking-[0.3em] text-zinc-600 uppercase
       "
       >
         Core Stack

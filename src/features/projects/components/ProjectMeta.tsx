@@ -45,8 +45,8 @@ export function ProjectDateBadge(props: ProjectDateBadgeProps) {
     <span
       className="
       inline-flex items-center rounded-md bg-zinc-800/50 px-2 py-0.5 text-[11px]
-      font-medium text-zinc-500 ring-1 ring-inset ring-zinc-700/50
-      transition-colors duration-300
+      font-medium text-zinc-500 ring-1 ring-zinc-700/50 transition-colors
+      duration-300 ring-inset
       group-hover:text-zinc-400 group-hover:ring-zinc-600
     "
     >
@@ -75,8 +75,8 @@ export function ProjectFeatureBadge(props: ProjectFeatureBadgeProps) {
     <span
       className="
       inline-flex items-center gap-1 rounded-md bg-amber-900/30 px-2 py-0.5
-      text-[11px] font-semibold text-amber-400 ring-1 ring-inset
-      ring-amber-700/50 transition-colors duration-300
+      text-[11px] font-semibold text-amber-400 ring-1 ring-amber-700/50
+      transition-colors duration-300 ring-inset
       group-hover:text-amber-300 group-hover:ring-amber-600/60
     "
     >

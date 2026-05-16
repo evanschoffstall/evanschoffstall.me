@@ -115,7 +115,7 @@ function HeaderNavigation(props: HeaderNavigationProps) {
       animate={{ opacity: 1, y: 0 }}
       className="
       fixed inset-x-0 top-0 z-50 border-b border-transparent bg-zinc-900/0
-      backdrop-blur
+      backdrop-blur-sm
     "
       initial={{ opacity: 0, y: -10 }}
       transition={headerChromeTransition}
@@ -161,7 +161,7 @@ function HeaderNavigation(props: HeaderNavigationProps) {
             className="
             inline-flex h-6 shrink-0 items-center justify-center gap-1
             rounded-full border border-zinc-800 bg-zinc-900/40 px-2
-            text-[11px] font-medium tabular-nums text-zinc-500
+            text-[11px] font-medium text-zinc-500 tabular-nums
             sm:h-7 sm:px-2.5 sm:text-xs
           "
           >
@@ -190,7 +190,7 @@ function ProjectHeaderContent(props: ProjectHeaderContentProps) {
   return (
     <motion.div
       animate={{ filter: "blur(0px)", opacity: 1, y: 0 }}
-      className="container relative isolate mx-auto overflow-hidden pb-4 pt-[5.75rem]"
+      className="relative isolate container mx-auto overflow-hidden pt-23 pb-4"
       initial={{ filter: "blur(10px)", opacity: 0, y: 24 }}
       style={{ willChange: "opacity, transform, filter" }}
       transition={headerContentTransition}
@@ -209,7 +209,7 @@ function ProjectHeaderContent(props: ProjectHeaderContentProps) {
         >
           {project.title}
         </h1>
-        <p className="text-lg leading-8 text-zinc-400">{project.description}</p>
+        <p className="text-lg/8  text-zinc-400">{project.description}</p>
       </div>
     </motion.div>
   );

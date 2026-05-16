@@ -105,7 +105,7 @@ export function VirtualScrollArea(props: VirtualScrollAreaProps) {
 
           return (
             <div
-              className={cn("absolute left-0 top-0 w-full", item.className)}
+              className={cn("absolute top-0 left-0 w-full", item.className)}
               data-index={virtualItem.index}
               key={item.key}
               ref={(element) => {
@@ -259,7 +259,7 @@ function ScrollBar(props: ScrollBarProps) {
   return (
     <ScrollAreaPrimitive.Scrollbar
       className={cn(
-        "flex touch-none select-none transition-colors",
+        "flex touch-none transition-colors select-none",
         orientation === "vertical" &&
           `
             h-full w-2 rounded-full border-l border-l-transparent bg-zinc-900/60

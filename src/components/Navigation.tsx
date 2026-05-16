@@ -37,7 +37,7 @@ export function Navigation(props: Props) {
     <header ref={ref}>
       <div
         className={`
-          fixed inset-x-0 top-0 z-50 border-b backdrop-blur duration-200
+          fixed inset-x-0 top-0 z-50 border-b backdrop-blur-sm duration-200
           ${
             isIntersecting
               ? "border-transparent bg-zinc-900/0"

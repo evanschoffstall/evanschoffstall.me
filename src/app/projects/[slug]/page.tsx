@@ -99,7 +99,7 @@ export default async function ProjectPage(props: Props) {
           ) : (
             <section
               className="
-              prose prose-zinc prose-invert prose-quoteless max-w-none
+              prose max-w-none prose-quoteless prose-zinc prose-invert
             "
             >
               <Mdx code={project.body.code} />

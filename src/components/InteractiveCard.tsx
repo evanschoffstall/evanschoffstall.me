@@ -85,7 +85,7 @@ export function FeaturedCard(props: CardProps) {
       className={className}
       containerClassName="
         group relative overflow-hidden rounded-xl border border-amber-900/30
-        bg-zinc-900/40 shadow-2xl shadow-amber-950/20 duration-700
+        bg-[rgba(24,24,27,0.4)] shadow-2xl shadow-amber-950/20 duration-700
         hover:border-amber-700/40 hover:bg-amber-950/10
         hover:shadow-amber-900/30
         md:gap-8
@@ -105,7 +105,7 @@ export function FeaturedCard(props: CardProps) {
       topAccent={
         <div
           className="
-          absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent
+          absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent
           via-amber-500/50 to-transparent
         "
         />
@@ -129,7 +129,7 @@ export function Glow(props: GlowProps) {
       aria-hidden="true"
       className={cn(
         `
-          absolute inset-0 rounded-lg bg-gradient-to-br from-zinc-800/20
+          absolute inset-0 rounded-lg bg-linear-to-br from-zinc-800/20
           via-transparent to-zinc-700/20 blur-xl
         `,
         className,

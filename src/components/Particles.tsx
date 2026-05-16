@@ -65,7 +65,7 @@ export function ParticlesBackground(props: ParticlesBackgroundProps) {
     <>
       <div
         className="
-        fixed inset-0 -z-20 bg-gradient-to-tl from-black via-zinc-600/20
+        fixed inset-0 -z-20 bg-linear-to-tl from-black via-zinc-600/20
         to-black
       "
       />

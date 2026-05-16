@@ -29,7 +29,7 @@ export function HomeNavigation(props: HomeNavigationProps) {
       animate={nameSettled ? "visible" : "hidden"}
       className="
         fixed inset-x-0 top-0 z-50 border-b border-transparent bg-zinc-900/0
-        backdrop-blur
+        backdrop-blur-sm
       "
       initial={skipInitialAnimation ? false : "hidden"}
       variants={fadeIn}

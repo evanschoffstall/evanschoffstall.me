@@ -103,14 +103,14 @@ export default function RootLayout(props: RootLayoutProps) {
         <ParticlesBackground quantity={ANIMATION.DEFAULT_PARTICLE_QUANTITY} />
         <div
           className="
-          pointer-events-none fixed inset-0 bg-gradient-to-tr from-zinc-900/20
+          pointer-events-none fixed inset-0 bg-linear-to-tr from-zinc-900/20
           via-black to-zinc-800/20
         "
         />
         <div
           className="
           pointer-events-none fixed inset-0
-          bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))]
+          bg-[radial-gradient(ellipse_at_top_right,var(--tw-gradient-stops))]
           from-zinc-800/5 via-transparent to-transparent
         "
         />

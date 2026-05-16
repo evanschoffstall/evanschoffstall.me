@@ -199,7 +199,7 @@ function HeroCardBody(props: HeroCardBodyProps) {
       </h2>
       <p
         className="
-        mt-2 line-clamp-3 text-sm leading-relaxed text-zinc-400
+        mt-2 line-clamp-3 text-sm/relaxed  text-zinc-400
         transition-colors duration-300
         group-hover:text-zinc-300
       "
@@ -226,7 +226,7 @@ function HeroCardMeta(props: HeroCardMetaProps) {
       </div>
       <ProjectViewsBadge
         className="
-          flex items-center gap-1.5 text-xs tabular-nums text-zinc-500
+          flex items-center gap-1.5 text-xs text-zinc-500 tabular-nums
           transition-colors duration-300
           group-hover:text-zinc-400
         "
@@ -286,7 +286,7 @@ function ProjectsDivider() {
     <motion.div
       animate={{ opacity: 1, scaleX: 1 }}
       className="
-        h-px w-full bg-gradient-to-r from-transparent via-zinc-700/60
+        h-px w-full bg-linear-to-r from-transparent via-zinc-700/60
         to-transparent
       "
       initial={{ opacity: 0, scaleX: 0 }}
@@ -368,12 +368,12 @@ function ProjectsIntro() {
     >
       <p
         className="
-        text-[10px] font-semibold uppercase tracking-[0.3em] text-zinc-600
+        text-[10px] font-semibold tracking-[0.3em] text-zinc-600 uppercase
       "
       >
         Projects
       </p>
-      <p className="text-sm leading-7 text-zinc-500">
+      <p className="text-sm/7  text-zinc-500">
         Some of the projects are from work and some are on my own time.
       </p>
     </motion.div>

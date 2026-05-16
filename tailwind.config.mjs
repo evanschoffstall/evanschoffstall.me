@@ -2,7 +2,6 @@ import typography from "@tailwindcss/typography";
 import debugScreens from "tailwindcss-debug-screens";
 import defaultTheme from "tailwindcss/defaultTheme";
 
-/** @type {import('tailwindcss').Config} */
 export default {
   content: [
     "./src/app/**/*.{js,ts,jsx,tsx}",

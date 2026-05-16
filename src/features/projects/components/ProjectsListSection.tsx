@@ -59,8 +59,8 @@ export function ProjectsListSection(props: ProjectsListSectionProps) {
         <div className="flex items-center gap-4 pt-4">
           <p
             className="
-            shrink-0 text-[10px] font-semibold uppercase tracking-[0.3em]
-            text-zinc-600
+            shrink-0 text-[10px] font-semibold tracking-[0.3em] text-zinc-600
+            uppercase
           "
           >
             {title}
@@ -185,7 +185,7 @@ function ProjectsDivider() {
     <motion.div
       animate={{ opacity: 1, scaleX: 1 }}
       className="
-        h-px w-full bg-gradient-to-r from-transparent via-zinc-700/60
+        h-px w-full bg-linear-to-r from-transparent via-zinc-700/60
         to-transparent
       "
       initial={{ opacity: 0, scaleX: 0 }}

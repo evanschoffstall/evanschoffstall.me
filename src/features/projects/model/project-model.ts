@@ -53,7 +53,7 @@ export function extractSlugFromBody(body: unknown): null | string {
   if (!body || typeof body !== "object") return null;
   if (!("slug" in body)) return null;
 
-  const result = validateProjectSlug((body as { slug: unknown }).slug);
+  const result = validateProjectSlug(body.slug);
   return result.valid ? result.slug : null;
 }
 

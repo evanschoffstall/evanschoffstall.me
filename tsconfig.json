@@ -33,7 +33,6 @@
     "tests/**/*.ts",
     "tests/**/*.tsx",
     "contentlayer.generated.d.ts",
-    ".contentlayer/generated",
     ".contentlayer/generated/**/*.ts",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
